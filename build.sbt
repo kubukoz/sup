@@ -25,6 +25,7 @@ val commonSettings = Seq(
   name := "sup",
   updateOptions := updateOptions.value.withGigahorse(false), //may fix publishing bug
   libraryDependencies ++= Seq(
+    "org.typelevel" %% "cats-core" % "1.5.0",
     "org.scalatest" %% "scalatest" % "3.0.4" % Test
   ) ++ compilerPlugins
 )
