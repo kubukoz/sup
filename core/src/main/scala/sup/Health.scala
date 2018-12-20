@@ -11,4 +11,7 @@ sealed trait Health extends Product with Serializable {
 object Health {
   case object Good extends Health
   case object Bad extends Health
+
+  val good: Health = Good
+  val bad: Health = Bad
 }

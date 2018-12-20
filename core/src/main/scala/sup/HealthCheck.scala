@@ -1,9 +1,12 @@
 package sup
 
-import scala.concurrent.duration.FiniteDuration
-import cats.effect.{Concurrent, Timer}
+import cats.implicits._
 import cats.effect.implicits._
+
+import cats.effect.{Concurrent, Timer}
 import cats.~>
+
+import scala.concurrent.duration.FiniteDuration
 
 trait HealthCheck[F[_]] {
   def check: F[Health]
@@ -13,7 +16,13 @@ trait HealthCheck[F[_]] {
 object HealthCheck {
 
   def timed[F[_]: Concurrent: Timer](underlying: HealthCheck[F], time: FiniteDuration): HealthCheck[F] =
-    underlying.mapK(λ[F ~> F](_.timeout(time)))
+    new TimedHealthCheck(underlying, time)
+}
+
+final class TimedHealthCheck[F[_]: Concurrent: Timer](underlying: HealthCheck[F], time: FiniteDuration)
+    extends HealthCheck[F] {
+
+  override val check: F[Health] = underlying.check.timeoutTo(time, Health.bad.pure[F])
 }
 
 final class MappedHealthCheck[F[_]](underlying: HealthCheck[F], function: F ~> F) extends HealthCheck[F] {
