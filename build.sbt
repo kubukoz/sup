@@ -25,7 +25,7 @@ val commonSettings = Seq(
   name := "sup",
   updateOptions := updateOptions.value.withGigahorse(false), //may fix publishing bug
   libraryDependencies ++= Seq(
-    "org.typelevel" %% "cats-core" % "1.5.0",
+    "org.typelevel" %% "cats-effect" % "1.1.0",
     "org.scalatest" %% "scalatest" % "3.0.4" % Test
   ) ++ compilerPlugins
 )
@@ -33,9 +33,4 @@ val commonSettings = Seq(
 val core = project.settings(commonSettings).settings(name += "-core")
 
 val sup =
-  project
-    .in(file("."))
-    .settings(commonSettings)
-    .settings(skip in publish := true)
-    .dependsOn(core)
-    .aggregate(core)
+  project.in(file(".")).settings(commonSettings).settings(skip in publish := true).dependsOn(core).aggregate(core)

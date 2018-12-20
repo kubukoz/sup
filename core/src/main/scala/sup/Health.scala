@@ -1,9 +1,10 @@
 package sup
 
 sealed trait Health extends Product with Serializable {
+
   def isGood: Boolean = this match {
     case Health.Good => true
-    case Health.Bad => false
+    case Health.Bad  => false
   }
 }
 

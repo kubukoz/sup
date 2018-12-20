@@ -6,6 +6,8 @@ import cats.implicits._
 
 trait HealthReporter[F[_]] {
   def report: F[HealthReport]
+
+  def mapChecks(hcc: HealthCheck[F] => HealthCheck[F]): HealthReporter[F]
 }
 
 object HealthReporter {
@@ -18,5 +20,8 @@ object HealthReporter {
           HealthReport(results, status)
         }
       }
+
+      override def mapChecks(hcc: HealthCheck[F] => HealthCheck[F]): HealthReporter[F] =
+        fromChecks(hcc(first), rest.map(hcc): _*)
     }
 }
