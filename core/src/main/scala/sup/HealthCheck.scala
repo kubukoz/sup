@@ -4,27 +4,46 @@ import cats.implicits._
 import cats.effect.implicits._
 
 import cats.effect.{Concurrent, Timer}
-import cats.~>
 
 import scala.concurrent.duration.FiniteDuration
+import cats.Group
+import cats.Monoid
+import cats.Functor
 
 trait HealthCheck[F[_]] {
   def check: F[Health]
-  def mapK(f: F ~> F): HealthCheck[F] = new MappedHealthCheck[F](this, f)
+  def modifyF(f: F[Health] => F[Health]): HealthCheck[F] = modify(new HealthCheckMod[F](f))
+  def modify(mod: HealthCheckMod[F]): HealthCheck[F] = new ModifiedHealthCheck[F](this, mod)
 }
 
-object HealthCheck {
+final class HealthCheckMod[F[_]](val modify: F[Health] => F[Health]) extends AnyVal
 
-  def timed[F[_]: Concurrent: Timer](underlying: HealthCheck[F], time: FiniteDuration): HealthCheck[F] =
-    new TimedHealthCheck(underlying, time)
+object HealthCheckMod extends HealthCheckModInstances0 {
+
+  def timed[F[_]: Concurrent: Timer](time: FiniteDuration): HealthCheckMod[F] =
+    new HealthCheckMod[F](_.timeoutTo(time, Health.bad.pure[F]))
 }
 
-final class TimedHealthCheck[F[_]: Concurrent: Timer](underlying: HealthCheck[F], time: FiniteDuration)
-    extends HealthCheck[F] {
+private[sup] trait HealthCheckModInstances0 extends HealthCheckModInstances1 {
 
-  override val check: F[Health] = underlying.check.timeoutTo(time, Health.bad.pure[F])
+  //todo lawless?
+//  implicit def group[F[_]: Functor]: Group[HealthCheckMod[F]] = new HealthCheckModMonoid[F] with Group[HealthCheckMod[F]] {
+//    def inverse(mod: HealthCheckMod[F]): HealthCheckMod[F] = new HealthCheckMod[F](mod.modify(_).map(Health.inverse))
+//  }
 }
 
-final class MappedHealthCheck[F[_]](underlying: HealthCheck[F], function: F ~> F) extends HealthCheck[F] {
-  override val check: F[Health] = function(underlying.check)
+private[sup] trait HealthCheckModInstances1 {
+  implicit def monoid[F[_]]: Monoid[HealthCheckMod[F]] = new HealthCheckModMonoid[F]
+}
+
+private[sup] class HealthCheckModMonoid[F[_]] extends Monoid[HealthCheckMod[F]] {
+  def empty: HealthCheckMod[F] = new HealthCheckMod[F](identity)
+
+  def combine(a: HealthCheckMod[F], b: HealthCheckMod[F]): HealthCheckMod[F] =
+    new HealthCheckMod[F](a.modify compose b.modify)
+}
+
+final class ModifiedHealthCheck[F[_]](underlying: HealthCheck[F], modifier: HealthCheckMod[F]) extends HealthCheck[F] {
+  override val check: F[Health] = modifier.modify(underlying.check)
+  override def modify(mod: HealthCheckMod[F]): HealthCheck[F] = new ModifiedHealthCheck[F](underlying, mod |+| modifier)
 }

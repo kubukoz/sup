@@ -1,4 +1,5 @@
 package sup
+import cats.Eq
 
 sealed trait Health extends Product with Serializable {
 
@@ -14,4 +15,11 @@ object Health {
 
   val good: Health = Good
   val bad: Health = Bad
+
+  val inverse: Health => Health = {
+    case Good => Bad
+    case Bad => Good
+  }
+
+  implicit val eq: Eq[Health] = Eq.fromUniversalEquals
 }

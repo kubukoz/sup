@@ -26,6 +26,11 @@ val commonSettings = Seq(
   updateOptions := updateOptions.value.withGigahorse(false), //may fix publishing bug
   libraryDependencies ++= Seq(
     "org.typelevel" %% "cats-effect" % "1.1.0",
+    "org.typelevel" %% "cats-effect-laws" % "1.1.0",
+    "org.typelevel" %% "cats-testkit" % "1.5.0" % Test,
+    "org.typelevel" %% "cats-laws" % "1.5.0" % Test,
+    "org.typelevel" %% "cats-kernel-laws" % "1.5.0" % Test,
+    "com.github.alexarchambault" %% "scalacheck-shapeless_1.13" % "1.1.6" % Test,
     "org.scalatest" %% "scalatest" % "3.0.4" % Test
   ) ++ compilerPlugins
 )
