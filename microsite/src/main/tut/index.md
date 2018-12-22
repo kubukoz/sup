@@ -5,9 +5,18 @@ layout: home
 
 [![License](http://img.shields.io/:license-Apache%202-green.svg)](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-'sup provides composable, purely functional healthchecks.
+'sup (/sʌp/) provides composable, purely functional healthchecks.
 
-
+* [Installation](#installation)
+* [Main concepts](#main-concepts)
+  + [Health](#health)
+  + [HealthResult](#healthresult)
+  + [HealthCheck](#healthcheck)
+* [Advanced concepts](#advanced-concepts)
+  + [HealthReporter](#healthreporter)
+  + [Tagging](#tagging)
+* [Modifiers](#modifiers)
+  
 ## Installation
 
 For sbt:
@@ -29,9 +38,9 @@ import sup._
 
 ## Main concepts
 
-- Health
-- HealthResult
-- HealthCheck
+- [Health](#health)
+- [HealthResult](#healthresult)
+- [HealthCheck](#healthcheck)
 
 ### Health
 
