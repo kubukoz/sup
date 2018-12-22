@@ -25,8 +25,6 @@ val commonSettings = Seq(
   name := "sup",
   updateOptions := updateOptions.value.withGigahorse(false), //may fix publishing bug
   libraryDependencies ++= Seq(
-    "com.github.mpilquist"       %% "simulacrum"                % "0.14.0",
-    "org.typelevel"              %% "cats-effect"               % "1.1.0",
     "org.typelevel"              %% "cats-effect-laws"          % "1.1.0" % Test,
     "org.typelevel"              %% "cats-testkit"              % "1.5.0" % Test,
     "org.typelevel"              %% "cats-laws"                 % "1.5.0" % Test,
@@ -39,7 +37,12 @@ val commonSettings = Seq(
 def module(moduleName: String): Project =
   Project(moduleName, file(moduleName)).settings(commonSettings).settings(name += s"-$moduleName")
 
-val core = module("core")
+val core = module("core").settings(
+  libraryDependencies ++= Seq(
+    "com.github.mpilquist" %% "simulacrum"  % "0.14.0",
+    "org.typelevel"        %% "cats-effect" % "1.1.0"
+  )
+)
 
 val scalacache = module("scalacache")
   .settings(
