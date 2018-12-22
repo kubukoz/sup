@@ -2,7 +2,7 @@ package sup
 
 import cats.data.{NonEmptyList, OneAnd}
 import cats.effect._
-import sup.data.Tagged
+import sup.data.{HealthReporter, Tagged}
 
 class Samples(implicit ConcurrentIO: Concurrent[IO], timer: Timer[IO]) {
   import cats._

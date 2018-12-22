@@ -1,8 +1,9 @@
-package sup
+package sup.data
 
 import cats.data.{NonEmptyList, OneAnd}
 import cats.implicits._
 import cats.{Apply, Foldable, Monoid, NonEmptyTraverse}
+import sup._
 
 object HealthReporter {
 
