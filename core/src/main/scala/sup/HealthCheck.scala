@@ -1,49 +1,47 @@
 package sup
 
+import cats.{~>, Eval, Foldable, Functor, Id}
 import cats.implicits._
-import cats.effect.implicits._
+import sup.alg.FunctorK
 
-import cats.effect.{Concurrent, Timer}
+case class HealthResult[H[_]](value: H[Health]) extends AnyVal
 
-import scala.concurrent.duration.FiniteDuration
-import cats.Group
-import cats.Monoid
-import cats.Functor
+object HealthResult {
+  def one(head: Health): HealthResult[Id]                               = HealthResult[Id](head)
+  def tagged[Tag](tag: Tag, head: Health): HealthResult[Tagged[Tag, ?]] = HealthResult(Tagged(tag, head))
 
-trait HealthCheck[F[_]] {
-  def check: F[Health]
-  def modifyF(f: F[Health] => F[Health]): HealthCheck[F] = modify(new HealthCheckMod[F](f))
-  def modify(mod: HealthCheckMod[F]): HealthCheck[F] = new ModifiedHealthCheck[F](this, mod)
+  def combineAllGood[H[_]: Foldable](healthResult: HealthResult[H]): Health =
+    healthResult.value.combineAll(Health.allGoodMonoid)
 }
 
-final class HealthCheckMod[F[_]](val modify: F[Health] => F[Health]) extends AnyVal
-
-object HealthCheckMod extends HealthCheckModInstances0 {
-
-  def timed[F[_]: Concurrent: Timer](time: FiniteDuration): HealthCheckMod[F] =
-    new HealthCheckMod[F](_.timeoutTo(time, Health.bad.pure[F]))
+trait HealthCheck[F[_], H[_]] {
+  def check: F[HealthResult[H]]
 }
 
-private[sup] trait HealthCheckModInstances0 extends HealthCheckModInstances1 {
-
-  //todo lawless?
-//  implicit def group[F[_]: Functor]: Group[HealthCheckMod[F]] = new HealthCheckModMonoid[F] with Group[HealthCheckMod[F]] {
-//    def inverse(mod: HealthCheckMod[F]): HealthCheckMod[F] = new HealthCheckMod[F](mod.modify(_).map(Health.inverse))
-//  }
+object HealthCheck {
+  implicit def functorK[F[_]: Functor]: FunctorK[HealthCheck[F, ?[_]]] = new FunctorK[HealthCheck[F, ?[_]]] {
+    override def mapK[G[_], H[_]](fgh: HealthCheck[F, G])(gh: G ~> H): HealthCheck[F, H] =
+      new HealthCheck[F, H] {
+        override val check: F[HealthResult[H]] = fgh.check.map(res => HealthResult(gh(res.value)))
+      }
+  }
 }
 
-private[sup] trait HealthCheckModInstances1 {
-  implicit def monoid[F[_]]: Monoid[HealthCheckMod[F]] = new HealthCheckModMonoid[F]
-}
+//final class ModifiedHealthCheck[F[_]](underlying: HealthCheck[F], modifier: HealthCheckMod[F]) extends HealthCheck[F] {
+//  override val check: F[Health] = modifier.modify(underlying.check)
+//  override def modify(mod: HealthCheckMod[F]): HealthCheck[F] = new ModifiedHealthCheck[F](underlying, mod |+| modifier)
+//}
 
-private[sup] class HealthCheckModMonoid[F[_]] extends Monoid[HealthCheckMod[F]] {
-  def empty: HealthCheckMod[F] = new HealthCheckMod[F](identity)
 
-  def combine(a: HealthCheckMod[F], b: HealthCheckMod[F]): HealthCheckMod[F] =
-    new HealthCheckMod[F](a.modify compose b.modify)
-}
+case class Tagged[Tag, H](tag: Tag, health: H)
 
-final class ModifiedHealthCheck[F[_]](underlying: HealthCheck[F], modifier: HealthCheckMod[F]) extends HealthCheck[F] {
-  override val check: F[Health] = modifier.modify(underlying.check)
-  override def modify(mod: HealthCheckMod[F]): HealthCheck[F] = new ModifiedHealthCheck[F](underlying, mod |+| modifier)
+object Tagged {
+  def tagK[Tag](tag: Tag): Id ~> Tagged[Tag, ?] = λ[Id ~> Tagged[Tag, ?]](Tagged(tag, _))
+
+  implicit def taggedFoldable[Tag]: Foldable[Tagged[Tag, ?]] = new Foldable[Tagged[Tag, ?]] {
+    def foldLeft[A, B](fa: Tagged[Tag, A], b: B)(f: (B, A) => B): B = f(b, fa.health)
+
+    def foldRight[A, B](fa: Tagged[Tag, A], lb: Eval[B])(f: (A, Eval[B]) => Eval[B]): Eval[B] =
+      f(fa.health, lb)
+  }
 }

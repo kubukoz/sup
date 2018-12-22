@@ -25,6 +25,8 @@ val commonSettings = Seq(
   name := "sup",
   updateOptions := updateOptions.value.withGigahorse(false), //may fix publishing bug
   libraryDependencies ++= Seq(
+    "com.github.mpilquist" %% "simulacrum" % "0.14.0",
+    "org.typelevel" %% "cats-free" % "1.5.0",
     "org.typelevel" %% "cats-effect" % "1.1.0",
     "org.typelevel" %% "cats-effect-laws" % "1.1.0",
     "org.typelevel" %% "cats-testkit" % "1.5.0" % Test,

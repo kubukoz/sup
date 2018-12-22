@@ -1,5 +1,5 @@
 package sup
-import cats.Eq
+import cats.{Eq, Monoid}
 
 sealed trait Health extends Product with Serializable {
 
@@ -11,15 +11,15 @@ sealed trait Health extends Product with Serializable {
 
 object Health {
   case object Good extends Health
-  case object Bad extends Health
+  case object Bad  extends Health
 
   val good: Health = Good
-  val bad: Health = Bad
-
-  val inverse: Health => Health = {
-    case Good => Bad
-    case Bad => Good
-  }
+  val bad: Health  = Bad
 
   implicit val eq: Eq[Health] = Eq.fromUniversalEquals
+
+  val allGoodMonoid: Monoid[Health] = new Monoid[Health] {
+    override val empty: Health                         = bad
+    override def combine(x: Health, y: Health): Health = if (x.isGood) y else bad
+  }
 }
