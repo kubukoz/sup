@@ -6,6 +6,6 @@ docs: true
 collections:
   tut:
     output: true
-version: 4cab02b9-SNAPSHOT
+version: c09f98ca-SNAPSHOT
 org: com.kubukoz
 markdown: kramdown
