@@ -4,15 +4,15 @@ import cats.{~>, Eval, Foldable, Id}
 final case class Tagged[Tag, H](tag: Tag, health: H)
 
 object Tagged {
-  def tagK[Tag](tag: Tag): Id ~> Tagged[Tag, ?] = λ[Id ~> Tagged[Tag, ?]](Tagged(tag, _))
-  def toId[Tag]: Tagged[Tag, ?] ~> Id           = λ[Tagged[Tag, ?] ~> Id](_.health)
+  def wrapK[Tag](tag: Tag): Id ~> Tagged[Tag, ?] = λ[Id ~> Tagged[Tag, ?]](Tagged(tag, _))
+  def unwrapK[Tag]: Tagged[Tag, ?] ~> Id         = λ[Tagged[Tag, ?] ~> Id](_.health)
 
   /**
     * The Tagged instance of Foldable.
     * The only place where it should be passed to is [[sup.HealthReporter.fromChecks]],
     * for determining the status of the wrapping check. In other cases, it's probably useless, as it discards the tag completely.
     * */
-  implicit def taggedFoldable[Tag]: Foldable[Tagged[Tag, ?]] = Foldable2.by(toId[Tag])
+  implicit def taggedFoldable[Tag]: Foldable[Tagged[Tag, ?]] = Foldable2.by(unwrapK[Tag])
 
   //todo PR to cats
   object Foldable2 {

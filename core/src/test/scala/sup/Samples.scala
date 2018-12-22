@@ -18,7 +18,7 @@ object Samples {
     val check: IO[HealthResult[Id]] = IO(println(s"Checking queue $queue")).as(HealthResult.one(Health.healthy))
   }
 
-  val kafkaCheck = (kafkaQueueCheck("q1") |+| kafkaQueueCheck("q2")).mapK(Tagged.tagK("kafka"))
+  val kafkaCheck = (kafkaQueueCheck("q1") |+| kafkaQueueCheck("q2")).mapK(Tagged.wrapK("kafka"))
 
   val reporter: HealthReporter[IO, TaggedNel] =
     HealthReporter.fromChecks(webCheck, kafkaCheck)
