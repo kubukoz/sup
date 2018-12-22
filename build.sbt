@@ -25,19 +25,34 @@ val commonSettings = Seq(
   name := "sup",
   updateOptions := updateOptions.value.withGigahorse(false), //may fix publishing bug
   libraryDependencies ++= Seq(
-    "com.github.mpilquist" %% "simulacrum" % "0.14.0",
-    "org.typelevel" %% "cats-free" % "1.5.0",
-    "org.typelevel" %% "cats-effect" % "1.1.0",
-    "org.typelevel" %% "cats-effect-laws" % "1.1.0",
-    "org.typelevel" %% "cats-testkit" % "1.5.0" % Test,
-    "org.typelevel" %% "cats-laws" % "1.5.0" % Test,
-    "org.typelevel" %% "cats-kernel-laws" % "1.5.0" % Test,
+    "com.github.mpilquist"       %% "simulacrum"                % "0.14.0",
+    "org.typelevel"              %% "cats-effect"               % "1.1.0",
+    "org.typelevel"              %% "cats-effect-laws"          % "1.1.0" % Test,
+    "org.typelevel"              %% "cats-testkit"              % "1.5.0" % Test,
+    "org.typelevel"              %% "cats-laws"                 % "1.5.0" % Test,
+    "org.typelevel"              %% "cats-kernel-laws"          % "1.5.0" % Test,
     "com.github.alexarchambault" %% "scalacheck-shapeless_1.13" % "1.1.6" % Test,
-    "org.scalatest" %% "scalatest" % "3.0.4" % Test
+    "org.scalatest"              %% "scalatest"                 % "3.0.4" % Test
   ) ++ compilerPlugins
 )
 
-val core = project.settings(commonSettings).settings(name += "-core")
+def module(moduleName: String): Project =
+  Project(moduleName, file(moduleName)).settings(commonSettings).settings(name += s"-$moduleName")
+
+val core = module("core")
+
+val scalacache = module("scalacache")
+  .settings(
+    libraryDependencies ++= Seq(
+      "com.github.cb372" %% "scalacache-core" % "0.27.0"
+    )
+  )
+  .dependsOn(core)
 
 val sup =
-  project.in(file(".")).settings(commonSettings).settings(skip in publish := true).dependsOn(core).aggregate(core)
+  project
+    .in(file("."))
+    .settings(commonSettings)
+    .settings(skip in publish := true)
+    .dependsOn(core, scalacache)
+    .aggregate(core, scalacache)
