@@ -54,10 +54,23 @@ val scalacache = module("scalacache")
   )
   .dependsOn(core)
 
+val microsite = project.settings(
+  micrositeName := "sup",
+  micrositeDescription := "Functional healthchecks in Scala",
+  micrositeUrl := "https://sup.kubukoz.com",
+  micrositeAuthor := "Jakub Kozłowski",
+  micrositeTwitterCreator := "@kubukoz",
+  micrositeGithubOwner := "kubukoz",
+  micrositeGithubRepo := "sup",
+  micrositeGitterChannel := false,
+  fork in tut := true,
+
+).enablePlugins(MicrositesPlugin)
+
 val sup =
   project
     .in(file("."))
     .settings(commonSettings)
     .settings(skip in publish := true)
-    .dependsOn(core, scalacache)
-    .aggregate(core, scalacache)
+    .dependsOn(core, scalacache, microsite)
+    .aggregate(core, scalacache, microsite)
