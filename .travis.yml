@@ -29,4 +29,4 @@ jobs:
     - sbt test:compile test
   # run ci-release only if previous stages passed
   - stage: release
-    script: sbt +ci-release
+    script: sbt ci-release
