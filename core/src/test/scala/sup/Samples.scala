@@ -24,10 +24,4 @@ object Samples {
     HealthReporter.fromChecks(webCheck, kafkaCheck)
 
   val checked: IO[HealthResult[OneAnd[TaggedNel, ?]]] = reporter.check
-
-//  val raw: IO[(Health, NonEmptyList[(String, Health)])] = reporter.check.map(_.value match {
-//    case oa =>
-//      (oa.head, oa.tail.map { tagged => tagged.tag -> tagged.health
-//      })
-//  })
 }
