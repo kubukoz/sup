@@ -17,7 +17,7 @@ object HealthReporter {
     * Constructs a healthcheck from a non-empty structure G of healthchecks.
     * The status of the whole check is determined using the results of given checks and the monoid of Health.
     *
-    * e.g. if all checks need to return Healthy for the whole thing to be healthy, use [[Health.allHealthyMonoid]].
+    * e.g. if all checks need to return Healthy for the whole thing to be healthy, use [[Health.allHealthyCommutativeMonoid]].
     */
   def wrapChecks[F[_]: Apply, G[_]: NonEmptyTraverse, H[_]: Foldable](checks: G[HealthCheck[F, H]])(
     implicit M: Monoid[Health]): HealthReporter[F, (G ∘ H)#λ] = {

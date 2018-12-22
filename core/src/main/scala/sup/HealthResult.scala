@@ -2,8 +2,8 @@ package sup
 
 import cats.implicits._
 import cats.kernel.Monoid
-import cats.{~>, Applicative, Id}
-import sup.algebra.FunctorK
+import cats.tagless.FunctorK
+import cats.{~>, Applicative, Eq, Id}
 import sup.data.Tagged
 
 final case class HealthResult[H[_]](value: H[Health]) extends AnyVal
@@ -24,4 +24,6 @@ object HealthResult {
       override def combine(x: HealthResult[H], y: HealthResult[H]): HealthResult[H] =
         HealthResult(Applicative.monoid[H, Health].combine(x.value, y.value))
     }
+
+  implicit def eq[H[_]](implicit H: Eq[H[Health]]): Eq[HealthResult[H]] = Eq.by(_.value)
 }

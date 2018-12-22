@@ -15,7 +15,19 @@ object mods {
     * */
   def timeoutToSick[F[_]: Concurrent: Timer, H[_]: Applicative](
     duration: FiniteDuration): F[HealthResult[H]] => F[HealthResult[H]] = {
-    _.timeoutTo(duration, HealthResult(Health.sick.pure[H]).pure[F])
+    timeoutToDefault(Health.Sick, duration)
+  }
+
+  /**
+    * Fallback to the provided value in case the check takes longer than `duration`.
+    *
+    * Use with [[HealthCheck.transform]].
+    * */
+  def timeoutToDefault[F[_]: Concurrent: Timer, H[_]: Applicative](
+    default: Health,
+    duration: FiniteDuration): F[HealthResult[H]] => F[HealthResult[H]] = {
+    _.timeoutTo(duration, HealthResult(default.pure[H]).pure[F])
+
   }
 
   /**

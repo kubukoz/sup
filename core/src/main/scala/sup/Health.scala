@@ -25,8 +25,8 @@ object Health {
   /**
     * A monoid that'll return [[Sick]] if any of the combined values are sick, [[Healthy]] otherwise.
     * */
-  implicit val allHealthyMonoid: CommutativeMonoid[Health] = new CommutativeMonoid[Health] {
-    override val empty: Health                         = sick
+  implicit val allHealthyCommutativeMonoid: CommutativeMonoid[Health] = new CommutativeMonoid[Health] {
+    override val empty: Health                         = healthy
     override def combine(x: Health, y: Health): Health = if (x.isHealthy) y else sick
   }
 }

@@ -3,7 +3,7 @@ package sup.transformed
 import cats.implicits._
 import cats.{~>, Functor}
 import sup.{HealthCheck, HealthResult}
-import sup.algebra.FunctorK.ops._
+import cats.tagless.implicits._
 
 private[sup] final class LeftMappedHealthCheck[F[_], G[_], H[_]](underlying: HealthCheck[F, H], fg: F ~> G)
     extends HealthCheck[G, H] {

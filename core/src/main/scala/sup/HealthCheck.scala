@@ -1,8 +1,8 @@
 package sup
 
-import cats.{~>, Applicative, Functor, Monoid}
+import cats.{~>, Applicative, Eq, Functor, Monoid}
 import cats.implicits._
-import sup.algebra.FunctorK
+import cats.tagless.FunctorK
 import sup.transformed.{LeftMappedHealthCheck, MappedKHealthCheck, TransformedHealthCheck}
 
 /**
@@ -34,6 +34,10 @@ object HealthCheck {
     override val check: F[HealthResult[H]] = HealthResult.const[H](health).pure[F]
   }
 
+  def liftF[F[_], H[_]](_check: F[HealthResult[H]]): HealthCheck[F, H] = new HealthCheck[F, H] {
+    override val check: F[HealthResult[H]] = _check
+  }
+
   implicit def functorK[F[_]: Functor]: FunctorK[HealthCheck[F, ?[_]]] = new FunctorK[HealthCheck[F, ?[_]]] {
     override def mapK[G[_], H[_]](fgh: HealthCheck[F, G])(gh: G ~> H): HealthCheck[F, H] = fgh.mapK(gh)
   }
@@ -46,4 +50,6 @@ object HealthCheck {
         override val check: F[HealthResult[H]] = Applicative.monoid[F, HealthResult[H]].combine(x.check, y.check)
       }
     }
+
+  implicit def healthCheckEq[F[_], H[_]](implicit F: Eq[F[HealthResult[H]]]): Eq[HealthCheck[F, H]] = Eq.by(_.check)
 }

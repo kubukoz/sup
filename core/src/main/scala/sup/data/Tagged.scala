@@ -1,6 +1,8 @@
 package sup.data
 
-import cats.{~>, Eval, Foldable, Id}
+import cats.{~>, Eq, Eval, Foldable, Id}
+import cats.instances.tuple._
+
 final case class Tagged[Tag, H](tag: Tag, health: H)
 
 object Tagged {
@@ -13,6 +15,8 @@ object Tagged {
     * for determining the status of the wrapping check. In other cases, it's probably useless, as it discards the tag completely.
     * */
   implicit def taggedFoldable[Tag]: Foldable[Tagged[Tag, ?]] = Foldable2.by(unwrapK[Tag])
+
+  implicit def eqTagged[Tag: Eq, H: Eq]: Eq[Tagged[Tag, H]] = Eq.by(tagged => (tagged.tag, tagged.health))
 
   //todo PR to cats
   object Foldable2 {

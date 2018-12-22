@@ -25,6 +25,7 @@ val commonSettings = Seq(
   name := "sup",
   updateOptions := updateOptions.value.withGigahorse(false), //may fix publishing bug
   libraryDependencies ++= Seq(
+    "org.typelevel"              %% "cats-tagless-laws"         % "0.2.0" % Test,
     "org.typelevel"              %% "cats-effect-laws"          % "1.1.0" % Test,
     "org.typelevel"              %% "cats-testkit"              % "1.5.0" % Test,
     "org.typelevel"              %% "cats-laws"                 % "1.5.0" % Test,
@@ -39,8 +40,9 @@ def module(moduleName: String): Project =
 
 val core = module("core").settings(
   libraryDependencies ++= Seq(
-    "com.github.mpilquist" %% "simulacrum"  % "0.14.0",
-    "org.typelevel"        %% "cats-effect" % "1.1.0"
+    "com.github.mpilquist" %% "simulacrum"        % "0.14.0",
+    "org.typelevel"        %% "cats-effect"       % "1.1.0",
+    "org.typelevel"        %% "cats-tagless-core" % "0.2.0"
   )
 )
 
