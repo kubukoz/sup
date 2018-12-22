@@ -6,6 +6,6 @@ docs: true
 collections:
   tut:
     output: true
-version: 1e48da55+20181222-2121-SNAPSHOT
+version: 4cab02b9-SNAPSHOT
 org: com.kubukoz
 markdown: kramdown
