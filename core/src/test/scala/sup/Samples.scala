@@ -1,12 +1,13 @@
 package sup
 
 import cats.data.{NonEmptyList, OneAnd}
+import cats.effect._
 import sup.data.Tagged
 
-object Samples {
-  import cats.effect._
+class Samples(implicit ConcurrentIO: Concurrent[IO], timer: Timer[IO]) {
   import cats._
   import cats.implicits._
+  import scala.concurrent.duration._
 
   type TaggedNel[A] = NonEmptyList[Tagged[String, A]]
 
@@ -18,7 +19,7 @@ object Samples {
     val check: IO[HealthResult[Id]] = IO(println(s"Checking queue $queue")).as(HealthResult.one(Health.healthy))
   }
 
-  val kafkaCheck = (kafkaQueueCheck("q1") |+| kafkaQueueCheck("q2")).mapK(Tagged.wrapK("kafka"))
+  val kafkaCheck = (kafkaQueueCheck("q1") |+| kafkaQueueCheck("q2").transform(mods.timeoutToSick(5.seconds))).mapK(mods.tagWith("kafka"))
 
   val reporter: HealthReporter[IO, TaggedNel] =
     HealthReporter.fromChecks(webCheck, kafkaCheck)

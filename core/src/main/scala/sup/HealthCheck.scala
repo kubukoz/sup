@@ -3,18 +3,13 @@ package sup
 import cats.{~>, Applicative, Eq, Functor, Monoid}
 import cats.implicits._
 import cats.tagless.FunctorK
-import sup.transformed.{LeftMappedHealthCheck, MappedKHealthCheck, TransformedHealthCheck}
+import sup.transformed.{LeftMappedHealthCheck, MappedKHealthCheck, MappedResultHealthCheck, TransformedHealthCheck}
 
 /**
   * A health check.
   * F is the effect of making a healthcheck (e.g. IO for calls to external systems).
   *
-  * H is the container of results. For example:
-  * - H = Id: there's only one result.
-  * - H = Tagged[String, ?]: there's only one result, tagged with a String (e.g. the dependency's name)
-  * - H = NonEmptyList: there are multiple checks
-  * - H = OneAnd[NonEmptyList, ?]: there's one check, and a NonEmptyList of checks
-  * - H = OneAnd[(NonEmptyList ∘ Tagged[String, ?])#λ, ?]: there's one check, and a NonEmptyList of checks tagged with a String
+  * H is the container of results. See [[HealthResult]] for examples.
   * */
 trait HealthCheck[F[_], H[_]] {
   def check: F[HealthResult[H]]
@@ -26,6 +21,9 @@ trait HealthCheck[F[_], H[_]] {
     new TransformedHealthCheck[F, G, H, I](this, f)
 
   def mapK[I[_]](f: H ~> I)(implicit F: Functor[F]): HealthCheck[F, I] = new MappedKHealthCheck(this, f)
+
+  def mapResult[I[_]](f: HealthResult[H] => HealthResult[I])(implicit F: Functor[F]): HealthCheck[F, I] =
+    new MappedResultHealthCheck(this, f)
 }
 
 object HealthCheck {

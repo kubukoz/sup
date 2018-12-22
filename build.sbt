@@ -54,18 +54,24 @@ val scalacache = module("scalacache")
   )
   .dependsOn(core)
 
-val microsite = project.settings(
-  micrositeName := "sup",
-  micrositeDescription := "Functional healthchecks in Scala",
-  micrositeUrl := "https://sup.kubukoz.com",
-  micrositeAuthor := "Jakub Kozłowski",
-  micrositeTwitterCreator := "@kubukoz",
-  micrositeGithubOwner := "kubukoz",
-  micrositeGithubRepo := "sup",
-  micrositeGitterChannel := false,
-  fork in tut := true,
-
-).enablePlugins(MicrositesPlugin)
+val microsite = project
+  .settings(
+    micrositeName := "sup",
+    micrositeDescription := "Functional healthchecks in Scala",
+    micrositeUrl := "https://sup.kubukoz.com",
+    micrositeAuthor := "Jakub Kozłowski",
+    micrositeTwitterCreator := "@kubukoz",
+    micrositeGithubOwner := "kubukoz",
+    micrositeGithubRepo := "sup",
+    micrositeGitterChannel := false,
+    fork in tut := true,
+    scalacOptions ++= Options.all,
+    scalacOptions --= Seq("-Ywarn-unused:imports"),
+    libraryDependencies ++= compilerPlugins
+  )
+  .enablePlugins(MicrositesPlugin)
+  .dependsOn(core)
+  .aggregate(core)
 
 val sup =
   project

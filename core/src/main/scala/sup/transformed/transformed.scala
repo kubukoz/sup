@@ -25,3 +25,8 @@ private[sup] final class MappedKHealthCheck[F[_]: Functor, G[_], H[_]](underlyin
     extends HealthCheck[F, H] {
   override val check: F[HealthResult[H]] = underlying.check.map(_.mapK(f))
 }
+private[sup] final class MappedResultHealthCheck[F[_]: Functor, G[_], H[_]](underlying: HealthCheck[F, G],
+                                                                            f: HealthResult[G] => HealthResult[H])
+    extends HealthCheck[F, H] {
+  override val check: F[HealthResult[H]] = underlying.check.map(f)
+}

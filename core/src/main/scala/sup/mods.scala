@@ -1,10 +1,12 @@
 package sup
-import cats.{~>, Applicative}
+
+import cats.{~>, Applicative, Id}
 import cats.effect.{Concurrent, Timer}
 
 import scala.concurrent.duration.FiniteDuration
 import cats.effect.implicits._
 import cats.implicits._
+import sup.data.Tagged
 
 object mods {
 
@@ -39,4 +41,18 @@ object mods {
   def timeoutToFailure[F[_]: Concurrent: Timer, H[_]](duration: FiniteDuration): F ~> F = λ[F ~> F] {
     _.timeout(duration)
   }
+
+  /**
+    * Tag a health check with a value.
+    *
+    * Use with [[HealthCheck.mapK]].
+    * */
+  def tagWith[Tag](tag: Tag): Id ~> Tagged[Tag, ?] = λ[Id ~> Tagged[Tag, ?]](Tagged(tag, _))
+
+  /**
+    * Unwrap a tagged health check (dual of `tagWith`).
+    *
+    * Use with [[HealthCheck.mapK]].
+    * */
+  def untag[Tag]: Tagged[Tag, ?] ~> Id = λ[Tagged[Tag, ?] ~> Id](_.health)
 }
