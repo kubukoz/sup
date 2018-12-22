@@ -13,6 +13,8 @@ import sup.transformed.{LeftMappedHealthCheck, MappedKHealthCheck, TransformedHe
   * - H = Id: there's only one result.
   * - H = Tagged[String, ?]: there's only one result, tagged with a String (e.g. the dependency's name)
   * - H = NonEmptyList: there are multiple checks
+  * - H = OneAnd[NonEmptyList, ?]: there's one check, and a NonEmptyList of checks
+  * - H = OneAnd[(NonEmptyList ∘ Tagged[String, ?])#λ, ?]: there's one check, and a NonEmptyList of checks tagged with a String
   * */
 trait HealthCheck[F[_], H[_]] {
   def check: F[HealthResult[H]]
