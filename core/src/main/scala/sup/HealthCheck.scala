@@ -11,7 +11,7 @@ import sup.transformed.{LeftMappedHealthCheck, MappedKHealthCheck, MappedResultH
   *
   * H is the container of results. See [[HealthResult]] for examples.
   * */
-trait HealthCheck[F[_], H[_]] {
+abstract class HealthCheck[F[_], H[_]] {
   def check: F[HealthResult[H]]
 
   def leftMapK[G[_]](fg: F ~> G): HealthCheck[G, H] =
@@ -28,6 +28,9 @@ trait HealthCheck[F[_], H[_]] {
 
 object HealthCheck {
 
+  /**
+    * A healthcheck that always returns the supplied health value.
+    * */
   def const[F[_]: Applicative, H[_]: Applicative](health: Health): HealthCheck[F, H] = new HealthCheck[F, H] {
     override val check: F[HealthResult[H]] = HealthResult.const[H](health).pure[F]
   }

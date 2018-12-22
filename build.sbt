@@ -1,3 +1,6 @@
+val Scala_212 = "2.12.8"
+val Scala_211 = "2.11.11"
+
 inThisBuild(
   List(
     organization := "com.kubukoz",
@@ -19,7 +22,7 @@ val compilerPlugins = List(
 )
 
 val commonSettings = Seq(
-  scalaVersion := "2.12.8",
+  scalaVersion := Scala_211,
   scalacOptions ++= Options.all,
   fork in Test := true,
   name := "sup",
@@ -35,8 +38,10 @@ val commonSettings = Seq(
   ) ++ compilerPlugins
 )
 
+val crossBuiltCommonSettings = commonSettings ++ Seq(crossScalaVersions := Seq(Scala_211, Scala_212))
+
 def module(moduleName: String): Project =
-  Project(moduleName, file(moduleName)).settings(commonSettings).settings(name += s"-$moduleName")
+  Project(moduleName, file(moduleName)).settings(crossBuiltCommonSettings).settings(name += s"-$moduleName")
 
 val core = module("core").settings(
   libraryDependencies ++= Seq(
@@ -56,6 +61,8 @@ val scalacache = module("scalacache")
 
 val microsite = project
   .settings(
+    scalaVersion := Scala_211,
+    crossScalaVersions := List(),
     micrositeName := "sup",
     micrositeDescription := "Functional healthchecks in Scala",
     micrositeUrl := "https://sup.kubukoz.com",
@@ -67,7 +74,8 @@ val microsite = project
     fork in tut := true,
     scalacOptions ++= Options.all,
     scalacOptions --= Seq("-Ywarn-unused:imports"),
-    libraryDependencies ++= compilerPlugins
+    libraryDependencies ++= compilerPlugins,
+    skip in publish := true
   )
   .enablePlugins(MicrositesPlugin)
   .dependsOn(core)
@@ -77,6 +85,5 @@ val sup =
   project
     .in(file("."))
     .settings(commonSettings)
-    .settings(skip in publish := true)
-    .dependsOn(core, scalacache, microsite)
+    .settings(skip in publish := true, crossScalaVersions := List())
     .aggregate(core, scalacache, microsite)
