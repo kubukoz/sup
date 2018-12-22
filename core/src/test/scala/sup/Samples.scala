@@ -7,7 +7,6 @@ object Samples {
   import cats.effect._
   import cats._
   import cats.implicits._
-  import sup.algebra.FunctorK.ops._
 
   type TaggedNel[A] = NonEmptyList[Tagged[String, A]]
 

@@ -22,6 +22,8 @@ trait HealthCheck[F[_], H[_]] {
 
   def transform[G[_], I[_]](f: F[HealthResult[H]] => G[HealthResult[I]]): HealthCheck[G, I] =
     new TransformedHealthCheck[F, G, H, I](this, f)
+
+  def mapK[I[_]](f: H ~> I)(implicit F: Functor[F]): HealthCheck[F, I] = new MappedKHealthCheck(this, f)
 }
 
 object HealthCheck {
@@ -31,8 +33,7 @@ object HealthCheck {
   }
 
   implicit def functorK[F[_]: Functor]: FunctorK[HealthCheck[F, ?[_]]] = new FunctorK[HealthCheck[F, ?[_]]] {
-    override def mapK[G[_], H[_]](fgh: HealthCheck[F, G])(gh: G ~> H): HealthCheck[F, H] =
-      new MappedKHealthCheck(fgh, gh)
+    override def mapK[G[_], H[_]](fgh: HealthCheck[F, G])(gh: G ~> H): HealthCheck[F, H] = fgh.mapK(gh)
   }
 
   implicit def checkMonoid[F[_]: Applicative, H[_]: Applicative](
