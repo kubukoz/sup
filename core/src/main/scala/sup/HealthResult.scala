@@ -2,7 +2,7 @@ package sup
 
 import cats.implicits._
 import cats.kernel.Monoid
-import cats.{Applicative, Id, ~>}
+import cats.{~>, Applicative, Id}
 import sup.algebra.FunctorK
 import sup.data.Tagged
 

@@ -16,6 +16,7 @@ object Tagged {
 
   //todo PR to cats
   object Foldable2 {
+
     def by[F[_], G[_]: Foldable](fg: F ~> G): Foldable[F] = new Foldable[F] {
       override def foldLeft[A, B](fa: F[A], b: B)(f: (B, A) => B): B = Foldable[G].foldLeft(fg(fa), b)(f)
       override def foldRight[A, B](fa: F[A], lb: Eval[B])(f: (A, Eval[B]) => Eval[B]): Eval[B] =
