@@ -1,13 +1,9 @@
 package sup
 
-import cats.{~>, Eq}
 import cats.data.{NonEmptyList, OneAnd}
-import cats.kernel.laws.discipline.MonoidTests
 import cats.tests.CatsSuite
-import org.scalacheck.Arbitrary
-import sup.HealthReporter.HealthReporter
+import sup.data.Tagged
 
-import scala.util.Try
 
 class HealthCheckModInstancesTest extends CatsSuite {
 //
@@ -31,29 +27,27 @@ class HealthCheckModInstancesTest extends CatsSuite {
 
 object Samples {
   import cats.effect._
-  import cats.implicits._
-  import cats.effect.implicits._
   import cats._
-  import alg.FunctorK.ops._
+  import sup.algebra.FunctorK.ops._
 
   type TaggedNel[A] = NonEmptyList[Tagged[String, A]]
 
   val webCheck: HealthCheck[IO, Tagged[String, ?]] = new HealthCheck[IO, Tagged[String, ?]] {
-    val check: IO[HealthResult[Tagged[String, ?]]] = IO.pure(HealthResult.tagged("WEB", Health.good))
+    val check: IO[HealthResult[Tagged[String, ?]]] = IO.pure(HealthResult.tagged("WEB", Health.healthy))
   }
 
   val kafkaCheck: HealthCheck[IO, Tagged[String, ?]] = new HealthCheck[IO, Id] {
-    val check: IO[HealthResult[Id]] = IO.pure(HealthResult.one(Health.good))
+    val check: IO[HealthResult[Id]] = IO.pure(HealthResult.one(Health.healthy))
   }.mapK(Tagged.tagK("KAFKA"))
 
-  val reporter: HealthReporter[IO, TaggedNel] = HealthReporter.fromChecks(webCheck, kafkaCheck)
+  val reporter: HealthReporter[IO, TaggedNel] =
+    HealthReporter.fromChecks(webCheck, kafkaCheck)
 
   val checked: IO[HealthResult[OneAnd[TaggedNel, ?]]] = reporter.check
 
-  val raw: IO[(Health, NonEmptyList[(String, Health)])] = reporter.check.map(_.value match {
-    case OneAnd(h, t) =>
-      (h, t.map { tagged =>
-        tagged.tag -> tagged.health
-      })
-  })
+//  val raw: IO[(Health, NonEmptyList[(String, Health)])] = reporter.check.map(_.value match {
+//    case oa =>
+//      (oa.head, oa.tail.map { tagged => tagged.tag -> tagged.health
+//      })
+//  })
 }

@@ -1,13 +1,10 @@
 package sup
 
-import cats.data.NonEmptyList
+import cats.data.{NonEmptyList, OneAnd}
 import cats.implicits._
 import cats.{Apply, Foldable, NonEmptyTraverse}
-import cats.data.OneAnd
 
 object HealthReporter {
-
-  type HealthReporter[F[_], G[_]] = HealthCheck[F, OneAnd[G, ?]]
 
   def fromChecks[F[_]: Apply, H[_]: Foldable](first: HealthCheck[F, H],
                                               rest: HealthCheck[F, H]*): HealthReporter[F, (NonEmptyList ∘ H)#λ] =
@@ -27,7 +24,7 @@ object HealthReporter {
     new HealthReporter[F, GH] {
       override val check: F[HealthResult[OneAnd[GH, ?]]] = {
         checks.nonEmptyTraverse(_.check).map { results =>
-          val status = if (results.forall(HealthResult.combineAllGood[H](_).isGood)) Health.Good else Health.Bad
+          val status = if (results.forall(HealthResult.combineAllGood[H](_).isHealthy)) Health.Healthy else Health.Sick
 
           HealthResult[OneAnd[GH, ?]](OneAnd[GH, Health](status, results.map(_.value)))
         }

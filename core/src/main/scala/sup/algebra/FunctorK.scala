@@ -1,4 +1,4 @@
-package sup.alg
+package sup.algebra
 
 import cats.~>
 import simulacrum._
