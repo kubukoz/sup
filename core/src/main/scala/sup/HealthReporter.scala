@@ -2,29 +2,32 @@ package sup
 
 import cats.data.{NonEmptyList, OneAnd}
 import cats.implicits._
-import cats.{Apply, Foldable, NonEmptyTraverse}
+import cats.{Apply, Foldable, Monoid, NonEmptyTraverse}
 
 object HealthReporter {
 
-  def fromChecks[F[_]: Apply, H[_]: Foldable](first: HealthCheck[F, H],
-                                              rest: HealthCheck[F, H]*): HealthReporter[F, (NonEmptyList ∘ H)#λ] =
+  /**
+    * Equivalent to [[wrapChecks]] for G = NonEmptyList, with more pleasant syntax.
+    * */
+  def fromChecks[F[_]: Apply, H[_]: Foldable](first: HealthCheck[F, H], rest: HealthCheck[F, H]*)(
+    implicit M: Monoid[Health]): HealthReporter[F, (NonEmptyList ∘ H)#λ] =
     wrapChecks(NonEmptyList(first, rest.toList))
 
   /**
-    * Constructs a healthcheck from a non-empty structure of healthchecks.
-    * If any of the healthchecks fails, the status of the whole check is failed.
+    * Constructs a healthcheck from a non-empty structure G of healthchecks.
+    * The status of the whole check is determined using the results of given checks and the monoid of Health.
     *
-    * Note: Checks inside `H[_]` (which will usually be Id or a tagged alternative to Id)
-    * are combined using the all-good monoid - they'll be concatenated, and any failure also fails the check.
+    * e.g. if all checks need to return Healthy for the whole thing to be healthy, use [[Health.allHealthyMonoid]].
     */
-  def wrapChecks[F[_]: Apply, G[_]: NonEmptyTraverse, H[_]: Foldable](
-    checks: G[HealthCheck[F, H]]): HealthReporter[F, (G ∘ H)#λ] = {
+  def wrapChecks[F[_]: Apply, G[_]: NonEmptyTraverse, H[_]: Foldable](checks: G[HealthCheck[F, H]])(
+    implicit M: Monoid[Health]): HealthReporter[F, (G ∘ H)#λ] = {
     type GH[A] = G[H[A]]
 
     new HealthReporter[F, GH] {
       override val check: F[HealthResult[OneAnd[GH, ?]]] = {
         checks.nonEmptyTraverse(_.check).map { results =>
-          val status = if (results.forall(HealthResult.combineAllGood[H](_).isHealthy)) Health.Healthy else Health.Sick
+          val status =
+            if (results.reduceMap(_.value.combineAll).isHealthy) Health.Healthy else Health.Sick
 
           HealthResult[OneAnd[GH, ?]](OneAnd[GH, Health](status, results.map(_.value)))
         }

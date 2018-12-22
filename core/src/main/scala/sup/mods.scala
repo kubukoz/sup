@@ -1,5 +1,5 @@
 package sup
-import cats.Applicative
+import cats.{~>, Applicative}
 import cats.effect.{Concurrent, Timer}
 
 import scala.concurrent.duration.FiniteDuration
@@ -7,11 +7,24 @@ import cats.effect.implicits._
 import cats.implicits._
 
 object mods {
+
   /**
-    * Use with [[HealthCheck.leftMapK]].
+    * Fail the health check with [[Health.Sick]] in case the check takes longer than `duration`.
+    *
+    * Use with [[HealthCheck.transform]].
     * */
-  def timed[F[_]: Concurrent: Timer, H[_]: Applicative](
+  def timeoutToSick[F[_]: Concurrent: Timer, H[_]: Applicative](
     duration: FiniteDuration): F[HealthResult[H]] => F[HealthResult[H]] = {
     _.timeoutTo(duration, HealthResult(Health.sick.pure[H]).pure[F])
+  }
+
+  /**
+    * Fail the health check with a failure (as defined by [[Concurrent.timeout]] for F)
+    * in case the check takes longer than `duration`.
+    *
+    * Use with [[HealthCheck.leftMapK]].
+    * */
+  def timeoutToFailure[F[_]: Concurrent: Timer, H[_]](duration: FiniteDuration): F ~> F = λ[F ~> F] {
+    _.timeout(duration)
   }
 }
