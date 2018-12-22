@@ -1,9 +1,7 @@
 package sup
 
-import cats.kernel.laws.discipline.{CommutativeGroupTests, CommutativeMonoidTests, EqTests}
-import cats.laws.discipline._
+import cats.kernel.laws.discipline.{CommutativeMonoidTests, EqTests}
 import cats.tests.CatsSuite
-import sup.data.Tagged
 import org.scalacheck.ScalacheckShapeless._
 
 class HealthCatsInstancesTests extends CatsSuite {
