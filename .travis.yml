@@ -33,8 +33,6 @@ jobs:
   # stage="test" if no stage is specified
   - script:
     - sbt test:compile test
-  - script:
-    - sbt microsite/publishMicrosite
-  # run ci-release only if previous stages passed
+  # run releases
   - stage: release
-    script: sbt ci-release
+    script: sbt microsite/publishMicrosite ci-release
