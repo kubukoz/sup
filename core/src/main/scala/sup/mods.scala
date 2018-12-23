@@ -14,15 +14,14 @@ object mods {
   /**
     * Fail the health check with [[Health.Sick]] in case the check takes longer than `duration`.
     * */
-  def timeoutToSick[F[_]: Concurrent: Timer, H[_]: Applicative](duration: FiniteDuration): HealthCheckMod[F, H, F, H] =
+  def timeoutToSick[F[_]: Concurrent: Timer, H[_]: Applicative](duration: FiniteDuration): HealthCheckEndoMod[F, H] =
     timeoutToDefault(Health.Sick, duration)
 
   /**
     * Fallback to the provided value in case the check takes longer than `duration`.
     * */
-  def timeoutToDefault[F[_]: Concurrent: Timer, H[_]: Applicative](
-    default: Health,
-    duration: FiniteDuration): HealthCheckMod[F, H, F, H] =
+  def timeoutToDefault[F[_]: Concurrent: Timer, H[_]: Applicative](default: Health,
+                                                                   duration: FiniteDuration): HealthCheckEndoMod[F, H] =
     _.transform {
       _.timeoutTo(duration, HealthResult(default.pure[H]).pure[F])
     }
@@ -31,7 +30,7 @@ object mods {
     * Fail the health check with a failure (as defined by [[Concurrent.timeout]] for F)
     * in case the check takes longer than `duration`.
     * */
-  def timeoutToFailure[F[_]: Concurrent: Timer, H[_]](duration: FiniteDuration): HealthCheckMod[F, H, F, H] =
+  def timeoutToFailure[F[_]: Concurrent: Timer, H[_]](duration: FiniteDuration): HealthCheckEndoMod[F, H] =
     _.transform {
       _.timeout(duration)
     }
