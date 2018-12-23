@@ -73,15 +73,15 @@ val microsite = project
     micrositeGitterChannel := false,
     micrositePushSiteWith := GitHub4s,
     micrositeGithubToken := sys.env.get("GITHUB_TOKEN"),
-    fork in tut := true,
+    fork in makeMicrosite := true,
     scalacOptions ++= Options.all,
     scalacOptions --= Seq("-Ywarn-unused:imports"),
     libraryDependencies ++= compilerPlugins,
     skip in publish := true
   )
   .enablePlugins(MicrositesPlugin)
-  .dependsOn(core)
-  .aggregate(core)
+  .dependsOn(core, scalacache)
+  .aggregate(core, scalacache)
 
 val sup =
   project
