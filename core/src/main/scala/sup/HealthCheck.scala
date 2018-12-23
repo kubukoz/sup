@@ -1,9 +1,14 @@
 package sup
 
-import cats.{~>, Applicative, Eq, Functor, Monoid}
+import cats.data.{EitherK, Tuple2K}
+import cats.effect.Concurrent
+import cats.{~>, Applicative, ApplicativeError, Apply, Eq, Functor, Monoid}
 import cats.implicits._
+import cats.effect.implicits._
 import cats.tagless.FunctorK
 import sup.transformed.{LeftMappedHealthCheck, MappedKHealthCheck, MappedResultHealthCheck, TransformedHealthCheck}
+import cats.tagless.implicits._
+import cats.temp.par._
 
 /**
   * A health check.
@@ -38,6 +43,49 @@ object HealthCheck {
   def liftF[F[_], H[_]](_check: F[HealthResult[H]]): HealthCheck[F, H] = new HealthCheck[F, H] {
     override val check: F[HealthResult[H]] = _check
   }
+
+  /**
+    * Combines two healthchecks by running the first one and recovering with the second one in case of failure in F.
+    * */
+  def either[F[_]: ApplicativeError[?[_], E], E, H[_], I[_]](a: HealthCheck[F, H],
+                                                             b: HealthCheck[F, I]): HealthCheck[F, EitherK[H, I, ?]] =
+    liftF {
+      a.check
+        .map(ar => EitherK.left[I](ar.value))
+        .orElse(b.check.map(br => EitherK.right[H](br.value)))
+        .map(HealthResult(_))
+    }
+
+  /**
+    * Combines two healthchecks by running them both, then wrapping the result in a Tuple2K.
+    * */
+  def tupled[F[_]: Apply, H[_], I[_]](a: HealthCheck[F, H], b: HealthCheck[F, I]): HealthCheck[F, Tuple2K[H, I, ?]] =
+    liftF {
+      (a.check, b.check).mapN { (ac, bc) =>
+        HealthResult(Tuple2K(ac.value, bc.value))
+      }
+    }
+
+  /**
+    * Combines two healthchecks by running them in parallel, then wrapping the result in a Tuple2K.
+    * */
+  def parTupled[F[_]: Par, H[_], I[_]](a: HealthCheck[F, H], b: HealthCheck[F, I]): HealthCheck[F, Tuple2K[H, I, ?]] =
+    liftF {
+      (a.check, b.check).parMapN { (ac, bc) =>
+        HealthResult(Tuple2K(ac.value, bc.value))
+      }
+    }
+
+  /**
+    * Races two healthchecks against each other.
+    * The first one to complete with a result (regardless of whether healthy or sick) will cancel the other.
+    * */
+  def race[F[_]: Concurrent, H[_], I[_]](a: HealthCheck[F, H], b: HealthCheck[F, I]): HealthCheck[F, EitherK[H, I, ?]] =
+    liftF {
+      a.check.race(b.check).map { e =>
+        HealthResult(EitherK(e.bimap(_.value, _.value)))
+      }
+    }
 
   implicit def functorK[F[_]: Functor]: FunctorK[HealthCheck[F, ?[_]]] = new FunctorK[HealthCheck[F, ?[_]]] {
     override def mapK[G[_], H[_]](fgh: HealthCheck[F, G])(gh: G ~> H): HealthCheck[F, H] = fgh.mapK(gh)

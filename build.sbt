@@ -47,6 +47,7 @@ val core = module("core").settings(
   libraryDependencies ++= Seq(
     "com.github.mpilquist" %% "simulacrum"        % "0.14.0",
     "org.typelevel"        %% "cats-effect"       % "1.1.0",
+    "io.chrisdavenport"    %% "cats-par"          % "0.2.0",
     "org.typelevel"        %% "cats-tagless-core" % "0.2.0"
   )
 )
