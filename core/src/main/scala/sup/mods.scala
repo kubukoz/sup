@@ -69,7 +69,7 @@ object mods {
   /**
     * Merges an EitherK of the same container type. Useful in conjunction with HealthCheck.{`either`, `race`}.
     *
-    * Use with [[HealthCheck.mapResult]] and [[HealthResult.transform]].
+    * Use with [[HealthCheck.mapResult]] and `HealthResult.mapK`.
     * */
   def mergeEitherK[H[_]]: EitherK[H, H, ?] ~> H = λ[EitherK[H, H, ?] ~> H](_.run.merge)
 }

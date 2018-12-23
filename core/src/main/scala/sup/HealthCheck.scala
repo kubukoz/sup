@@ -74,7 +74,7 @@ object HealthCheck {
     *
     * If H and I are the same, the result's Tuple2K can be combined to a single H/I container using `mods.mergeTuple2K`.
     * */
-  def parTupled[F[_]: Par, H[_], I[_]](a: HealthCheck[F, H], b: HealthCheck[F, I]): HealthCheck[F, Tuple2K[H, I, ?]] =
+  def parTupled[F[_]: NonEmptyPar, H[_], I[_]](a: HealthCheck[F, H], b: HealthCheck[F, I]): HealthCheck[F, Tuple2K[H, I, ?]] =
     liftF {
       (a.check, b.check).parMapN { (ac, bc) =>
         HealthResult(Tuple2K(ac.value, bc.value))
