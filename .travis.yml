@@ -32,7 +32,7 @@ jobs:
   include:
   # stage="test" if no stage is specified
   - script:
-    - sbt test:compile test
+    - sbt test:compile test microsite/makeMicrosite
   # run releases
   - stage: release
     script: sbt microsite/publishMicrosite ci-release

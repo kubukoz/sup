@@ -74,6 +74,7 @@ val microsite = project
     micrositeGitterChannel := false,
     micrositePushSiteWith := GitHub4s,
     micrositeGithubToken := sys.env.get("GITHUB_TOKEN"),
+    //doesn't fork anyway though
     fork in makeMicrosite := true,
     scalacOptions ++= Options.all,
     scalacOptions --= Seq("-Ywarn-unused:imports"),
