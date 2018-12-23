@@ -21,6 +21,8 @@ abstract class HealthCheck[F[_], H[_]] {
   def leftMapK[G[_]](f: F ~> G): HealthCheck[G, H] =
     transform(f(_))
 
+  def through[G[_], I[_]](mod: HealthCheckMod[F, H, G, I]): HealthCheck[G, I] = mod(this)
+
   def transform[G[_], I[_]](f: F[HealthResult[H]] => G[HealthResult[I]]): HealthCheck[G, I] =
     HealthCheck.liftF(f(check))
 
@@ -74,7 +76,8 @@ object HealthCheck {
     *
     * If H and I are the same, the result's Tuple2K can be combined to a single H/I container using `mods.mergeTuple2K`.
     * */
-  def parTupled[F[_]: NonEmptyPar, H[_], I[_]](a: HealthCheck[F, H], b: HealthCheck[F, I]): HealthCheck[F, Tuple2K[H, I, ?]] =
+  def parTupled[F[_]: NonEmptyPar, H[_], I[_]](a: HealthCheck[F, H],
+                                               b: HealthCheck[F, I]): HealthCheck[F, Tuple2K[H, I, ?]] =
     liftF {
       (a.check, b.check).parMapN { (ac, bc) =>
         HealthResult(Tuple2K(ac.value, bc.value))

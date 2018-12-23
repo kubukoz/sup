@@ -19,7 +19,7 @@ import sup._, sup.scalacache._
 ### `cached`
 
 You can make a healthcheck cached by transforming it with the `cached` function
-(which is just a thin wrapper over `cache.cachingForMemoizeF(key)(ttl)`, so you can just use that).
+(which is a pretty thin wrapper over `cache.cachingForMemoizeF(key)(ttl)`, so you can just use that).
 
 Let's grab a bunch of imports and define our Scalacache config:
 
@@ -35,9 +35,9 @@ Now, the health check:
 
 ```tut:book
 def queueCheck(queueName: String): HealthCheck[IO, Tagged[String, ?]] =
-  HealthCheck.const[IO, Id](Health.Healthy).mapK(tagWith(queueName))
+  HealthCheck.const[IO, Id](Health.Healthy).through(tagWith(queueName))
 
-def q1 = queueCheck("foo").transform(cached("queue-foo", Some(10.seconds)))
+def q1 = queueCheck("foo").through(cached("queue-foo", Some(10.seconds)))
 ```
 
 Because a `HealthReporter` is just a special case of `HealthCheck`, the same modifier works for reporters:
@@ -45,9 +45,9 @@ Because a `HealthReporter` is just a special case of `HealthCheck`, the same mod
 ```tut:book
 def reporter: HealthReporter[IO, TaggedNel[String, ?]] =
   HealthReporter.fromChecks(
-    queueCheck("foo").transform(cached("queue-foo", Some(10.seconds))),
+    queueCheck("foo").through(cached("queue-foo", Some(10.seconds))),
     queueCheck("bar")
-  ).transform(cached("report", Some(5.seconds)))
+  ).through(cached("report", Some(5.seconds)))
 ```
 
 The above will be a `HealthReporter` that'll cache the whole system's health for 5 seconds,

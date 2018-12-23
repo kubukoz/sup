@@ -11,7 +11,8 @@ object scalacache {
     * */
   def cached[F[_], H[_]](key: String, ttl: Option[Duration])(implicit cache: Cache[HealthResult[H]],
                                                              mode: Mode[F],
-                                                             flags: Flags): Endo[F[HealthResult[H]]] = { action =>
-    cache.cachingForMemoizeF(key)(ttl)(action)
+                                                             flags: Flags): HealthCheckMod[F, H, F, H] = _.transform {
+    action =>
+      cache.cachingForMemoizeF(key)(ttl)(action)
   }
 }

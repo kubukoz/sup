@@ -145,16 +145,15 @@ A healthcheck can be tagged with a label, e.g. a `String` with the dependency's 
 ```tut:book
 import sup.mods._
 
-val kafkaTagged = kafka.mapK(mods.tagWith("kafka"))
-val postgresTagged = postgres.mapK(mods.tagWith("postgres"))
+val kafkaTagged = kafka.through(mods.tagWith("kafka"))
+val postgresTagged = postgres.through(mods.tagWith("postgres"))
 
 val taggedReporter = HealthReporter.fromChecks(kafkaTagged, postgresTagged)
 ```
 
 ## Modifiers
 
-sup provides a variety of ways to customize a healthcheck. These include `mapK`, `transform`, `mapResult` and `leftMapK`
-(the method that fits a modifier best is mentioned in each modifier's Scaladoc).
+sup provides a variety of ways to customize a healthcheck. These include `through`, `mapK`, `transform`, `mapResult` and `leftMapK`.
 Check out the predefined modifiers in the `sup.mods` object or create your own.
 
 Here are some example modifiers provided by sup:
@@ -168,7 +167,7 @@ import scala.concurrent.duration._
 
 implicit val contextShift: ContextShift[IO] = IO.contextShift(scala.concurrent.ExecutionContext.global)
 implicit val timer: Timer[IO] = IO.timer(scala.concurrent.ExecutionContext.global)
-val timedKafka = kafka.transform(mods.timeoutToSick(5.seconds))
+val timedKafka = kafka.through(mods.timeoutToSick(5.seconds))
 ```
 
 Other modifiers with timeouts include `timeoutToDefault` and `timeoutToFailure`.
@@ -178,5 +177,7 @@ Other modifiers with timeouts include `timeoutToDefault` and `timeoutToFailure`.
 Tag a healthcheck with a value (or unwrap a tagged healthcheck):
 
 ```tut:book
-val taggedKafka2 = kafka.mapK(mods.tagWith("foo"))
+val taggedKafka2 = kafka.through(mods.tagWith("foo"))
+
+val untaggedKafka = taggedKafka2.through(mods.untag)
 ```

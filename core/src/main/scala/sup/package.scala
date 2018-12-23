@@ -1,3 +1,4 @@
+import cats.Endo
 import cats.data.{NonEmptyList, OneAnd}
 import sup.data.Tagged
 
@@ -9,4 +10,6 @@ package object sup {
   val HealthReporter: data.HealthReporter.type = data.HealthReporter
 
   type TaggedNel[Tag, A] = NonEmptyList[Tagged[Tag, A]]
+
+  type HealthCheckMod[F[_], H[_], G[_], I[_]] = HealthCheck[F, H] => HealthCheck[G, I]
 }
