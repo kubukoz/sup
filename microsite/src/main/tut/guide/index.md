@@ -92,7 +92,8 @@ trait HealthCheck[F[_], H[_]] {
 `HealthCheck[F, H]` is a health-checking action with effects of type `F` that'll result in a collection `H` of `Health`.
 
 Similarly to `HealthResult`, a `HealthCheck[F, H]` has a monoid for any `F[_]: Applicative, H[_]: Applicative`.
-This is really cool, because thanks to this we can combine two similar healhchecks into one that'll check both.
+This is really cool, because thanks to this we can combine two similar healhchecks into one that'll check both
+(sequentially or in parallel, depending on the applicative of F - to enforce parallel execution use `HealthCheck.parTupled`).
 
 Let's start with some cats imports (assume they're available in the rest of the page):
 

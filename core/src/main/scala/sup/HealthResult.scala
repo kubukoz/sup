@@ -6,7 +6,9 @@ import cats.tagless.FunctorK
 import cats.{~>, Applicative, Eq, Id}
 import sup.data.Tagged
 
-final case class HealthResult[H[_]](value: H[Health]) extends AnyVal
+final case class HealthResult[H[_]](value: H[Health]) extends AnyVal {
+  def transform[I[_]](f: H[Health] => I[Health]): HealthResult[I] = HealthResult(f(value))
+}
 
 object HealthResult {
   def const[H[_]: Applicative](health: Health): HealthResult[H] = HealthResult(health.pure[H])

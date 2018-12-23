@@ -1,6 +1,7 @@
 package sup
 
-import cats.{~>, Applicative, Id}
+import cats.data.{EitherK, Tuple2K}
+import cats.{~>, Applicative, Id, Semigroup}
 import cats.effect.{Concurrent, Timer}
 
 import scala.concurrent.duration.FiniteDuration
@@ -55,4 +56,20 @@ object mods {
     * Use with [[HealthCheck.mapK]].
     * */
   def untag[Tag]: Tagged[Tag, ?] ~> Id = λ[Tagged[Tag, ?] ~> Id](_.health)
+
+  /**
+    * Combines containers in a Tuple2K using the given semigroup. Useful in conjunction with HealthCheck.{`tupled`, `parTupled`}.
+    *
+    * Use with [[HealthCheck.mapResult]] and [[HealthResult.transform]].
+    * */
+  def combineTuple2K[H[_]](tuple: Tuple2K[H, H, Health])(implicit S: Semigroup[H[Health]]): H[Health] = {
+    tuple.first |+| tuple.second
+  }
+
+  /**
+    * Merges an EitherK of the same container type. Useful in conjunction with HealthCheck.{`either`, `race`}.
+    *
+    * Use with [[HealthCheck.mapResult]] and [[HealthResult.transform]].
+    * */
+  def mergeEitherK[H[_]]: EitherK[H, H, ?] ~> H = λ[EitherK[H, H, ?] ~> H](_.run.merge)
 }
