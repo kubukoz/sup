@@ -13,3 +13,6 @@ options:
   - title: fs2-redis
     url: guide/fs2-redis.html
     menu_section: modules
+  - title: log4cats
+    url: guide/log4cats.html
+    menu_section: modules

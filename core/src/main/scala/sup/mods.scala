@@ -1,7 +1,7 @@
 package sup
 
 import cats.data.{EitherK, Tuple2K}
-import cats.{~>, Applicative, ApplicativeError, Functor, Id, Semigroup}
+import cats.{~>, Applicative, ApplicativeError, FlatMap, Functor, Id, Semigroup}
 import cats.effect.{Concurrent, Timer}
 
 import scala.concurrent.duration.FiniteDuration
@@ -73,4 +73,12 @@ object mods {
   def mergeEitherK[F[_]: Functor, H[_]]: HealthCheckMod[F, EitherK[H, H, ?], F, H] = _.mapResult {
     _.transform(_.run.merge)
   }
+
+  /**
+    * Runs the `before` action before the healthcheck, and the `after` action once it has a result.
+    * */
+  def surround[F[_]: FlatMap, H[_]](before: F[Unit])(after: HealthResult[H] => F[Unit]): HealthCheckEndoMod[F, H] =
+    _.transform {
+      before *> _.flatTap(after)
+    }
 }

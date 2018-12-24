@@ -15,6 +15,7 @@ val kindProjectorVersion       = "0.9.8"
 val refinedVersion             = "0.9.3"
 val fs2RedisVersion            = "0.7.0-SNAPSHOT"
 val h2Version                  = "1.4.197"
+val log4CatsVersion            = "0.2.0"
 
 inThisBuild(
   List(
@@ -94,7 +95,16 @@ val redis = module("redis")
   )
   .dependsOn(core)
 
-val allModules = List(core, scalacache, doobie, redis)
+val log4cats = module("log4cats")
+  .settings(
+    libraryDependencies ++= Seq(
+      "io.chrisdavenport" %% "log4cats-core"   % log4CatsVersion,
+      "io.chrisdavenport" %% "log4cats-extras" % log4CatsVersion % Test
+    )
+  )
+  .dependsOn(core)
+
+val allModules = List(core, scalacache, doobie, redis, log4cats)
 
 val microsite = project
   .settings(
@@ -114,6 +124,9 @@ val microsite = project
     scalacOptions ++= Options.all,
     scalacOptions --= Seq("-Ywarn-unused:imports"),
     libraryDependencies ++= compilerPlugins,
+    libraryDependencies ++= Seq(
+      "io.chrisdavenport" %% "log4cats-extras" % log4CatsVersion
+    ),
     skip in publish := true
   )
   .enablePlugins(MicrositesPlugin)

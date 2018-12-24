@@ -1,6 +1,6 @@
 package sup
 import cats.kernel.CommutativeMonoid
-import cats.Eq
+import cats.{Eq, Show}
 
 /**
   * The component's health status. It can only be Healthy or Sick - there's no middle ground (no Unknown state).
@@ -34,4 +34,6 @@ object Health {
     override val empty: Health                         = healthy
     override def combine(x: Health, y: Health): Health = if (x.isHealthy) y else sick
   }
+
+  implicit val show: Show[Health] = Show.fromToString
 }

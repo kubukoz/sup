@@ -181,3 +181,19 @@ val taggedKafka2 = kafka.through(mods.tagWith("foo"))
 
 val untaggedKafka = taggedKafka2.through(mods.untag)
 ```
+
+### `recoverToSick`
+
+Swallows any errors that might happen in the healthcheck's effect and falls back to `Sick`.
+
+```tut:book
+val safeKafka = kafka.through(mods.recoverToSick)
+```
+
+### `surround`
+
+Surrounds a healthcheck with effectful actions.
+
+```tut:book
+val surroundedKafka = kafka.through(mods.surround(IO(println("foo")))(result => IO(println(s"foo result: $result"))))
+```
