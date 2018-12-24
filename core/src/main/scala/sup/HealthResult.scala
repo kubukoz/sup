@@ -3,7 +3,7 @@ package sup
 import cats.implicits._
 import cats.kernel.Monoid
 import cats.tagless.FunctorK
-import cats.{~>, Applicative, Eq, Id}
+import cats.{Applicative, Eq, Id, ~>}
 import sup.data.Tagged
 
 final case class HealthResult[H[_]](value: H[Health]) extends AnyVal {
