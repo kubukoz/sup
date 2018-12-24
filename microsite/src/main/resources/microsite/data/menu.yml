@@ -7,3 +7,6 @@ options:
   - title: Scalacache
     url: guide/scalacache.html
     menu_section: modules
+  - title: Doobie
+    url: guide/doobie.html
+    menu_section: modules

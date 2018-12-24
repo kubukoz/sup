@@ -1,6 +1,19 @@
 val Scala_212 = "2.12.8"
 val Scala_211 = "2.11.11"
 
+val catsEffectVersion          = "1.1.0"
+val catsTaglessVersion         = "0.2.0"
+val catsParVersion             = "0.2.0"
+val doobieVersion              = "0.6.0"
+val catsVersion                = "1.5.0"
+val scalacheckShapelessVersion = "1.1.6"
+val scalatestVersion           = "3.0.4"
+val simulacrumVersion          = "0.14.0"
+val scalacacheVersion          = "0.27.0"
+val macroParadiseVersion       = "2.1.1"
+val kindProjectorVersion       = "0.9.8"
+val refinedVersion             = "0.9.3"
+
 inThisBuild(
   List(
     organization := "com.kubukoz",
@@ -17,8 +30,8 @@ inThisBuild(
   ))
 
 val compilerPlugins = List(
-  compilerPlugin("org.scalamacros" % "paradise" % "2.1.1").cross(CrossVersion.full),
-  compilerPlugin("org.spire-math" %% "kind-projector" % "0.9.8")
+  compilerPlugin("org.scalamacros" % "paradise" % macroParadiseVersion).cross(CrossVersion.full),
+  compilerPlugin("org.spire-math" %% "kind-projector" % kindProjectorVersion)
 )
 
 val commonSettings = Seq(
@@ -28,13 +41,13 @@ val commonSettings = Seq(
   name := "sup",
   updateOptions := updateOptions.value.withGigahorse(false), //may fix publishing bug
   libraryDependencies ++= Seq(
-    "org.typelevel"              %% "cats-tagless-laws"         % "0.2.0" % Test,
-    "org.typelevel"              %% "cats-effect-laws"          % "1.1.0" % Test,
-    "org.typelevel"              %% "cats-testkit"              % "1.5.0" % Test,
-    "org.typelevel"              %% "cats-laws"                 % "1.5.0" % Test,
-    "org.typelevel"              %% "cats-kernel-laws"          % "1.5.0" % Test,
-    "com.github.alexarchambault" %% "scalacheck-shapeless_1.13" % "1.1.6" % Test,
-    "org.scalatest"              %% "scalatest"                 % "3.0.4" % Test
+    "org.typelevel"              %% "cats-tagless-laws"         % catsTaglessVersion         % Test,
+    "org.typelevel"              %% "cats-effect-laws"          % catsEffectVersion          % Test,
+    "org.typelevel"              %% "cats-testkit"              % catsVersion                % Test,
+    "org.typelevel"              %% "cats-laws"                 % catsVersion                % Test,
+    "org.typelevel"              %% "cats-kernel-laws"          % catsVersion                % Test,
+    "com.github.alexarchambault" %% "scalacheck-shapeless_1.13" % scalacheckShapelessVersion % Test,
+    "org.scalatest"              %% "scalatest"                 % scalatestVersion           % Test
   ) ++ compilerPlugins
 )
 
@@ -45,20 +58,33 @@ def module(moduleName: String): Project =
 
 val core = module("core").settings(
   libraryDependencies ++= Seq(
-    "com.github.mpilquist" %% "simulacrum"        % "0.14.0",
-    "org.typelevel"        %% "cats-effect"       % "1.1.0",
-    "io.chrisdavenport"    %% "cats-par"          % "0.2.0",
-    "org.typelevel"        %% "cats-tagless-core" % "0.2.0"
+    "com.github.mpilquist" %% "simulacrum"        % simulacrumVersion,
+    "org.typelevel"        %% "cats-effect"       % catsEffectVersion,
+    "io.chrisdavenport"    %% "cats-par"          % catsParVersion,
+    "org.typelevel"        %% "cats-tagless-core" % catsTaglessVersion
   )
 )
 
 val scalacache = module("scalacache")
   .settings(
     libraryDependencies ++= Seq(
-      "com.github.cb372" %% "scalacache-core" % "0.27.0"
+      "com.github.cb372" %% "scalacache-core" % scalacacheVersion
     )
   )
   .dependsOn(core)
+  .aggregate(core)
+
+val doobie = module("doobie")
+  .settings(
+    libraryDependencies ++= Seq(
+      "org.tpolecat" %% "doobie-core" % doobieVersion,
+      "eu.timepit"   %% "refined"     % refinedVersion
+    )
+  )
+  .dependsOn(core)
+  .aggregate(core)
+
+val allModules = List(core, scalacache, doobie)
 
 val microsite = project
   .settings(
@@ -82,12 +108,12 @@ val microsite = project
     skip in publish := true
   )
   .enablePlugins(MicrositesPlugin)
-  .dependsOn(core, scalacache)
-  .aggregate(core, scalacache)
+  .dependsOn(allModules.map(x => x: ClasspathDep[ProjectReference]): _*)
+  .aggregate(allModules.map(x => x: ProjectReference): _*)
 
 val sup =
   project
     .in(file("."))
     .settings(commonSettings)
     .settings(skip in publish := true, crossScalaVersions := List())
-    .aggregate(core, scalacache, microsite)
+    .aggregate((microsite :: allModules).map(x => x: ProjectReference): _*)

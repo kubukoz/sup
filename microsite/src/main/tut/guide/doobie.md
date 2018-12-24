@@ -1,0 +1,34 @@
+---
+layout: docs
+title: Doobie
+---
+
+sup has a Doobie module:
+
+```
+libraryDependencies += "com.kubukoz" %% "sup-doobie" % "0.1.0"
+```
+
+Imports:
+```tut:silent
+import sup._, sup.doobie._
+```
+
+## What's included
+
+### `connectionCheck`
+
+You can build a connection check out of a doobie `Transactor`. Let's create one first:
+
+```tut:book
+import _root_.doobie._, cats.effect._
+
+def transactor: Transactor[IO] = ???
+```
+
+And now the health check:
+
+```tut
+import eu.timepit.refined.auto._
+def doobieCheck = connectionCheck(transactor)(timeoutSeconds = Some(5))
+```

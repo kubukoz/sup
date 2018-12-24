@@ -20,6 +20,11 @@ object Health {
   val healthy: Health = Healthy
   val sick: Health    = Sick
 
+  val fromBoolean: Boolean => Health = {
+    case true  => Healthy
+    case false => Sick
+  }
+
   implicit val eq: Eq[Health] = Eq.fromUniversalEquals
 
   /**

@@ -13,7 +13,7 @@ final case class HealthResult[H[_]](value: H[Health]) extends AnyVal {
 object HealthResult {
   def const[H[_]: Applicative](health: Health): HealthResult[H] = HealthResult(health.pure[H])
 
-  def one(head: Health): HealthResult[Id]                               = HealthResult[Id](head)
+  val one: Health => HealthResult[Id]                                   = HealthResult[Id]
   def tagged[Tag](tag: Tag, head: Health): HealthResult[Tagged[Tag, ?]] = HealthResult(Tagged(tag, head))
 
   implicit val functorK: FunctorK[HealthResult] = new FunctorK[HealthResult] {
