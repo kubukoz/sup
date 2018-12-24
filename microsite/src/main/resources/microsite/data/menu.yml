@@ -10,3 +10,6 @@ options:
   - title: Doobie
     url: guide/doobie.html
     menu_section: modules
+  - title: fs2-redis
+    url: guide/fs2-redis.html
+    menu_section: modules

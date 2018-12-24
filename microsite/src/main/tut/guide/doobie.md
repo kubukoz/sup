@@ -28,7 +28,7 @@ def transactor: Transactor[IO] = ???
 
 And now the health check:
 
-```tut
+```tut:book
 import eu.timepit.refined.auto._
 def doobieCheck = connectionCheck(transactor)(timeoutSeconds = Some(5))
 ```

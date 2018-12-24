@@ -13,6 +13,7 @@ val scalacacheVersion          = "0.27.0"
 val macroParadiseVersion       = "2.1.1"
 val kindProjectorVersion       = "0.9.8"
 val refinedVersion             = "0.9.3"
+val fs2RedisVersion            = "0.7.0-SNAPSHOT"
 
 inThisBuild(
   List(
@@ -35,7 +36,7 @@ val compilerPlugins = List(
 )
 
 val commonSettings = Seq(
-  scalaVersion := Scala_211,
+  scalaVersion := Scala_212,
   scalacOptions ++= Options.all,
   fork in Test := true,
   name := "sup",
@@ -84,11 +85,20 @@ val doobie = module("doobie")
   .dependsOn(core)
   .aggregate(core)
 
-val allModules = List(core, scalacache, doobie)
+val redis = module("redis")
+  .settings(
+    crossScalaVersions := List(Scala_212),
+    libraryDependencies ++= Seq(
+      "com.github.gvolpe" %% "fs2-redis-effects" % fs2RedisVersion
+    )
+  )
+  .dependsOn(core)
+  .aggregate(core)
+
+val allModules = List(core, scalacache, doobie, redis)
 
 val microsite = project
   .settings(
-    scalaVersion := Scala_211,
     crossScalaVersions := List(),
     micrositeName := "sup",
     micrositeDescription := "Functional healthchecks in Scala",
