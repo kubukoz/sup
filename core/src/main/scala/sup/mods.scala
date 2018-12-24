@@ -1,7 +1,7 @@
 package sup
 
 import cats.data.{EitherK, Tuple2K}
-import cats.{~>, Applicative, Functor, Id, Semigroup}
+import cats.{~>, Applicative, ApplicativeError, Functor, Id, Semigroup}
 import cats.effect.{Concurrent, Timer}
 
 import scala.concurrent.duration.FiniteDuration
@@ -33,6 +33,14 @@ object mods {
   def timeoutToFailure[F[_]: Concurrent: Timer, H[_]](duration: FiniteDuration): HealthCheckEndoMod[F, H] =
     _.transform {
       _.timeout(duration)
+    }
+
+  /**
+    * Recover any errors that might happen in F (to a Sick result)
+    * */
+  def recoverToSick[F[_], H[_]: Applicative, E](implicit F: ApplicativeError[F, E]): HealthCheckEndoMod[F, H] =
+    _.transform {
+      _.orElse(HealthResult.const[H](Health.Sick).pure[F])
     }
 
   /**

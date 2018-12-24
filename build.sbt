@@ -14,6 +14,7 @@ val macroParadiseVersion       = "2.1.1"
 val kindProjectorVersion       = "0.9.8"
 val refinedVersion             = "0.9.3"
 val fs2RedisVersion            = "0.7.0-SNAPSHOT"
+val h2Version                  = "1.4.197"
 
 inThisBuild(
   List(
@@ -73,17 +74,16 @@ val scalacache = module("scalacache")
     )
   )
   .dependsOn(core)
-  .aggregate(core)
 
 val doobie = module("doobie")
   .settings(
     libraryDependencies ++= Seq(
-      "org.tpolecat" %% "doobie-core" % doobieVersion,
-      "eu.timepit"   %% "refined"     % refinedVersion
+      "org.tpolecat"   %% "doobie-core" % doobieVersion,
+      "eu.timepit"     %% "refined"     % refinedVersion,
+      "com.h2database" % "h2"           % h2Version % Test
     )
   )
-  .dependsOn(core)
-  .aggregate(core)
+  .dependsOn(core % "compile->compile;test->test")
 
 val redis = module("redis")
   .settings(
@@ -93,7 +93,6 @@ val redis = module("redis")
     )
   )
   .dependsOn(core)
-  .aggregate(core)
 
 val allModules = List(core, scalacache, doobie, redis)
 
@@ -119,7 +118,6 @@ val microsite = project
   )
   .enablePlugins(MicrositesPlugin)
   .dependsOn(allModules.map(x => x: ClasspathDep[ProjectReference]): _*)
-  .aggregate(allModules.map(x => x: ProjectReference): _*)
 
 val sup =
   project
