@@ -16,6 +16,8 @@ val refinedVersion             = "0.9.3"
 val fs2RedisVersion            = "0.7.0-SNAPSHOT"
 val h2Version                  = "1.4.197"
 val log4CatsVersion            = "0.2.0"
+val http4sVersion              = "0.20.0-M4"
+val circeVersion               = "0.11.0"
 
 inThisBuild(
   List(
@@ -107,8 +109,8 @@ val log4cats = module("log4cats")
 val http4s = module("http4s")
   .settings(
     libraryDependencies ++= Seq(
-      "org.http4s" %% "http4s-core" % "0.20.0-M4",
-      "org.http4s" %% "http4s-dsl" % "0.20.0-M4"
+      "org.http4s" %% "http4s-core" % http4sVersion,
+      "org.http4s" %% "http4s-dsl"  % http4sVersion
     )
   )
   .dependsOn(core)
@@ -116,12 +118,12 @@ val http4s = module("http4s")
 val circe = module("circe")
   .settings(
     libraryDependencies ++= Seq(
-      "io.circe" %% "circe-generic" % "0.11.0"
+      "io.circe" %% "circe-generic" % circeVersion
     )
   )
   .dependsOn(core)
 
-val allModules = List(core, scalacache, doobie, redis, http4s, circe)
+val allModules = List(core, scalacache, doobie, redis, log4cats, http4s, circe)
 
 val microsite = project
   .settings(
@@ -142,7 +144,8 @@ val microsite = project
     scalacOptions --= Seq("-Ywarn-unused:imports"),
     libraryDependencies ++= compilerPlugins,
     libraryDependencies ++= Seq(
-      "io.chrisdavenport" %% "log4cats-extras" % log4CatsVersion
+      "io.chrisdavenport" %% "log4cats-extras" % log4CatsVersion,
+      "org.http4s"        %% "http4s-circe"    % http4sVersion
     ),
     skip in publish := true
   )

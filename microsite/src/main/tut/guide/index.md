@@ -6,7 +6,7 @@ title: Usage guide
 # Usage guide
 
 * [Installation](#installation)
-* [Main concepts](#main-concepts)
+* [Core concepts](#core-concepts)
   + [Health](#health)
   + [HealthResult](#healthresult)
   + [HealthCheck](#healthcheck)
@@ -34,7 +34,7 @@ Imports:
 import sup._
 ```
 
-## Main concepts
+## Core concepts
 
 - [Health](#health)
 - [HealthResult](#healthresult)
