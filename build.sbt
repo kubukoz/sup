@@ -115,6 +115,14 @@ val http4s = module("http4s")
   )
   .dependsOn(core)
 
+val http4sClient = module("http4s-client")
+  .settings(
+    libraryDependencies ++= Seq(
+      "org.http4s" %% "http4s-client" % http4sVersion
+    )
+  )
+  .dependsOn(core)
+
 val circe = module("circe")
   .settings(
     libraryDependencies ++= Seq(
@@ -123,7 +131,7 @@ val circe = module("circe")
   )
   .dependsOn(core)
 
-val allModules = List(core, scalacache, doobie, redis, log4cats, http4s, circe)
+val allModules = List(core, scalacache, doobie, redis, log4cats, http4s, http4sClient, circe)
 
 val microsite = project
   .settings(

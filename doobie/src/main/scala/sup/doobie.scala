@@ -18,8 +18,8 @@ object doobie {
     //zero means infinite in JDBC
     val actualTimeoutSeconds = timeoutSeconds.fold(0)(_.value)
 
-    HealthCheck.liftF {
-      FC.isValid(actualTimeoutSeconds).map(HealthResult.one compose Health.fromBoolean).transact(xa)
+    HealthCheck.liftFBoolean {
+      FC.isValid(actualTimeoutSeconds).transact(xa)
     }
   }
 }
