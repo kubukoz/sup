@@ -168,6 +168,7 @@ val microsite = project
     ),
     skip in publish := true,
     buildInfoPackage := "sup.buildinfo",
+    micrositeAnalyticsToken := "UA-55943015-9",
     buildInfoKeys := Seq[BuildInfoKey](version)
   )
   .enablePlugins(MicrositesPlugin)
