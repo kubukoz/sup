@@ -38,11 +38,11 @@ val healthcheck: HealthCheck[IO, Id] = statusCodeHealthCheck(Request[IO]())
 val routes = healthCheckRoutes(healthcheck)
 
 //also works with reports!
-implicit val reportEntityEncoder: EntityEncoder[IO, HealthResult[Report[NonEmptyList, ?]]] = jsonEncoderOf
+implicit val reportEntityEncoder: EntityEncoder[IO, HealthResult[Report[TaggedNel[String, ?], ?]]] = jsonEncoderOf
 
 val report = HealthReporter.fromChecks(
-  healthcheck,
-  HealthCheck.const[IO, Id](Health.Sick)
+  healthcheck.through(mods.tagWith("foo")),
+  HealthCheck.const[IO, Id](Health.Healthy).through(mods.tagWith("bar"))
 )
 
 val reportRoutes = healthCheckRoutes(report)
