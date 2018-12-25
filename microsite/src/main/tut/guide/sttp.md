@@ -25,5 +25,6 @@ import com.softwaremill.sttp.{sttp => request, _}, cats.implicits._, cats.effect
 
 implicit def backend: SttpBackend[IO, Any] = ???
  
-def check: HealthCheck[IO, Id] = statusCodeHealthCheck[IO, String](request.get(uri"https://google.com"))
+def check: HealthCheck[IO, Id] =
+  statusCodeHealthCheck[IO, String](request.get(uri"https://google.com"))
 ```

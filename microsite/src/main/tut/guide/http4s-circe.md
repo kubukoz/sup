@@ -36,7 +36,7 @@ implicit val client: Client[IO] = Client.fromHttpApp(HttpApp.notFound[IO])
  
 implicit val encoder: EntityEncoder[IO, HealthResult[Id]] = jsonEncoderOf
 
-val healthcheck: HealthCheck[IO, Id] = sup.http4sclient.statusCodeHealthCheck(Request[IO]())
+val healthcheck: HealthCheck[IO, Id] = statusCodeHealthCheck(Request[IO]())
 
 val routes = healthCheckRoutes(healthcheck)
 ```
@@ -48,5 +48,5 @@ There's a way to build a healthcheck out of a request to a remote one:
 ```tut:book
 implicit val decoder: EntityDecoder[IO, HealthResult[Id]] = jsonOf
 
-val remoteCheck = sup.http4sclient.remoteHealthCheck(Request[IO]())
+val remoteCheck = remoteHealthCheck(Request[IO]())
 ```
