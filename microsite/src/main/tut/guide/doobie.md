@@ -5,8 +5,8 @@ title: Doobie
 
 sup has a Doobie module:
 
-```
-libraryDependencies += "com.kubukoz" %% "sup-doobie" % "0.1.0"
+```tut:passthrough
+sup.microsite.sbtDependencies("doobie")
 ```
 
 Imports:

@@ -5,8 +5,8 @@ title: log4cats
 
 sup has a log4cats module:
 
-```
-libraryDependencies += "com.kubukoz" %% "sup-log4cats" % "0.1.0"
+```tut:passthrough
+sup.microsite.sbtDependencies("log4cats")
 ```
 
 Imports:

@@ -166,10 +166,13 @@ val microsite = project
       "io.chrisdavenport" %% "log4cats-extras" % log4CatsVersion,
       "org.http4s"        %% "http4s-circe"    % http4sVersion
     ),
-    skip in publish := true
+    skip in publish := true,
+    buildInfoPackage := "sup.buildinfo",
+    buildInfoKeys := Seq[BuildInfoKey](version)
   )
   .enablePlugins(MicrositesPlugin)
   .dependsOn(allModules.map(x => x: ClasspathDep[ProjectReference]): _*)
+  .enablePlugins(BuildInfoPlugin)
 
 val sup =
   project

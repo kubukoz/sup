@@ -5,8 +5,8 @@ title: sttp
 
 sup has a module for sttp:
 
-```
-libraryDependencies += "com.kubukoz" %% "sup-sttp" % "0.1.0"
+```tut:passthrough
+sup.microsite.sbtDependencies("sttp")
 ```
 
 Imports:

@@ -5,8 +5,8 @@ title: Scalacache
 
 sup has a Scalacache module:
 
-```
-libraryDependencies += "com.kubukoz" %% "sup-scalacache" % "0.1.0"
+```tut:passthrough
+sup.microsite.sbtDependencies("scalacache")
 ```
 
 Imports:

@@ -11,14 +11,14 @@ layout: home
 
 For sbt:
 
-```
-libraryDependencies += "com.kubukoz" %% "sup-core" % "0.1.0"
+```tut:passthrough
+sup.microsite.sbtDependencies("core")
 ```
 
 For ammonite:
 
-```
-import $ivy.`com.kubukoz::sup-core:0.1.0`
+```tut:passthrough
+sup.microsite.ammDependency("core")
 ```
 
 Imports:

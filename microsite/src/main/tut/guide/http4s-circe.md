@@ -5,12 +5,8 @@ title: http4s-circe
 
 sup has modules for http4s, http4s-client and circe:
 
-```
-libraryDependencies ++= Seq(
-  "com.kubukoz" %% "sup-http4s" % "0.1.0",
-  "com.kubukoz" %% "sup-http4s-client" % "0.1.0",
-  "com.kubukoz" %% "sup-circe" % "0.1.0"
-)
+```tut:passthrough
+sup.microsite.sbtDependencies("http4s", "http4s-client", "circe")
 ```
 
 Imports:

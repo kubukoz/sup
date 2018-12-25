@@ -5,8 +5,8 @@ title: fs2-redis
 
 sup has an fs2-redis module:
 
-```
-libraryDependencies += "com.kubukoz" %% "sup-redis" % "0.1.0"
+```tut:passthrough
+sup.microsite.sbtDependencies("redis")
 ```
 
 Imports:
