@@ -18,6 +18,7 @@ val h2Version                  = "1.4.197"
 val log4CatsVersion            = "0.2.0"
 val http4sVersion              = "0.20.0-M4"
 val circeVersion               = "0.11.0"
+val sttpVersion                = "1.5.2"
 
 inThisBuild(
   List(
@@ -131,7 +132,15 @@ val circe = module("circe")
   )
   .dependsOn(core)
 
-val allModules = List(core, scalacache, doobie, redis, log4cats, http4s, http4sClient, circe)
+val sttp = module("sttp")
+  .settings(
+    libraryDependencies ++= Seq(
+      "com.softwaremill.sttp" %% "core" % sttpVersion
+    )
+  )
+  .dependsOn(core)
+
+val allModules = List(core, scalacache, doobie, redis, log4cats, http4s, http4sClient, circe, sttp)
 
 val microsite = project
   .settings(

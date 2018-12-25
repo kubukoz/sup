@@ -8,9 +8,9 @@ import cats.implicits._
 object http4sclient {
 
   /**
-    * Checks if a request made with a client has a successful status.
+    * Checks if a request made with a client has a successful status (1xx-3xx).
     * */
-  def healthCheck[F[_]: Functor](call: Request[F])(implicit client: Client[F]): HealthCheck[F, Id] =
+  def statusCodeHealthCheck[F[_]: Functor](call: Request[F])(implicit client: Client[F]): HealthCheck[F, Id] =
     HealthCheck.liftFBoolean(client.status(call).map(_.isSuccess))
 
   /**
