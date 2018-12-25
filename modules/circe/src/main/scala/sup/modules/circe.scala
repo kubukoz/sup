@@ -6,8 +6,9 @@ import sup.data.{Report, Tagged}
 import sup.{Health, HealthResult}
 
 object circe {
-  implicit val healthCirceEncoder: Encoder[Health] = deriveEncoder
-  implicit val healthCirceDecoder: Decoder[Health] = deriveDecoder
+  implicit val healthCirceEncoder: Encoder[Health] = Encoder[String].contramap(_.toString)
+  implicit val healthCirceDecoder: Decoder[Health] =
+    Decoder[String].emap(s => Health.fromString(s).toRight(s"$s is not a valid ${Health.getClass.getName}"))
 
   implicit def taggedCirceEncoder[Tag: Encoder, H: Encoder]: Encoder[Tagged[Tag, H]] = deriveEncoder
   implicit def taggedCirceDecoder[Tag: Decoder, H: Decoder]: Decoder[Tagged[Tag, H]] = deriveDecoder

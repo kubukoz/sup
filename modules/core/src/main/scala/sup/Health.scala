@@ -1,6 +1,8 @@
 package sup
+
 import cats.kernel.CommutativeMonoid
 import cats.{Eq, Show}
+import cats.implicits._
 
 /**
   * The component's health status. It can only be Healthy or Sick - there's no middle ground (no Unknown state).
@@ -23,6 +25,12 @@ object Health {
   val fromBoolean: Boolean => Health = {
     case true  => Healthy
     case false => Sick
+  }
+
+  val fromString: String => Option[Health] = {
+    case "Healthy" => Healthy.some
+    case "Sick"    => Sick.some
+    case _         => None
   }
 
   implicit val eq: Eq[Health] = Eq.fromUniversalEquals
