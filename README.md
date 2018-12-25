@@ -15,4 +15,4 @@
 "com.kubukoz" %% "sup-core" % supVersion
 ```
 
-Check out [the microsite](https://sup.kubukoz.com) and [the usage guide](guide). 
+Check out [the microsite](https://sup.kubukoz.com) and [the usage guide](https://sup.kubukoz.com/guide). 
