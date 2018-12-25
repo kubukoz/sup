@@ -12,7 +12,7 @@ sup.microsite.sbtDependencies("http4s", "http4s-client", "circe")
 Imports:
 ```tut:silent
 import sup._
-import sup.modules.http4s._, sup.modules.http4sclient._, sup.modules.circe._
+import sup.modules.http4s._, sup.modules.http4sclient._, sup.modules.circe.implicits._
 ```
 
 ## What's included

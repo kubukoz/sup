@@ -19,7 +19,5 @@ object http4sclient {
     * */
   def remoteHealthCheck[F[_], H[_]](call: Request[F])(implicit client: Client[F],
                                                       decoder: EntityDecoder[F, HealthResult[H]]): HealthCheck[F, H] =
-    HealthCheck.liftF {
-      client.expect[HealthResult[H]](call)
-    }
+    HealthCheck.liftF(client.expect[HealthResult[H]](call))
 }
