@@ -26,7 +26,8 @@ The circe module provides circe `Encoder`/`Decoder` instances for all the import
 so you can use them together with `http4s-circe` and bundle the whole thing up:
 
 ```tut:book
-import org.http4s.circe._, org.http4s._, org.http4s.client._, cats.effect._, cats._, cats.data._, sup.data._
+import org.http4s.circe._, org.http4s._, org.http4s.implicits._, org.http4s.client._
+import cats.effect._, cats._, cats.data._, sup.data._
 
 implicit val client: Client[IO] = Client.fromHttpApp(HttpApp.notFound[IO])
  
@@ -37,7 +38,6 @@ val healthcheck: HealthCheck[IO, Id] = statusCodeHealthCheck(Request[IO]())
 val routes = healthCheckRoutes(healthcheck)
 
 //also works with reports!
-
 implicit val reportEntityEncoder: EntityEncoder[IO, HealthResult[Report[NonEmptyList, ?]]] = jsonEncoderOf
 
 val report = HealthReporter.fromChecks(
@@ -46,6 +46,8 @@ val report = HealthReporter.fromChecks(
 )
 
 val reportRoutes = healthCheckRoutes(report)
+
+reportRoutes.orNotFound.run(Request(uri = Uri.uri("/health-check"))).flatMap(_.as[String]).unsafeRunSync()
 ```
 
 ### `remoteHealthCheck`
