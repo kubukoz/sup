@@ -1,4 +1,3 @@
-import cats.Endo
 import cats.data.{NonEmptyList, OneAnd}
 import sup.data.Tagged
 

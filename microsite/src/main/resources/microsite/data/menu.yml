@@ -16,3 +16,6 @@ options:
   - title: log4cats
     url: guide/log4cats.html
     menu_section: modules
+  - title: http4s / circe
+    url: guide/http4s-circe.html
+    menu_section: modules

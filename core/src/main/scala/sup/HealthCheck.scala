@@ -2,7 +2,7 @@ package sup
 
 import cats.data.{EitherK, Tuple2K}
 import cats.effect.Concurrent
-import cats.{~>, Applicative, ApplicativeError, Apply, Eq, Functor, Monoid}
+import cats.{~>, Applicative, ApplicativeError, Apply, Eq, Functor, Id, Monoid}
 import cats.implicits._
 import cats.effect.implicits._
 import cats.tagless.FunctorK
@@ -44,6 +44,12 @@ object HealthCheck {
   def liftF[F[_], H[_]](_check: F[HealthResult[H]]): HealthCheck[F, H] = new HealthCheck[F, H] {
     override val check: F[HealthResult[H]] = _check
   }
+
+  /**
+    * Lifts a Boolean-returning action to a healthcheck that yields Sick if the action returns false.
+    * */
+  def liftFBoolean[F[_]: Functor](fb: F[Boolean]): HealthCheck[F, Id] =
+    liftF(fb.map(Health.fromBoolean andThen HealthResult.one))
 
   /**
     * Combines two healthchecks by running the first one and recovering with the second one in case of failure in F.
