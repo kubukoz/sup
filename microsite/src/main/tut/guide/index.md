@@ -75,10 +75,10 @@ Other examples of a suitable type include:
 - `cats.Id`: there's only one result.
 - `sup.Tagged[String, ?]`: there's only one result, tagged with a String (e.g. the dependency's name)
 - `cats.data.NonEmptyList`: there are multiple checks
-- `sup.data.Report[cats.data.NonEmptyList, ?]`: there's one check, and a `NonEmptyList` of checks
-- `sup.data.Report[sup.TaggedNel[String, ?], ?]`: there's one check, and a `NonEmptyList` of checks tagged with a `String`.
+- `sup.data.Report[cats.Id, cats.data.NonEmptyList, ?]`: there's one check, and a `NonEmptyList` of checks
+- `sup.data.Report[sup.Tagged[String, ?], NonEmptyList, ?]`: there's one check, and a `NonEmptyList` of checks tagged with a `String`.
 
-(`sup.data.Report` is equivalent to `cats.data.OneAnd`)
+(`sup.data.Report[F, G, ?]` is equivalent to `cats.data.OneAnd[Nested[F, G, ?], ?]`)
 
 `HealthResult[H]` has a `Monoid` for any `H[_]: Applicative`, although most of its usages will be transparent to the user.
 
@@ -128,7 +128,7 @@ A healthcheck wrapping multiple healthchecks is called a `HealthReporter`. Here'
 ```scala
 import sup.data.Report
 
-type HealthReporter[F[_], G[_]] = HealthCheck[F, Report[G, ?]]
+type HealthReporter[F[_], G[_], H[_]] = HealthCheck[F, Report[G, H, ?]]
 ```
 
 You can construct one from a sequence of healthchecks using the `HealthReporter.fromChecks` function:
@@ -137,7 +137,7 @@ You can construct one from a sequence of healthchecks using the `HealthReporter.
 val kafka: HealthCheck[IO, Id] = HealthCheck.const(Health.Healthy)
 val postgres: HealthCheck[IO, Id] = HealthCheck.const(Health.Healthy)
 
-val reporter: HealthReporter[IO, NonEmptyList] = HealthReporter.fromChecks(kafka, postgres)
+val reporter: HealthReporter[IO, NonEmptyList, Id] = HealthReporter.fromChecks(kafka, postgres)
 ```
 
 ### Tagging  

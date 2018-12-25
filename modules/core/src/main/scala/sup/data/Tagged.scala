@@ -1,8 +1,7 @@
 package sup.data
 
-import cats.{~>, Eq, Eval, Foldable, Id, Reducible}
 import cats.instances.tuple._
-import sup.mods
+import cats.{Eq, Eval, Id, Reducible, ~>}
 
 final case class Tagged[Tag, H](tag: Tag, health: H)
 
@@ -13,7 +12,7 @@ object Tagged {
     * The only place where it should be passed to is [[sup.HealthReporter.fromChecks]],
     * for determining the status of the wrapping check. In other cases, it's probably useless, as it discards the tag completely.
     * */
-  implicit def taggedFoldable[Tag]: Reducible[Tagged[Tag, ?]] = Reducibles.by(λ[Tagged[Tag, ?] ~> Id](_.health))
+  implicit def taggedReducible[Tag]: Reducible[Tagged[Tag, ?]] = Reducibles.by(λ[Tagged[Tag, ?] ~> Id](_.health))
 
   implicit def eqTagged[Tag: Eq, H: Eq]: Eq[Tagged[Tag, H]] = Eq.by(tagged => (tagged.tag, tagged.health))
 

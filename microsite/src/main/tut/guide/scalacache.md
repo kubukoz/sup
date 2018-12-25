@@ -24,7 +24,7 @@ You can make a healthcheck cached by transforming it with the `cached` function
 Let's grab a bunch of imports and define our Scalacache config:
 
 ```tut:book
-import cats._, cats.effect._, scala.concurrent.duration._, scalacache._, sup.mods._, sup.data._
+import cats._, cats.effect._, cats.data._, scala.concurrent.duration._, scalacache._, sup.mods._, sup.data._
 
 //you'll probably want to implement these
 implicit def cache[H[_]]: Cache[HealthResult[H]] = ???
@@ -43,7 +43,7 @@ def q1 = queueCheck("foo").through(cached("queue-foo", Some(10.seconds)))
 Because a `HealthReporter` is just a special case of `HealthCheck`, the same modifier works for reporters:
 
 ```tut:book
-def reporter: HealthReporter[IO, TaggedNel[String, ?]] =
+def reporter: HealthReporter[IO, NonEmptyList, Tagged[String, ?]] =
   HealthReporter.fromChecks(
     queueCheck("foo").through(cached("queue-foo", Some(10.seconds))),
     queueCheck("bar")

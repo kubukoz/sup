@@ -13,10 +13,10 @@ object circe {
   implicit def taggedCirceEncoder[Tag: Encoder, H: Encoder]: Encoder[Tagged[Tag, H]] = deriveEncoder
   implicit def taggedCirceDecoder[Tag: Decoder, H: Decoder]: Decoder[Tagged[Tag, H]] = deriveDecoder
 
-  implicit def reportCirceEncoder[H[_], A: Encoder](implicit H: Encoder[H[A]]): Encoder[Report[H, A]] =
+  implicit def reportCirceEncoder[G[_], H[_], A: Encoder](implicit H: Encoder[G[H[A]]]): Encoder[Report[G, H, A]] =
     deriveEncoder
 
-  implicit def reportCirceDecoder[H[_], A: Decoder](implicit H: Decoder[H[A]]): Decoder[Report[H, A]] =
+  implicit def reportCirceDecoder[G[_], H[_], A: Decoder](implicit H: Decoder[G[H[A]]]): Decoder[Report[G, H, A]] =
     deriveDecoder
 
   implicit def healthResultCirceEncoder[H[_]](implicit E: Encoder[H[Health]]): Encoder[HealthResult[H]] =
