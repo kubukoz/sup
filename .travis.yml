@@ -36,7 +36,8 @@ jobs:
   - script:
     - sbt test:compile test microsite/makeMicrosite
   # run releases
-  - stage: release
-    script: sbt ci-release
   - stage: releaseMicrosite
     script: sbt microsite/publishMicrosite
+  # this may fail because of some misconfiguration, but artifacts will end up in staging and can be promoted manually
+  - stage: release
+    script: sbt ci-release
