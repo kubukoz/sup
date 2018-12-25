@@ -11,7 +11,7 @@ libraryDependencies += "com.kubukoz" %% "sup-redis" % "0.1.0"
 
 Imports:
 ```tut:silent
-import sup._, sup.redis._
+import sup._, sup.modules.redis._
 ```
 
 ## What's included

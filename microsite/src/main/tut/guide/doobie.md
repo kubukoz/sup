@@ -11,7 +11,7 @@ libraryDependencies += "com.kubukoz" %% "sup-doobie" % "0.1.0"
 
 Imports:
 ```tut:silent
-import sup._, sup.doobie._
+import sup._, sup.modules.doobie._
 ```
 
 ## What's included
@@ -21,7 +21,7 @@ import sup._, sup.doobie._
 You can build a connection check out of a doobie `Transactor`. Let's create one first:
 
 ```tut:book
-import _root_.doobie._, cats.effect._
+import doobie._, cats.effect._
 
 def transactor: Transactor[IO] = ???
 ```

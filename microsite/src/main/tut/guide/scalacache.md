@@ -11,7 +11,7 @@ libraryDependencies += "com.kubukoz" %% "sup-scalacache" % "0.1.0"
 
 Imports:
 ```tut:silent
-import sup._, sup.scalacache._
+import sup._, sup.modules.scalacache._
 ```
 
 ## What's included
@@ -24,7 +24,7 @@ You can make a healthcheck cached by transforming it with the `cached` function
 Let's grab a bunch of imports and define our Scalacache config:
 
 ```tut:book
-import cats._, cats.effect._, scala.concurrent.duration._, _root_.scalacache._, sup.mods._, sup.data._
+import cats._, cats.effect._, scala.concurrent.duration._, scalacache._, sup.mods._, sup.data._
 
 //you'll probably want to implement these
 implicit def cache[H[_]]: Cache[HealthResult[H]] = ???

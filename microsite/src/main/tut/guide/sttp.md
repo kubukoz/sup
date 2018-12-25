@@ -11,7 +11,7 @@ libraryDependencies += "com.kubukoz" %% "sup-sttp" % "0.1.0"
 
 Imports:
 ```tut:silent
-import sup._, sup.sttp._
+import sup._, sup.modules.sttp._
 ```
 
 ## What's included

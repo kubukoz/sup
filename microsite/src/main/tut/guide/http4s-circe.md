@@ -15,7 +15,8 @@ libraryDependencies ++= Seq(
 
 Imports:
 ```tut:silent
-import sup._, sup.http4s._, sup.http4sclient._, sup.circe._
+import sup._
+import sup.modules.http4s._, sup.modules.http4sclient._, sup.modules.circe._
 ```
 
 ## What's included

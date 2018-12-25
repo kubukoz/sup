@@ -11,7 +11,7 @@ libraryDependencies += "com.kubukoz" %% "sup-log4cats" % "0.1.0"
 
 Imports:
 ```tut:silent
-import sup._, sup.log4cats._
+import sup._, sup.modules.log4cats._
 ```
 
 ## What's included
