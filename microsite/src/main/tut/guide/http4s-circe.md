@@ -12,7 +12,7 @@ sup.microsite.sbtDependencies("http4s", "http4s-client", "circe")
 Imports:
 ```tut:silent
 import sup._
-import sup.modules.http4s._, sup.modules.http4sclient._, sup.modules.circe.implicits._
+import sup.modules.http4s._, sup.modules.http4sclient._, sup.modules.circe._
 ```
 
 ## What's included
@@ -26,7 +26,7 @@ The circe module provides circe `Encoder`/`Decoder` instances for all the import
 so you can use them together with `http4s-circe` and bundle the whole thing up:
 
 ```tut:book
-import org.http4s.circe._, org.http4s._, org.http4s.client._, cats.effect._, cats._
+import org.http4s.circe._, org.http4s._, org.http4s.client._, cats.effect._, cats._, cats.data._, sup.data._
 
 implicit val client: Client[IO] = Client.fromHttpApp(HttpApp.notFound[IO])
  
@@ -35,6 +35,17 @@ implicit val encoder: EntityEncoder[IO, HealthResult[Id]] = jsonEncoderOf
 val healthcheck: HealthCheck[IO, Id] = statusCodeHealthCheck(Request[IO]())
 
 val routes = healthCheckRoutes(healthcheck)
+
+//also works with reports!
+
+implicit val reportEntityEncoder: EntityEncoder[IO, HealthResult[Report[NonEmptyList, ?]]] = jsonEncoderOf
+
+val report = HealthReporter.fromChecks(
+  healthcheck,
+  HealthCheck.const[IO, Id](Health.Sick)
+)
+
+val reportRoutes = healthCheckRoutes(report)
 ```
 
 ### `remoteHealthCheck`

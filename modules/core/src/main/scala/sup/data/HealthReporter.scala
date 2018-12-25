@@ -1,9 +1,9 @@
 package sup.data
 
-import cats.data.{NonEmptyList, OneAnd}
+import cats.data.NonEmptyList
 import cats.implicits._
 import cats.kernel.Semigroup
-import cats.{Apply, Foldable, NonEmptyTraverse, Reducible}
+import cats.{Apply, NonEmptyTraverse, Reducible}
 import sup._
 
 object HealthReporter {
@@ -26,11 +26,11 @@ object HealthReporter {
     type GH[A] = G[H[A]]
 
     new HealthReporter[F, GH] {
-      override val check: F[HealthResult[OneAnd[GH, ?]]] = {
+      override val check: F[HealthResult[Report[GH, ?]]] = {
         checks.nonEmptyTraverse(_.check).map { results =>
           val status = results.reduceMap(_.value.reduce)
 
-          HealthResult(OneAnd[GH, Health](status, results.map(_.value)))
+          HealthResult(Report[GH, Health](status, results.map(_.value)))
         }
       }
     }
