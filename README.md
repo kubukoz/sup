@@ -57,5 +57,5 @@ It's a design decision not to include any sort of metrics, response times, versi
 in sup - they are simply beyond the scope of health checks.
 Although some of these can be implemented by users and used with sup, they're not officially supported.
 
-Another design decision is that health checks are binary - a service is either healthy or not,
+Another design decision is that health is binary - a service is either healthy or not,
 and there's no "unknown" state.
