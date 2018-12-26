@@ -22,16 +22,12 @@ object HealthReporter {
     * e.g. if all checks need to return Healthy for the whole thing to be healthy, use [[Health.allHealthyCommutativeMonoid]].
     */
   def wrapChecks[F[_]: Apply, G[_]: NonEmptyTraverse, H[_]: Reducible](checks: G[HealthCheck[F, H]])(
-    implicit M: Semigroup[Health]): HealthReporter[F, G, H] = {
+    implicit M: Semigroup[Health]): HealthReporter[F, G, H] = HealthCheck.liftF {
 
-    new HealthReporter[F, G, H] {
-      override val check: F[HealthResult[Report[G, H, ?]]] = {
-        checks.nonEmptyTraverse(_.check).map { results =>
-          val status = results.reduceMap(_.value.reduce)
+    checks.nonEmptyTraverse(_.check).map { results =>
+      val status = results.reduceMap(_.value.reduce)
 
-          HealthResult(Report[G, H, Health](status, results.map(_.value)))
-        }
-      }
+      HealthResult(Report[G, H, Health](status, results.map(_.value)))
     }
   }
 }
