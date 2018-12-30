@@ -26,7 +26,7 @@ The circe module provides circe `Encoder`/`Decoder` instances for all the import
 so you can use them together with `http4s-circe` and bundle the whole thing up:
 
 ```tut:book
-import org.http4s.circe._, org.http4s._, org.http4s.implicits._, org.http4s.client._
+import io.circe._, org.http4s.circe._, org.http4s._, org.http4s.implicits._, org.http4s.client._
 import cats.effect._, cats._, cats.data._, sup.data._
 
 implicit val client: Client[IO] = Client.fromHttpApp(HttpApp.notFound[IO])
