@@ -1,7 +1,12 @@
 package sup.data
 
-import cats.instances.tuple._
-import cats.{Eq, Eval, Id, Reducible, ~>}
+import cats.implicits._
+import cats.Eq
+import cats.Eval
+import cats.Id
+import cats.Reducible
+import cats.Show
+import cats.~>
 
 final case class Tagged[Tag, H](tag: Tag, health: H)
 
@@ -12,9 +17,12 @@ object Tagged {
     * The only place where it should be passed to is [[sup.HealthReporter.fromChecks]],
     * for determining the status of the wrapping check. In other cases, it's probably useless, as it discards the tag completely.
     * */
-  implicit def taggedReducible[Tag]: Reducible[Tagged[Tag, ?]] = Reducibles.by(λ[Tagged[Tag, ?] ~> Id](_.health))
+  implicit def catsReducibleForTagged[Tag]: Reducible[Tagged[Tag, ?]] = Reducibles.by(λ[Tagged[Tag, ?] ~> Id](_.health))
 
-  implicit def eqTagged[Tag: Eq, H: Eq]: Eq[Tagged[Tag, H]] = Eq.by(tagged => (tagged.tag, tagged.health))
+  implicit def catsEqForTagged[Tag: Eq, H: Eq]: Eq[Tagged[Tag, H]] = Eq.by(tagged => (tagged.tag, tagged.health))
+
+  implicit def catsShowForTagged[Tag: Show, H: Show]: Show[Tagged[Tag, H]] =
+    Show.show(t => show"Tagged(tag = ${t.tag}, health = ${t.health}")
 
   object Reducibles {
 

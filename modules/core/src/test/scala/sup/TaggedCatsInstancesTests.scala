@@ -7,6 +7,6 @@ import sup.data.Tagged
 import org.scalacheck.ScalacheckShapeless._
 
 class TaggedCatsInstancesTests extends CatsSuite {
-  checkAll("Foldable[Tagged[String, ?]]", FoldableTests[Tagged[String, ?]].foldable[Int, Int])
+  checkAll("Reducible[Tagged[String, ?]]", ReducibleTests[Tagged[String, ?]].reducible[List, Int, Int])
   checkAll("Eq[Tagged[String, Int]]", EqTests[Tagged[String, Int]].eqv)
 }

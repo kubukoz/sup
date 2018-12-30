@@ -31,15 +31,14 @@ import cats.effect._, cats._, cats.data._, sup.data._
 
 implicit val client: Client[IO] = Client.fromHttpApp(HttpApp.notFound[IO])
  
-implicit val encoder: EntityEncoder[IO, HealthResult[Id]] = jsonEncoderOf
+//you'll most likely define this implicit only once per app
+implicit def entityEncoder[A: Encoder]: EntityEncoder[IO, A] = jsonEncoderOf
 
 val healthcheck: HealthCheck[IO, Id] = statusCodeHealthCheck(Request[IO]())
 
 val routes = healthCheckRoutes(healthcheck)
 
 //also works with reports!
-//you'll most likely define this implicit once per app
-implicit val reportEntityEncoder: EntityEncoder[IO, HealthResult[Report[NonEmptyList, Tagged[String, ?], ?]]] = jsonEncoderOf
 
 val report = HealthReporter.fromChecks(
   healthcheck.through(mods.tagWith("foo")),
