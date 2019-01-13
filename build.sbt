@@ -16,7 +16,7 @@ val refinedVersion             = "0.9.3"
 val fs2RedisVersion            = "0.6.1"
 val h2Version                  = "1.4.197"
 val log4CatsVersion            = "0.2.0"
-val http4sVersion              = "0.20.0-M4"
+val http4sVersion              = "0.20.0-M5"
 val circeVersion               = "0.11.0"
 val sttpVersion                = "1.5.3"
 
