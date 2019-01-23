@@ -54,7 +54,8 @@ val commonSettings = Seq(
     "org.typelevel"              %% "cats-kernel-laws"          % catsVersion                % Test,
     "com.github.alexarchambault" %% "scalacheck-shapeless_1.13" % scalacheckShapelessVersion % Test,
     "org.scalatest"              %% "scalatest"                 % scalatestVersion           % Test
-  ) ++ compilerPlugins
+  ) ++ compilerPlugins,
+  mimaPreviousArtifacts := Set(organization.value %% name.value.toLowerCase % "0.2.0")
 )
 
 val crossBuiltCommonSettings = commonSettings ++ Seq(crossScalaVersions := Seq(Scala_211, Scala_212))
@@ -179,5 +180,5 @@ val sup =
   project
     .in(file("."))
     .settings(commonSettings)
-    .settings(skip in publish := true, crossScalaVersions := List())
+    .settings(skip in publish := true, crossScalaVersions := List(), mimaPreviousArtifacts := Set.empty)
     .aggregate((microsite :: allModules).map(x => x: ProjectReference): _*)
