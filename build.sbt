@@ -3,7 +3,7 @@ val Scala_211 = "2.11.11"
 
 val catsEffectVersion          = "1.2.0"
 val catsTaglessVersion         = "0.2.0"
-val catsParVersion             = "0.2.0"
+val catsParVersion             = "0.2.1"
 val doobieVersion              = "0.6.0"
 val catsVersion                = "1.6.0"
 val scalacheckShapelessVersion = "1.1.8"
