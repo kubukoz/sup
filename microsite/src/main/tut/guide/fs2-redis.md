@@ -29,7 +29,7 @@ implicit def ping: Ping[IO] = ???
 And now the health check:
 
 ```tut:book
-def doobieCheck = pingCheck[IO, Throwable]
+def redisCheck = pingCheck[IO, Throwable]
 ```
 
 Errors are automatically recovered to a `Sick` status in this check.
