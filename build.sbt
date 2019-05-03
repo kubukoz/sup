@@ -1,13 +1,14 @@
+val Scala_213 = "2.13.0-RC1"
 val Scala_212 = "2.12.8"
-val Scala_211 = "2.11.11"
+val Scala_211 = "2.11.12"
 
-val catsEffectVersion          = "1.3.0"
+val catsEffectVersion          = "2.0.0-M1"
 val catsTaglessVersion         = "0.5"
 val catsParVersion             = "0.2.1"
 val doobieVersion              = "0.6.0"
-val catsVersion                = "1.6.0"
+val catsVersion                = "2.0.0-M1"
 val scalacheckShapelessVersion = "1.1.8"
-val scalatestVersion           = "3.0.7"
+val scalatestVersion           = "3.0.8-RC2"
 val simulacrumVersion          = "0.16.0"
 val scalacacheVersion          = "0.27.0"
 val macroParadiseVersion       = "2.1.1"
@@ -35,14 +36,15 @@ inThisBuild(
     )
   ))
 
+val paradisePlugin = compilerPlugin("org.scalamacros" % "paradise" % macroParadiseVersion).cross(CrossVersion.full)
+
 val compilerPlugins = List(
-  compilerPlugin("org.scalamacros" % "paradise" % macroParadiseVersion).cross(CrossVersion.full),
   compilerPlugin("org.spire-math" %% "kind-projector" % kindProjectorVersion)
 )
 
 val commonSettings = Seq(
-  scalaVersion := Scala_212,
-  scalacOptions ++= Options.all,
+  scalaVersion := Scala_211,
+  Options.addAll,
   fork in Test := true,
   name := "sup",
   updateOptions := updateOptions.value.withGigahorse(false), //may fix publishing bug
@@ -54,11 +56,11 @@ val commonSettings = Seq(
     "org.typelevel"              %% "cats-kernel-laws"          % catsVersion                % Test,
     "com.github.alexarchambault" %% "scalacheck-shapeless_1.13" % scalacheckShapelessVersion % Test,
     "org.scalatest"              %% "scalatest"                 % scalatestVersion           % Test
-  ) ++ compilerPlugins,
+  ) ++ (if(!scalaVersion.value.startsWith("2.13")) List(paradisePlugin) else Nil) ++ compilerPlugins,
   mimaPreviousArtifacts := Set(organization.value %% name.value.toLowerCase % "0.2.0")
 )
 
-val crossBuiltCommonSettings = commonSettings ++ Seq(crossScalaVersions := Seq(Scala_211, Scala_212))
+val crossBuiltCommonSettings = commonSettings ++ Seq(crossScalaVersions := Seq(Scala_211, Scala_212, Scala_213))
 
 def module(moduleName: String): Project =
   Project(moduleName, file("modules/" + moduleName))
@@ -160,7 +162,7 @@ val microsite = project
     micrositeGithubToken := sys.env.get("GITHUB_TOKEN"),
     //doesn't fork anyway though
     fork in makeMicrosite := true,
-    scalacOptions ++= Options.all,
+    Options.addAll,
     scalacOptions --= Seq("-Ywarn-unused:imports"),
     libraryDependencies ++= compilerPlugins,
     libraryDependencies ++= Seq(
