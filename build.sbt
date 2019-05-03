@@ -1,23 +1,23 @@
+val Scala_213 = "2.13.0-RC1"
 val Scala_212 = "2.12.8"
-val Scala_211 = "2.11.11"
+val Scala_211 = "2.11.12"
 
-val catsEffectVersion          = "1.3.1"
+val catsEffectVersion          = "2.0.0-M1"
 val catsTaglessVersion         = "0.8"
 val catsParVersion             = "0.2.1"
 val doobieVersion              = "0.7.0"
 val catsVersion                = "1.6.1"
-val scalacheckShapelessVersion = "1.1.8"
+val scalacheckShapelessVersion = "1.2.3"
 val scalatestVersion           = "3.0.8"
 val simulacrumVersion          = "0.19.0"
 val scalacacheVersion          = "0.28.0"
-val macroParadiseVersion       = "2.1.1"
 val kindProjectorVersion       = "0.9.10"
 val refinedVersion             = "0.9.8"
 val fs2RedisVersion            = "0.7.0"
 val h2Version                  = "1.4.199"
-val log4CatsVersion            = "0.3.0"
-val http4sVersion              = "0.20.3"
-val circeVersion               = "0.11.1"
+val log4CatsVersion            = "0.4.0-M1"
+val http4sVersion              = "0.21.0-M1"
+val circeVersion               = "0.12.0-M3"
 val sttpVersion                = "1.6.0"
 
 inThisBuild(
@@ -36,13 +36,12 @@ inThisBuild(
   ))
 
 val compilerPlugins = List(
-  compilerPlugin("org.scalamacros" % "paradise" % macroParadiseVersion).cross(CrossVersion.full),
   compilerPlugin("org.spire-math" %% "kind-projector" % kindProjectorVersion)
 )
 
 val commonSettings = Seq(
-  scalaVersion := Scala_212,
-  scalacOptions ++= Options.all,
+  scalaVersion := Scala_211,
+  Options.addAll,
   fork in Test := true,
   name := "sup",
   updateOptions := updateOptions.value.withGigahorse(false), //may fix publishing bug
@@ -58,7 +57,7 @@ val commonSettings = Seq(
   mimaPreviousArtifacts := Set(organization.value %% name.value.toLowerCase % "0.2.0")
 )
 
-val crossBuiltCommonSettings = commonSettings ++ Seq(crossScalaVersions := Seq(Scala_211, Scala_212))
+val crossBuiltCommonSettings = commonSettings ++ Seq(crossScalaVersions := Seq(Scala_211, Scala_212, Scala_213))
 
 def module(moduleName: String): Project =
   Project(moduleName, file("modules/" + moduleName))
@@ -160,7 +159,7 @@ val microsite = project
     micrositeGithubToken := sys.env.get("GITHUB_TOKEN"),
     //doesn't fork anyway though
     fork in makeMicrosite := true,
-    scalacOptions ++= Options.all,
+    scalacOptions ++= Options.addAll(scalaVersion.value),
     scalacOptions --= Seq("-Ywarn-unused:imports"),
     libraryDependencies ++= compilerPlugins,
     libraryDependencies ++= Seq(
