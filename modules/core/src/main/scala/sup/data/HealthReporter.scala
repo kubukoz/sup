@@ -27,7 +27,7 @@ object HealthReporter {
     checks: G[HealthCheck[F, H]]
   )(implicit M: Semigroup[Health]): HealthReporter[F, G, H] = HealthCheck.liftF {
 
-    checks.nonEmptyTraverse(_.check).map(reduceResults[G, H] _)
+    checks.nonEmptyTraverse(_.check).map(reduceResults[G, H])
   }
 
   /**
@@ -40,7 +40,7 @@ object HealthReporter {
     checks: G[HealthCheck[F, H]]
   )(implicit M: Semigroup[Health]): HealthReporter[F, G, H] = HealthCheck.liftF {
 
-    Parallel.parNonEmptyTraverse(checks)(_.check).map(reduceResults[G, H] _)
+    Parallel.parNonEmptyTraverse(checks)(_.check).map(reduceResults[G, H])
   }
 
   private def reduceResults[G[_]: Reducible: Functor, H[_]: Reducible](
