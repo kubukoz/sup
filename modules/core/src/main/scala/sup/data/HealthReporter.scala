@@ -3,7 +3,7 @@ package sup.data
 import cats.data.NonEmptyList
 import cats.implicits._
 import cats.kernel.Semigroup
-import cats.{Apply, NonEmptyTraverse, Parallel, Reducible, Functor}
+import cats.{Apply, Functor, NonEmptyTraverse, Parallel, Reducible}
 import cats.temp.par._
 import sup._
 
@@ -27,7 +27,7 @@ object HealthReporter {
     checks: G[HealthCheck[F, H]]
   )(implicit M: Semigroup[Health]): HealthReporter[F, G, H] = HealthCheck.liftF {
 
-    checks.nonEmptyTraverse(_.check).map(reduceResults[G, H])
+    checks.nonEmptyTraverse(_.check).map(fromResults[G, H])
   }
 
   /**
@@ -40,14 +40,12 @@ object HealthReporter {
     checks: G[HealthCheck[F, H]]
   )(implicit M: Semigroup[Health]): HealthReporter[F, G, H] = HealthCheck.liftF {
 
-    Parallel.parNonEmptyTraverse(checks)(_.check).map(reduceResults[G, H])
+    Parallel.parNonEmptyTraverse(checks)(_.check).map(fromResults[G, H])
   }
 
-  private def reduceResults[G[_]: Reducible: Functor, H[_]: Reducible](
+  def fromResults[G[_]: Reducible: Functor, H[_]: Reducible](
     results: G[HealthResult[H]]
-  )(implicit M: Semigroup[Health]) = {
-
-    val status = results.reduceMap(_.value.reduce)
-    HealthResult(Report[G, H, Health](status, results.map(_.value)))
+  )(implicit M: Semigroup[Health]): HealthResult[Report[G, H, ?]] = {
+    HealthResult(Report.fromResults[G, H, Health](results.map(_.value)))
   }
 }
