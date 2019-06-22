@@ -3,7 +3,7 @@ import sbt.Keys.{scalaVersion, scalacOptions}
 object Options {
 
   //from https://tpolecat.github.io/2017/04/25/scalac-flags.html
-  def addAll(scalaVersion: String) = {
+  def all(scalaVersion: String) = {
     val scala_2_11Options = Set(
       "-deprecation", // Emit warning and location for usages of deprecated APIs.
       "-explaintypes", // Explain type errors in more detail.
