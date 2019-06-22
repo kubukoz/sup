@@ -34,7 +34,7 @@ jobs:
   include:
   # stage="test" if no stage is specified
   - script:
-    - sbt test:compile test microsite/makeMicrosite
+    - sbt +test:compile +test microsite/makeMicrosite
   # run releases
   - stage: releaseMicrosite
     script: sbt microsite/publishMicrosite
