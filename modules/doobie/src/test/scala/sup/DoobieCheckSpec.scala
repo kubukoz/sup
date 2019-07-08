@@ -3,7 +3,6 @@ package sup
 import _root_.doobie.Transactor
 import cats.effect.{Async, ContextShift, IO, Timer}
 import eu.timepit.refined.auto._
-import org.scalatest.{Matchers, WordSpec}
 
 import scala.concurrent.ExecutionContext
 

@@ -2,10 +2,10 @@ package sup
 
 import cats.implicits._
 import com.github.gvolpe.fs2redis.algebra.Ping
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.{Matchers}
 import sup.modules.redis
 
-class RedisCheckSpec extends WordSpec with Matchers {
+class RedisCheckSpec extends AnyWordSpec with Matchers {
   "Either check" when {
     "Right" should {
       "be Healthy" in {

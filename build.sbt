@@ -4,7 +4,7 @@ val Scala_211 = "2.11.12"
 
 val catsEffectVersion          = "2.0.0-M4"
 val catsTaglessVersion         = "0.8"
-val catsParVersion             = "0.2.1"
+val catsParVersion             = "0.3.0-M1"
 val doobieVersion              = "0.8.0-M1"
 val catsVersion                = "2.0.0-M4"
 val scalacheckShapelessVersion = "1.2.3"
@@ -13,7 +13,7 @@ val simulacrumVersion          = "0.19.0"
 val scalacacheVersion          = "0.28.0"
 val kindProjectorVersion       = "0.10.3"
 val refinedVersion             = "0.9.8"
-val fs2RedisVersion            = "0.7.0"
+val fs2RedisVersion            = "0.8.3"
 val h2Version                  = "1.4.199"
 val log4CatsVersion            = "0.4.0-M1"
 val http4sVersion              = "0.21.0-M1"
@@ -45,7 +45,7 @@ val commonSettings = Seq(
   scalacOptions ++= Options.all(scalaVersion.value),
   fork in Test := true,
   name := "sup",
-  updateOptions := updateOptions.value.withGigahorse(false), //may fix publishing bug
+  updateOptions := updateOptions.value.withGigahorse(false),
   libraryDependencies ++= Seq(
     "org.typelevel"              %% "cats-tagless-laws"         % catsTaglessVersion         % Test,
     "org.typelevel"              %% "cats-effect-laws"          % catsEffectVersion          % Test,
@@ -55,8 +55,12 @@ val commonSettings = Seq(
     "com.github.alexarchambault" %% "scalacheck-shapeless_1.14" % scalacheckShapelessVersion % Test,
     "org.scalatest"              %% "scalatest"                 % scalatestVersion           % Test
   ) ++ compilerPlugins,
-  mimaPreviousArtifacts := Set(organization.value %% name.value.toLowerCase % "0.2.0")
+  mimaPreviousArtifacts := (if (under213(scalaVersion.value))
+                              Set(organization.value %% name.value.toLowerCase % "0.2.0")
+                            else Set.empty)
 )
+
+def under213(scalaVersion: String): Boolean = scalaVersion != Scala_213
 
 val crossBuiltCommonSettings = commonSettings ++ Seq(crossScalaVersions := Seq(Scala_211, Scala_212, Scala_213))
 
@@ -94,9 +98,10 @@ val doobie = module("doobie")
 
 val redis = module("redis")
   .settings(
-    crossScalaVersions := List(Scala_212),
+    scalaVersion := Scala_212,
+    crossScalaVersions := List(Scala_212, Scala_213),
     libraryDependencies ++= Seq(
-      "com.github.gvolpe" %% "fs2-redis-effects" % fs2RedisVersion
+      "dev.profunktor" %% "redis4cats-effects" % fs2RedisVersion
     )
   )
   .dependsOn(core)
@@ -142,7 +147,7 @@ val sttp = module("sttp")
   )
   .dependsOn(core)
 
-val allModules = List(core, scalacache, doobie, redis, log4cats, http4s, http4sClient, circe, sttp)
+val allModules = List(core /*,scalacache, doobie, redis, log4cats, http4s, http4sClient, circe, sttp*/)
 
 val microsite = project
   .settings(
@@ -179,5 +184,5 @@ val sup =
   project
     .in(file("."))
     .settings(commonSettings)
-    .settings(skip in publish := true, crossScalaVersions := List(), mimaPreviousArtifacts := Set.empty)
+    .settings(publishArtifact := false, crossScalaVersions := List(), mimaPreviousArtifacts := Set.empty)
     .aggregate((microsite :: allModules).map(x => x: ProjectReference): _*)
