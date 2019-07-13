@@ -2,7 +2,7 @@ val Scala_212 = "2.12.8"
 val Scala_211 = "2.11.11"
 
 val catsEffectVersion          = "1.3.1"
-val catsTaglessVersion         = "0.8"
+val catsTaglessVersion         = "0.9"
 val catsParVersion             = "0.2.1"
 val doobieVersion              = "0.7.0"
 val catsVersion                = "1.6.1"
@@ -16,9 +16,9 @@ val refinedVersion             = "0.9.8"
 val fs2RedisVersion            = "0.7.0"
 val h2Version                  = "1.4.199"
 val log4CatsVersion            = "0.3.0"
-val http4sVersion              = "0.20.4"
+val http4sVersion              = "0.20.6"
 val circeVersion               = "0.11.1"
-val sttpVersion                = "1.6.1"
+val sttpVersion                = "1.6.2"
 
 inThisBuild(
   List(
