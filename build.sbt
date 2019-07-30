@@ -18,7 +18,7 @@ val h2Version                  = "1.4.199"
 val log4CatsVersion            = "0.3.0"
 val http4sVersion              = "0.20.6"
 val circeVersion               = "0.11.1"
-val sttpVersion                = "1.6.3"
+val sttpVersion                = "1.6.4"
 
 inThisBuild(
   List(
