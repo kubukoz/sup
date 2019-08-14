@@ -1,12 +1,11 @@
 val Scala_213 = "2.13.0"
 val Scala_212 = "2.12.8"
-val Scala_211 = "2.11.12"
 
-val catsEffectVersion          = "2.0.0-M4"
-val catsTaglessVersion         = "0.8"
-val catsParVersion             = "0.3.0-M1"
+val catsEffectVersion          = "2.0.0-RC1"
+val catsTaglessVersion         = "0.9"
+val catsParVersion             = "1.0.0-RC1"
 val doobieVersion              = "0.8.0-M1"
-val catsVersion                = "2.0.0-M4"
+val catsVersion                = "2.0.0-RC1"
 val scalacheckShapelessVersion = "1.2.3"
 val scalatestVersion           = "3.0.8"
 val simulacrumVersion          = "0.19.0"
@@ -16,9 +15,9 @@ val refinedVersion             = "0.9.8"
 val fs2RedisVersion            = "0.8.3"
 val h2Version                  = "1.4.199"
 val log4CatsVersion            = "0.4.0-M1"
-val http4sVersion              = "0.21.0-M1"
-val circeVersion               = "0.12.0-M3"
-val sttpVersion                = "1.6.0"
+val http4sVersion              = "0.21.0-M3"
+val circeVersion               = "0.12.0-RC2"
+val sttpVersion                = "1.6.4"
 
 inThisBuild(
   List(
@@ -41,7 +40,7 @@ val compilerPlugins = List(
 )
 
 val commonSettings = Seq(
-  scalaVersion := Scala_211,
+  scalaVersion := Scala_212,
   scalacOptions ++= Options.all(scalaVersion.value),
   fork in Test := true,
   name := "sup",
@@ -62,7 +61,7 @@ val commonSettings = Seq(
 
 def under213(scalaVersion: String): Boolean = scalaVersion != Scala_213
 
-val crossBuiltCommonSettings = commonSettings ++ Seq(crossScalaVersions := Seq(Scala_211, Scala_212, Scala_213))
+val crossBuiltCommonSettings = commonSettings ++ Seq(crossScalaVersions := Seq(Scala_212, Scala_213))
 
 def module(moduleName: String): Project =
   Project(moduleName, file("modules/" + moduleName))

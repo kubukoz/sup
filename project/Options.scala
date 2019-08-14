@@ -4,7 +4,7 @@ object Options {
 
   //from https://tpolecat.github.io/2017/04/25/scalac-flags.html
   def all(scalaVersion: String) = {
-    val scala_2_11Options = Set(
+    val scala_2_12Options = Set(
       "-deprecation", // Emit warning and location for usages of deprecated APIs.
       "-explaintypes", // Explain type errors in more detail.
       "-feature", // Emit warning and location for usages of features that should be imported explicitly.
@@ -39,10 +39,7 @@ object Options {
       "-Ywarn-nullary-override", // Warn when non-nullary `def f()' overrides nullary `def f'.
       "-Ywarn-nullary-unit",  // Warn when nullary methods return Unit.
       "-Ywarn-numeric-widen", // Warn when numerics are widened.
-      "-Ywarn-value-discard" // Warn when non-Unit expression results are unused.
-    )
-
-    val scala_2_12Options = scala_2_11Options ++ Set(
+      "-Ywarn-value-discard", // Warn when non-Unit expression results are unused.
       "-Xlint:constant", // Evaluation of a constant arithmetic expression results in an error.
       "-Ywarn-extra-implicit", // Warn when more than one implicit parameter section is defined.
       "-Ywarn-unused:implicits", // Warn if an implicit parameter is unused.
@@ -69,7 +66,6 @@ object Options {
     ) ++ List("-Xlint:deprecation")
 
     (scalaVersion match {
-      case v if v.startsWith("2.11") => scala_2_11Options
       case v if v.startsWith("2.12") => scala_2_12Options
       case v if v.startsWith("2.13") => scala_2_13Options
     }).toList ++ List(
