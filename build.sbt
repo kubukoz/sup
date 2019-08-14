@@ -147,6 +147,7 @@ val allModules = List(core, scalacache, doobie, redis, log4cats, http4s, http4sC
 
 val microsite = project
   .settings(
+    scalaVersion := "2.12.8",
     crossScalaVersions := List(),
     micrositeName := "sup",
     micrositeDescription := "Functional healthchecks in Scala",
