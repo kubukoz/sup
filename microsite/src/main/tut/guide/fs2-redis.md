@@ -1,9 +1,9 @@
 ---
 layout: docs
-title: fs2-redis
+title: redis4cats
 ---
 
-sup has an fs2-redis module:
+sup has a redis4cats module:
 
 ```tut:passthrough
 sup.microsite.sbtDependencies("redis")
@@ -21,7 +21,7 @@ import sup._, sup.modules.redis._
 You can build a connection check out of a `Ping` algebra (included in `RedisCommands`). Let's create one first:
 
 ```tut:book
-import com.github.gvolpe.fs2redis.algebra.Ping, cats.effect._
+import dev.profunktor.redis4cats.algebra.Ping, cats.effect._
 
 implicit def ping: Ping[IO] = ???
 ```

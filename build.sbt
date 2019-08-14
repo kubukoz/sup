@@ -2,7 +2,7 @@ val Scala_212 = "2.12.8"
 val Scala_211 = "2.11.11"
 
 val catsEffectVersion          = "1.4.0"
-val catsTaglessVersion         = "0.9"
+val catsTaglessVersion         = "0.5"
 val catsParVersion             = "0.2.1"
 val doobieVersion              = "0.7.0"
 val catsVersion                = "1.6.1"
@@ -11,12 +11,12 @@ val scalatestVersion           = "3.0.8"
 val simulacrumVersion          = "0.19.0"
 val scalacacheVersion          = "0.28.0"
 val macroParadiseVersion       = "2.1.1"
-val kindProjectorVersion       = "0.9.10"
+val kindProjectorVersion       = "0.10.3"
 val refinedVersion             = "0.9.9"
-val fs2RedisVersion            = "0.7.0"
+val fs2RedisVersion            = "0.8.2"
 val h2Version                  = "1.4.199"
 val log4CatsVersion            = "0.3.0"
-val http4sVersion              = "0.20.9"
+val http4sVersion              = "0.20.10"
 val circeVersion               = "0.11.1"
 val sttpVersion                = "1.6.4"
 
@@ -37,7 +37,7 @@ inThisBuild(
 
 val compilerPlugins = List(
   compilerPlugin("org.scalamacros" % "paradise" % macroParadiseVersion).cross(CrossVersion.full),
-  compilerPlugin("org.spire-math" %% "kind-projector" % kindProjectorVersion)
+  compilerPlugin("org.typelevel" %% "kind-projector" % kindProjectorVersion)
 )
 
 val commonSettings = Seq(
@@ -96,7 +96,7 @@ val redis = module("redis")
   .settings(
     crossScalaVersions := List(Scala_212),
     libraryDependencies ++= Seq(
-      "com.github.gvolpe" %% "fs2-redis-effects" % fs2RedisVersion
+      "dev.profunktor" %% "redis4cats-effects" % fs2RedisVersion
     )
   )
   .dependsOn(core)

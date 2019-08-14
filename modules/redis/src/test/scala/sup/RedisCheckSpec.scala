@@ -1,7 +1,7 @@
 package sup
 
 import cats.implicits._
-import com.github.gvolpe.fs2redis.algebra.Ping
+import dev.profunktor.redis4cats.algebra.Ping
 import org.scalatest.{Matchers, WordSpec}
 import sup.modules.redis
 
