@@ -16,11 +16,12 @@ object microsite {
     println("```scala\n" + prefix + remaining + "\n```")
   }
 
+  val version = sup.buildinfo.BuildInfo.lastStableVersion
   def sbtDependency(moduleName: String): String =
-    s""""com.kubukoz" %% "sup-$moduleName" % "${sup.buildinfo.BuildInfo.version}""""
+    s""""com.kubukoz" %% "sup-$moduleName" % "$version""""
 
   def ammDependency(moduleName: String): Unit =
     println(s"""```
-       |import $$ivy.`com.kubukoz::sup-$moduleName:${sup.buildinfo.BuildInfo.version}`
+       |import $$ivy.`com.kubukoz::sup-$moduleName:$version`
        |```""".stripMargin)
 }

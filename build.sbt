@@ -145,6 +145,8 @@ val sttp = module("sttp")
 
 val allModules = List(core, scalacache, doobie, redis, log4cats, http4s, http4sClient, circe, sttp)
 
+val lastStableVersion = settingKey[String]("Last tagged version")
+
 val microsite = project
   .settings(
     scalaVersion := "2.12.8",
@@ -171,7 +173,8 @@ val microsite = project
     skip in publish := true,
     buildInfoPackage := "sup.buildinfo",
     micrositeAnalyticsToken := "UA-55943015-9",
-    buildInfoKeys := Seq[BuildInfoKey](version)
+    buildInfoKeys := Seq[BuildInfoKey](lastStableVersion),
+    lastStableVersion := dynverGitDescribeOutput.value.map(_.ref.value.tail).getOrElse(throw new Exception("There's no output from dynver!"))
   )
   .enablePlugins(MicrositesPlugin)
   .dependsOn(allModules.map(x => x: ClasspathDep[ProjectReference]): _*)
