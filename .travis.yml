@@ -26,8 +26,6 @@ install:
 - gem install jekyll -v 3.2.1
 stages:
 - name: test
-- name: releaseMicrosite
-  if: tag IS present
 - name: release
   if: (branch = master AND type = push) OR (tag IS present)
 jobs:
@@ -36,7 +34,7 @@ jobs:
   - script:
     - sbt +test:compile +test microsite/makeMicrosite
   # run releases
-  - stage: releaseMicrosite
+  - stage: release
     script: sbt microsite/publishMicrosite
   # this may fail because of some misconfiguration, but artifacts will end up in staging and can be promoted manually
   - stage: release
