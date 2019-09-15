@@ -2,12 +2,11 @@ package sup
 
 import cats.data.{EitherK, Tuple2K}
 import cats.effect.Concurrent
-import cats.{~>, Applicative, ApplicativeError, Apply, Eq, Functor, Id, Monoid}
+import cats.{~>, Applicative, ApplicativeError, Apply, Eq, Functor, Id, Monoid, NonEmptyParallel}
 import cats.implicits._
 import cats.effect.implicits._
 import cats.tagless.FunctorK
 import cats.tagless.implicits._
-import cats.temp.par._
 
 /**
   * A health check.
@@ -56,8 +55,10 @@ object HealthCheck {
     *
     * If H and I are the same, the result's EitherK can be combined to a single H/I container using `mods.mergeEitherK`.
     * */
-  def either[F[_]: ApplicativeError[?[_], E], E, H[_], I[_]](a: HealthCheck[F, H],
-                                                             b: HealthCheck[F, I]): HealthCheck[F, EitherK[H, I, ?]] =
+  def either[F[_]: ApplicativeError[?[_], E], E, H[_], I[_]](
+    a: HealthCheck[F, H],
+    b: HealthCheck[F, I]
+  ): HealthCheck[F, EitherK[H, I, ?]] =
     liftF {
       a.check
         .map(ar => EitherK.left[I](ar.value))
@@ -82,8 +83,10 @@ object HealthCheck {
     *
     * If H and I are the same, the result's Tuple2K can be combined to a single H/I container using `mods.mergeTuple2K`.
     * */
-  def parTupled[F[_]: NonEmptyPar, H[_], I[_]](a: HealthCheck[F, H],
-                                               b: HealthCheck[F, I]): HealthCheck[F, Tuple2K[H, I, ?]] =
+  def parTupled[F[_]: NonEmptyParallel, H[_], I[_]](
+    a: HealthCheck[F, H],
+    b: HealthCheck[F, I]
+  ): HealthCheck[F, Tuple2K[H, I, ?]] =
     liftF {
       (a.check, b.check).parMapN { (ac, bc) =>
         HealthResult(Tuple2K(ac.value, bc.value))
@@ -108,7 +111,8 @@ object HealthCheck {
   }
 
   implicit def checkMonoid[F[_]: Applicative, H[_]: Applicative](
-    implicit M: Monoid[Health]): Monoid[HealthCheck[F, H]] =
+    implicit M: Monoid[Health]
+  ): Monoid[HealthCheck[F, H]] =
     new Monoid[HealthCheck[F, H]] {
       override val empty: HealthCheck[F, H] = HealthCheck.const[F, H](M.empty)
       override def combine(x: HealthCheck[F, H], y: HealthCheck[F, H]): HealthCheck[F, H] = liftF {
