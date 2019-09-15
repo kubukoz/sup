@@ -45,6 +45,7 @@ val commonSettings = Seq(
     "org.typelevel" %% "cats-tagless-laws" % catsTaglessVersion % Test,
     "org.typelevel" %% "cats-effect-laws" % catsEffectVersion % Test,
     "org.typelevel" %% "cats-testkit" % catsVersion % Test,
+    "org.typelevel" %% "cats-testkit-scalatest" % "1.0.0-M2" % Test,
     "org.typelevel" %% "cats-laws" % catsVersion % Test,
     "org.typelevel" %% "cats-kernel-laws" % catsVersion % Test,
     "com.github.chocpanda" %% "scalacheck-magnolia" % scalacheckMagnoliaVersion % Test,

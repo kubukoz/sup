@@ -4,7 +4,7 @@ import cats.kernel.laws.discipline.EqTests
 import cats.laws.discipline._
 import cats.tests.CatsSuite
 import sup.data.Tagged
-import org.scalacheck.ScalacheckShapeless._
+import org.scalacheck.magnolia._
 
 class TaggedCatsInstancesTests extends CatsSuite {
   checkAll("Reducible[Tagged[String, ?]]", ReducibleTests[Tagged[String, ?]].reducible[List, Int, Int])

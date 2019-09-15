@@ -1,8 +1,9 @@
 package sup
 
-import cats.kernel.laws.discipline.{CommutativeMonoidTests, EqTests}
+import cats.kernel.laws.discipline.CommutativeMonoidTests
+import cats.kernel.laws.discipline.EqTests
 import cats.tests.CatsSuite
-import org.scalacheck.ScalacheckShapeless._
+import org.scalacheck.magnolia._
 
 class HealthCatsInstancesTests extends CatsSuite {
   checkAll("Eq[Health]", EqTests[Health].eqv)
