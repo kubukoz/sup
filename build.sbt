@@ -154,7 +154,6 @@ val microsite = project
     scalacOptions --= Seq("-Ywarn-unused:imports"),
     libraryDependencies ++= compilerPlugins,
     libraryDependencies ++= Seq(
-      "io.chrisdavenport" %% "log4cats-extras" % log4CatsVersion,
       "org.http4s" %% "http4s-circe" % http4sVersion
     ),
     skip in publish := true,
