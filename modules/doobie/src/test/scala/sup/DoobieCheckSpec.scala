@@ -1,10 +1,14 @@
 package sup
 
 import _root_.doobie.Transactor
-import cats.effect.{Async, ContextShift, IO, Timer}
-import eu.timepit.refined.auto._
-import org.scalatest.{Matchers, WordSpec}
-
+import cats.effect.Async
+import cats.effect.ContextShift
+import cats.effect.IO
+import cats.effect.Timer
+import org.scalatest.Matchers
+import org.scalatest.WordSpec
+import scala.concurrent.duration._
+import cats.implicits._
 import scala.concurrent.ExecutionContext
 
 class DoobieCheckSpec extends BaseIOTest {
@@ -16,12 +20,12 @@ class DoobieCheckSpec extends BaseIOTest {
     Transactor.fromDriverManager[F]("org.h2.Driver", "jdbcfoobarnope")
 
   implicit val cs: ContextShift[IO] = IO.contextShift(ExecutionContext.global)
-  implicit val timer: Timer[IO]     = IO.timer(ExecutionContext.global)
+  implicit val timer: Timer[IO] = IO.timer(ExecutionContext.global)
 
   "IO H2 check" when {
     "the database responds before the timeout" should {
       "be Healthy" in runIO {
-        val healthCheck = modules.doobie.connectionCheck(goodTransactor[IO])(timeoutSeconds = Some(5))
+        val healthCheck = modules.doobie.connectionCheck(goodTransactor[IO])(timeout = 5.seconds.some)
 
         healthCheck.check.map {
           _.value shouldBe Health.Healthy
@@ -31,7 +35,7 @@ class DoobieCheckSpec extends BaseIOTest {
 
     "there is no timeout" should {
       "be Healthy" in runIO {
-        val healthCheck = modules.doobie.connectionCheck(goodTransactor[IO])(timeoutSeconds = None)
+        val healthCheck = modules.doobie.connectionCheck(goodTransactor[IO])(timeout = none)
 
         healthCheck.check.map {
           _.value shouldBe Health.Healthy
