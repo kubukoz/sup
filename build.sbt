@@ -8,7 +8,7 @@ val doobieVersion              = "0.7.0"
 val catsVersion                = "1.6.1"
 val scalacheckShapelessVersion = "1.1.8"
 val scalatestVersion           = "3.0.8"
-val simulacrumVersion          = "0.19.0"
+val simulacrumVersion          = "1.0.0"
 val scalacacheVersion          = "0.28.0"
 val macroParadiseVersion       = "2.1.1"
 val kindProjectorVersion       = "0.10.3"
@@ -67,7 +67,7 @@ def module(moduleName: String): Project =
 
 val core = module("core").settings(
   libraryDependencies ++= Seq(
-    "com.github.mpilquist" %% "simulacrum"        % simulacrumVersion,
+    "org.typelevel" %% "simulacrum"        % simulacrumVersion,
     "org.typelevel"        %% "cats-effect"       % catsEffectVersion,
     "io.chrisdavenport"    %% "cats-par"          % catsParVersion,
     "org.typelevel"        %% "cats-tagless-core" % catsTaglessVersion
