@@ -1,5 +1,5 @@
 val Scala_212 = "2.12.10"
-val Scala_213 = "2.13.1"
+val Scala_213 = "2.13.0" //don't use 2.13.1 until kind-projector is fixed
 
 val catsEffectVersion = "2.0.0"
 val catsTaglessVersion = "0.10"
