@@ -1,5 +1,5 @@
 val Scala_212 = "2.12.10"
-val Scala_213 = "2.13.0"
+val Scala_213 = "2.13.1"
 
 val catsEffectVersion = "2.0.0"
 val catsTaglessVersion = "0.10"
@@ -11,7 +11,7 @@ val kindProjectorVersion = "0.10.3"
 val fs2RedisVersion = "0.9.0"
 val h2Version = "1.4.199"
 val log4CatsVersion = "1.0.0"
-val http4sVersion = "0.21.0-M5"
+val http4sVersion = "0.20.11"
 val circeVersion = "0.12.1"
 val sttpVersion = "1.6.7"
 
@@ -44,7 +44,6 @@ val commonSettings = Seq(
   libraryDependencies ++= Seq(
     "org.typelevel" %% "cats-tagless-laws" % catsTaglessVersion % Test,
     "org.typelevel" %% "cats-effect-laws" % catsEffectVersion % Test,
-    "org.typelevel" %% "cats-testkit" % catsVersion % Test,
     "org.typelevel" %% "cats-testkit-scalatest" % "1.0.0-M2" % Test,
     "org.typelevel" %% "cats-laws" % catsVersion % Test,
     "org.typelevel" %% "cats-kernel-laws" % catsVersion % Test,
