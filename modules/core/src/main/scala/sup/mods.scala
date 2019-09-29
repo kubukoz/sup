@@ -51,8 +51,6 @@ object mods {
 
   /**
     * Unwrap a tagged health check (dual of `tagWith`).
-    *
-    * Use with [[HealthCheck.mapK]].
     * */
   def untag[F[_]: Functor, Tag]: HealthCheckMod[F, Tagged[Tag, ?], F, Id] =
     _.mapResult(_.transform[Id](_.health))
@@ -67,8 +65,6 @@ object mods {
 
   /**
     * Merges an EitherK of the same container type. Useful in conjunction with HealthCheck.{`either`, `race`}.
-    *
-    * Use with [[HealthCheck.mapResult]] and `HealthResult.mapK`.
     * */
   def mergeEitherK[F[_]: Functor, H[_]]: HealthCheckMod[F, EitherK[H, H, ?], F, H] = _.mapResult {
     _.transform(_.run.merge)
