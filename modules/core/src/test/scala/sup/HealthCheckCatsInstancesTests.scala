@@ -3,7 +3,6 @@ import cats.kernel.laws.discipline.EqTests
 import cats.kernel.laws.discipline.MonoidTests
 import cats.tagless.laws.discipline.FunctorKTests
 import cats.tests.CatsSuite
-import org.scalacheck.magnolia._
 
 import scala.util.Try
 

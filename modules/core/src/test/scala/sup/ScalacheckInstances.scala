@@ -5,6 +5,17 @@ import org.scalacheck.Arbitrary
 import sup.data.Tagged
 
 object ScalacheckInstances {
+  implicit def arbitraryTagged[Tag: Arbitrary, E: Arbitrary]: Arbitrary[Tagged[Tag, E]] = Arbitrary {
+    for {
+      tag  <- Arbitrary.arbitrary[Tag]
+      elem <- Arbitrary.arbitrary[E]
+    } yield Tagged(tag, elem)
+  }
+  implicit def arbitraryHealthResult[H[_]](implicit F: Arbitrary[H[Health]]): Arbitrary[HealthResult[H]] = Arbitrary {
+    F.arbitrary.map(HealthResult(_))
+  }
+
+  implicit val arbitraryHealth: Arbitrary[Health] = Arbitrary(Arbitrary.arbitrary[Boolean].map(Health.fromBoolean))
   implicit val cogenHealth: Cogen[Health] = Cogen.cogenBoolean.contramap(_.isHealthy)
 
   implicit def arbitraryHealthCheck[F[_], H[_]](implicit A: Arbitrary[F[HealthResult[H]]]): Arbitrary[HealthCheck[F, H]] =

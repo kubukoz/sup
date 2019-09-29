@@ -4,7 +4,6 @@ import cats.kernel.laws.discipline.EqTests
 import cats.laws.discipline._
 import cats.tests.CatsSuite
 import sup.data.Tagged
-import org.scalacheck.magnolia._
 
 class TaggedCatsInstancesTests extends CatsSuite {
   import ScalacheckInstances._

@@ -5,8 +5,6 @@ import cats.effect.Async
 import cats.effect.ContextShift
 import cats.effect.IO
 import cats.effect.Timer
-import org.scalatest.Matchers
-import org.scalatest.WordSpec
 import scala.concurrent.duration._
 import cats.implicits._
 import scala.concurrent.ExecutionContext

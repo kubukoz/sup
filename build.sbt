@@ -5,7 +5,6 @@ val catsEffectVersion = "2.0.0"
 val catsTaglessVersion = "0.10"
 val doobieVersion = "0.8.2"
 val catsVersion = "2.0.0"
-val scalacheckMagnoliaVersion = "0.3.0"
 val scalacacheVersion = "0.28.0"
 val kindProjectorVersion = "0.10.3"
 val fs2RedisVersion = "0.9.0"
@@ -46,8 +45,7 @@ val commonSettings = Seq(
     "org.typelevel" %% "cats-effect-laws" % catsEffectVersion % Test,
     "org.typelevel" %% "cats-testkit-scalatest" % "1.0.0-M2" % Test,
     "org.typelevel" %% "cats-laws" % catsVersion % Test,
-    "org.typelevel" %% "cats-kernel-laws" % catsVersion % Test,
-    "com.github.chocpanda" %% "scalacheck-magnolia" % scalacheckMagnoliaVersion % Test
+    "org.typelevel" %% "cats-kernel-laws" % catsVersion % Test
   ) ++ compilerPlugins,
   mimaPreviousArtifacts := Set()
 )
@@ -59,7 +57,8 @@ def module(moduleName: String): Project =
 
 val core = module("core").settings(
   libraryDependencies ++= Seq(
-
+    "org.typelevel" %% "cats-effect" % catsEffectVersion,
+    "org.typelevel" %% "cats-tagless-core" % catsTaglessVersion
   )
 )
 
