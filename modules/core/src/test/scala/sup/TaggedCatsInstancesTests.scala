@@ -7,6 +7,8 @@ import sup.data.Tagged
 import org.scalacheck.magnolia._
 
 class TaggedCatsInstancesTests extends CatsSuite {
+  import ScalacheckInstances._
+
   checkAll("Reducible[Tagged[String, ?]]", ReducibleTests[Tagged[String, ?]].reducible[List, Int, Int])
   checkAll("Eq[Tagged[String, Int]]", EqTests[Tagged[String, Int]].eqv)
 }
