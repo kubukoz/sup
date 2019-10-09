@@ -11,8 +11,8 @@ val fs2RedisVersion = "0.9.0"
 val h2Version = "1.4.199"
 val log4CatsVersion = "1.0.0"
 val http4sVersion = "0.21.0-M5"
-val circeVersion = "0.12.1"
-val sttpVersion = "1.6.8"
+val circeVersion = "0.12.2"
+val sttpVersion = "1.6.7"
 
 inThisBuild(
   List(
