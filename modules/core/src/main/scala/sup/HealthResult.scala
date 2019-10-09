@@ -3,7 +3,10 @@ package sup
 import cats.implicits._
 import cats.kernel.Monoid
 import cats.tagless.FunctorK
-import cats.{~>, Applicative, Eq, Id}
+import cats.~>
+import cats.Applicative
+import cats.Eq
+import cats.Id
 import sup.data.Tagged
 
 final case class HealthResult[H[_]](value: H[Health]) extends AnyVal {
@@ -13,7 +16,7 @@ final case class HealthResult[H[_]](value: H[Health]) extends AnyVal {
 object HealthResult {
   def const[H[_]: Applicative](health: Health): HealthResult[H] = HealthResult(health.pure[H])
 
-  val one: Health => HealthResult[Id]                                   = HealthResult[Id]
+  val one: Health => HealthResult[Id] = HealthResult[Id]
   def tagged[Tag](tag: Tag, head: Health): HealthResult[Tagged[Tag, ?]] = HealthResult(Tagged(tag, head))
 
   implicit val functorK: FunctorK[HealthResult] = new FunctorK[HealthResult] {

@@ -3,7 +3,7 @@ val Scala_213 = "2.13.0" //don't use 2.13.1 until kind-projector is fixed
 
 val catsEffectVersion = "2.0.0"
 val catsTaglessVersion = "0.10"
-val doobieVersion = "0.8.2"
+val doobieVersion = "0.8.4"
 val catsVersion = "2.0.0"
 val scalacacheVersion = "0.28.0"
 val kindProjectorVersion = "0.10.3"
@@ -43,7 +43,7 @@ val commonSettings = Seq(
   libraryDependencies ++= Seq(
     "org.typelevel" %% "cats-tagless-laws" % catsTaglessVersion % Test,
     "org.typelevel" %% "cats-effect-laws" % catsEffectVersion % Test,
-    "org.typelevel" %% "cats-testkit-scalatest" % "1.0.0-M2" % Test,
+    "org.typelevel" %% "cats-testkit-scalatest" % "1.0.0-RC1" % Test,
     "org.typelevel" %% "cats-laws" % catsVersion % Test,
     "org.typelevel" %% "cats-kernel-laws" % catsVersion % Test
   ) ++ compilerPlugins,
