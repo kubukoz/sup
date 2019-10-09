@@ -1,12 +1,12 @@
 val Scala_212 = "2.12.10"
-val Scala_213 = "2.13.0" //don't use 2.13.1 until kind-projector is fixed
+val Scala_213 = "2.13.1"
 
 val catsEffectVersion = "2.0.0"
 val catsTaglessVersion = "0.10"
 val doobieVersion = "0.8.4"
 val catsVersion = "2.0.0"
 val scalacacheVersion = "0.28.0"
-val kindProjectorVersion = "0.10.3"
+val kindProjectorVersion = "0.11.0"
 val fs2RedisVersion = "0.9.0"
 val h2Version = "1.4.199"
 val log4CatsVersion = "1.0.0"
@@ -31,7 +31,7 @@ inThisBuild(
 )
 
 val compilerPlugins = List(
-  compilerPlugin("org.typelevel" %% "kind-projector" % kindProjectorVersion)
+  compilerPlugin("org.typelevel" % "kind-projector" % kindProjectorVersion cross CrossVersion.full)
 )
 
 val commonSettings = Seq(
