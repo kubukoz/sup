@@ -53,7 +53,7 @@ val commonSettings = Seq(
 val crossBuiltCommonSettings = commonSettings ++ Seq(crossScalaVersions := Seq(Scala_212, Scala_213))
 
 def module(moduleName: String): Project =
-  Project(moduleName, file("modules/" + moduleName)).settings(crossBuiltCommonSettings).settings(name += s"-$moduleName")
+  Project(moduleName, file("modules") / moduleName).settings(crossBuiltCommonSettings).settings(name += s"-$moduleName")
 
 val core = module("core").settings(
   libraryDependencies ++= Seq(
