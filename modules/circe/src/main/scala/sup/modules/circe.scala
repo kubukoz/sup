@@ -1,9 +1,13 @@
 package sup.modules
 
-import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
-import io.circe.{Decoder, Encoder}
-import sup.data.{Report, Tagged}
-import sup.{Health, HealthResult}
+import io.circe.generic.semiauto.deriveDecoder
+import io.circe.generic.semiauto.deriveEncoder
+import io.circe.Decoder
+import io.circe.Encoder
+import sup.data.Report
+import sup.data.Tagged
+import sup.Health
+import sup.HealthResult
 
 object circe {
   implicit val healthCirceEncoder: Encoder[Health] = Encoder[String].contramap(_.toString)

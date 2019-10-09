@@ -1,7 +1,7 @@
 package sup
 
 import cats.data.{EitherK, Tuple2K}
-import cats.{~>, Applicative, ApplicativeError, FlatMap, Functor, Id, Semigroup}
+import cats.{Applicative, ApplicativeError, FlatMap, Functor, Id, Semigroup}
 import cats.effect.{Concurrent, Timer}
 
 import scala.concurrent.duration.FiniteDuration
@@ -20,8 +20,10 @@ object mods {
   /**
     * Fallback to the provided value in case the check takes longer than `duration`.
     * */
-  def timeoutToDefault[F[_]: Concurrent: Timer, H[_]: Applicative](default: Health,
-                                                                   duration: FiniteDuration): HealthCheckEndoMod[F, H] =
+  def timeoutToDefault[F[_]: Concurrent: Timer, H[_]: Applicative](
+    default: Health,
+    duration: FiniteDuration
+  ): HealthCheckEndoMod[F, H] =
     _.transform {
       _.timeoutTo(duration, HealthResult(default.pure[H]).pure[F])
     }
