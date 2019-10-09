@@ -80,6 +80,6 @@ and there's no "unknown" state.
 
 ## Compatibility
 
-sup is cross-published for Scala 2.11 and 2.12.
+sup is cross-published for Scala 2.12 and 2.13.
 
 The core module has a dependency on cats-core 1.x and cats-effect 1.x.

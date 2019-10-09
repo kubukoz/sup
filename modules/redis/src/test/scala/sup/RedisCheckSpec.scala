@@ -2,10 +2,11 @@ package sup
 
 import cats.implicits._
 import dev.profunktor.redis4cats.algebra.Ping
-import org.scalatest.{Matchers, WordSpec}
 import sup.modules.redis
+import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.matchers.should.Matchers
 
-class RedisCheckSpec extends WordSpec with Matchers {
+class RedisCheckSpec extends AnyWordSpec with Matchers {
   "Either check" when {
     "Right" should {
       "be Healthy" in {

@@ -29,6 +29,7 @@ def transactor: Transactor[IO] = ???
 And now the health check:
 
 ```tut:book
-import eu.timepit.refined.auto._
-def doobieCheck = connectionCheck(transactor)(timeoutSeconds = Some(5))
+import scala.concurrent.duration._
+
+def doobieCheck = connectionCheck(transactor)(timeout = Some(5.seconds))
 ```
