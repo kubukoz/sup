@@ -115,7 +115,7 @@ val http4sClient = module("http4s-client")
 val circe = module("circe")
   .settings(
     libraryDependencies ++= Seq(
-      "io.circe" %% "circe-generic" % circeVersion
+      "io.circe" %% "circe-core" % circeVersion
     )
   )
   .dependsOn(core)
