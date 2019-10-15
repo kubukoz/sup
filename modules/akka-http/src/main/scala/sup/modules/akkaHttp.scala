@@ -49,13 +49,13 @@ object akkaHttp {
     path: String = "health-check",
     f: RequestContext => F ~> Future)
   (implicit marshaller: ToEntityMarshaller[HealthResult[H]], combineHealthChecks: Semigroup[Health]): Route = {
-    akkaPath(path) { requestCtx =>
-      get {
+    akkaPath(path) {
+      get { requestCtx =>
         onComplete(f(requestCtx)(healthCheckResponse(healthCheck))) {
           case Success(response) => complete(response)
           case Failure(e) => failWith(e)
-        }
-      }(requestCtx)
+        }(requestCtx)
+      }
     }
   }
 }
