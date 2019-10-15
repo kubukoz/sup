@@ -39,8 +39,8 @@ object http4s {
     import dsl._
 
     healthCheck.check.flatMap { check =>
-      if (check.value.reduce.isHealthy) Ok(check)
-      else ServiceUnavailable(check)
+      if (check.value.reduce.isHealthy)  Ok(check)
+      else ServiceUnavailable.apply(check)
     }
   }
 }
