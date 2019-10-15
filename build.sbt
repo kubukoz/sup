@@ -112,6 +112,14 @@ val http4sClient = module("http4s-client")
   )
   .dependsOn(core)
 
+val akkaHttp = module("akka-http")
+  .settings(
+    libraryDependencies ++= Seq(
+      "com.typesafe.akka" %% "akka-http" % "10.1.10"
+    )
+  )
+  .dependsOn(core)
+
 val circe = module("circe")
   .settings(
     libraryDependencies ++= Seq(
@@ -128,7 +136,7 @@ val sttp = module("sttp")
   )
   .dependsOn(core)
 
-val allModules = List(core, scalacache, doobie, redis, log4cats, http4s, http4sClient, circe, sttp)
+val allModules = List(core, scalacache, doobie, redis, log4cats, http4s, http4sClient, akkaHttp, circe, sttp)
 
 val lastStableVersion = settingKey[String]("Last tagged version")
 
