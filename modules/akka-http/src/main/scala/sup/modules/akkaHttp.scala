@@ -6,8 +6,8 @@ import akka.http.scaladsl.server.Directives.{path => akkaPath, _}
 import akka.http.scaladsl.server.Route
 import cats.Reducible
 import cats.effect.Effect
-import cats.implicits._
-import cats.kernel.Semigroup
+import cats.Semigroup
+import cats.syntax.reducible._
 import sup.{Health, HealthCheck, HealthResult}
 
 import scala.util.{Failure, Success}
