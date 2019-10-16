@@ -7,8 +7,8 @@ import akka.http.scaladsl.server.{RequestContext, Route}
 import cats.effect.Effect
 import cats.syntax.functor._
 import cats.syntax.reducible._
-import cats.{Functor, Reducible, Semigroup, ~>}
-import sup.{Health, HealthCheck, HealthResult}
+import cats.{Functor, Reducible, ~>}
+import sup.{HealthCheck, HealthResult}
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
@@ -25,7 +25,7 @@ object akkaHttp {
   def healthCheckRoutes[F[_] : Effect, H[_] : Reducible](
     healthCheck: HealthCheck[F, H],
     path: String = "health-check")
-  (implicit marshaller: ToEntityMarshaller[HealthResult[H]], combineHealthChecks: Semigroup[Health]): Route = {
+  (implicit marshaller: ToEntityMarshaller[HealthResult[H]]): Route = {
     akkaPath(path) {
       get {
         onComplete(Effect[F].toIO(healthCheckResponse(healthCheck)).unsafeToFuture()) {
@@ -36,8 +36,7 @@ object akkaHttp {
     }
   }
 
-  def healthCheckResponse[F[_] : Functor, H[_] : Reducible](healthCheck: HealthCheck[F, H])(
-    implicit combineHealthChecks: Semigroup[Health]): F[(StatusCode, HealthResult[H])] = {
+  def healthCheckResponse[F[_] : Functor, H[_] : Reducible](healthCheck: HealthCheck[F, H]): F[(StatusCode, HealthResult[H])] = {
     healthCheck.check.map { check =>
       if (check.value.reduce.isHealthy) StatusCodes.OK -> check
       else StatusCodes.ServiceUnavailable -> check
@@ -47,13 +46,13 @@ object akkaHttp {
   def healthCheckRoutesWithContext[F[_]: Functor, H[_] : Reducible, R](
     healthCheck: HealthCheck[F, H],
     path: String = "health-check",
-    f: RequestContext => F ~> Future)
-  (implicit marshaller: ToEntityMarshaller[HealthResult[H]], combineHealthChecks: Semigroup[Health]): Route = {
+    run: RequestContext => F ~> Future)
+  (implicit marshaller: ToEntityMarshaller[HealthResult[H]]): Route = {
     akkaPath(path) {
       get { requestCtx =>
-        onComplete(f(requestCtx)(healthCheckResponse(healthCheck))) {
+        onComplete(run(requestCtx)(healthCheckResponse(healthCheck))) {
           case Success(response) => complete(response)
-          case Failure(e) => failWith(e)
+          case Failure(error) => failWith(error)
         }(requestCtx)
       }
     }
