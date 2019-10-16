@@ -26,6 +26,7 @@ object HealthResult {
   implicit def monoid[H[_]: Applicative](implicit M: Monoid[Health]): Monoid[HealthResult[H]] =
     new Monoid[HealthResult[H]] {
       override val empty: HealthResult[H] = HealthResult.const[H](M.empty)
+
       override def combine(x: HealthResult[H], y: HealthResult[H]): HealthResult[H] =
         HealthResult(Applicative.monoid[H, Health].combine(x.value, y.value))
     }

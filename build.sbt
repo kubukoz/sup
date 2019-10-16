@@ -31,7 +31,7 @@ inThisBuild(
 )
 
 val compilerPlugins = List(
-  compilerPlugin("org.typelevel" % "kind-projector" % kindProjectorVersion cross CrossVersion.full)
+  compilerPlugin(("org.typelevel" % "kind-projector" % kindProjectorVersion).cross(CrossVersion.full))
 )
 
 val commonSettings = Seq(

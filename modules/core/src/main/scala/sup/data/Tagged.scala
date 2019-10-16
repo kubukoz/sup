@@ -28,9 +28,11 @@ object Tagged {
 
     def by[F[_], G[_]: Reducible](fg: F ~> G): Reducible[F] = new Reducible[F] {
       override def reduceLeftTo[A, B](fa: F[A])(f: A => B)(g: (B, A) => B): B = Reducible[G].reduceLeftTo(fg(fa))(f)(g)
+
       override def reduceRightTo[A, B](fa: F[A])(f: A => B)(g: (A, Eval[B]) => Eval[B]): Eval[B] =
         Reducible[G].reduceRightTo(fg(fa))(f)(g)
       override def foldLeft[A, B](fa: F[A], b: B)(f: (B, A) => B): B = Reducible[G].foldLeft(fg(fa), b)(f)
+
       override def foldRight[A, B](fa: F[A], lb: Eval[B])(f: (A, Eval[B]) => Eval[B]): Eval[B] =
         Reducible[G].foldRight(fg(fa), lb)(f)
     }
