@@ -20,7 +20,7 @@ object HealthReporter {
 
   /**
     * Constructs a healthcheck from a non-empty structure G of healthchecks.
-    * The status of the whole check is determined using the results of given checks and the semigroup of Health.
+    * The status of the whole check is determined using the results of given checks.
     *
     * e.g. if all checks need to return Healthy for the whole thing to be healthy, use [[Health.allHealthyCommutativeMonoid]].
     */
@@ -32,7 +32,7 @@ object HealthReporter {
 
   /**
     * Constructs a healthcheck from a non-empty structure G of healthchecks that are run in parallel.
-    * The status of the whole check is determined using the results of given checks and the semigroup of Health.
+    * The status of the whole check is determined using the results of given checks.
     *
     * e.g. if all checks need to return Healthy for the whole thing to be healthy, use [[Health.allHealthyCommutativeMonoid]].
     */
