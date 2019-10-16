@@ -14,13 +14,11 @@ object http4s {
     * Builds a HttpRoutes value that'll check the result of the healthcheck, and,
     * if it's sick, return ServiceUnavailable (Ok otherwise). See [[healthCheckResponse]]
     * for an alternative that doesn't provide a route matcher.
-    *
-    * The semigroup is used only to determine whether the overall health status is healthy.
     * */
   def healthCheckRoutes[F[_]: Sync, H[_]: Reducible](
     healthCheck: HealthCheck[F, H],
     path: String = "health-check"
-  )(implicit encoder: EntityEncoder[F, HealthResult[H]], combineHealthChecks: Semigroup[Health]): HttpRoutes[F] = {
+  )(implicit encoder: EntityEncoder[F, HealthResult[H]]): HttpRoutes[F] = {
 
     val dsl = new Http4sDsl[F] {}
     import dsl._
@@ -31,9 +29,9 @@ object http4s {
     }
   }
 
-  def healthCheckResponse[F[_]: Monad, H[_]: Reducible](healthCheck: HealthCheck[F, H])(
-    implicit encoder: EntityEncoder[F, HealthResult[H]],
-    combineHealthChecks: Semigroup[Health]): F[Response[F]] = {
+  def healthCheckResponse[F[_]: Monad, H[_]: Reducible](
+    healthCheck: HealthCheck[F, H]
+  )(implicit encoder: EntityEncoder[F, HealthResult[H]]): F[Response[F]] = {
 
     val dsl = new Http4sDsl[F] {}
     import dsl._
