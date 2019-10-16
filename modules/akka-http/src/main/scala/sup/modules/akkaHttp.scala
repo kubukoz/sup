@@ -30,7 +30,7 @@ object akkaHttp {
       get {
         onComplete(Effect[F].toIO(healthCheckResponse(healthCheck)).unsafeToFuture()) {
           case Success(response) => complete(response)
-          case Failure(e) => failWith(e)
+          case Failure(error) => failWith(error)
         }
       }
     }
