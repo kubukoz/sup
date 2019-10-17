@@ -9,10 +9,10 @@ val scalacacheVersion = "0.28.0"
 val kindProjectorVersion = "0.11.0"
 val fs2RedisVersion = "0.9.0"
 val h2Version = "1.4.200"
-val log4CatsVersion = "1.0.0"
+val log4CatsVersion = "1.0.1"
 val http4sVersion = "0.21.0-M5"
 val circeVersion = "0.12.2"
-val sttpVersion = "1.6.7"
+val sttpVersion = "1.6.8"
 
 inThisBuild(
   List(
@@ -115,7 +115,7 @@ val http4sClient = module("http4s-client")
 val circe = module("circe")
   .settings(
     libraryDependencies ++= Seq(
-      "io.circe" %% "circe-generic" % circeVersion
+      "io.circe" %% "circe-core" % circeVersion
     )
   )
   .dependsOn(core)
