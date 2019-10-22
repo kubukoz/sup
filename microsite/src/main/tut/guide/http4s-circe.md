@@ -26,14 +26,11 @@ The circe module provides circe `Encoder`/`Decoder` instances for all the import
 so you can use them together with `http4s-circe` and bundle the whole thing up:
 
 ```tut:book
-import io.circe._, org.http4s.circe._, org.http4s._, org.http4s.implicits._, org.http4s.client._
+import io.circe._, org.http4s.circe.CirceEntityCodec._, org.http4s._, org.http4s.implicits._, org.http4s.client._
 import cats.effect._, cats._, cats.data._, sup.data._
 
 implicit val client: Client[IO] = Client.fromHttpApp(HttpApp.notFound[IO])
  
-//you'll most likely define this implicit only once per app
-implicit def entityEncoder[A: Encoder]: EntityEncoder[IO, A] = jsonEncoderOf
-
 val healthcheck: HealthCheck[IO, Id] = statusCodeHealthCheck(Request[IO]())
 
 val routes = healthCheckRoutes(healthcheck)
@@ -47,7 +44,8 @@ val report = HealthReporter.fromChecks(
 
 val reportRoutes = healthCheckRoutes(report)
 
-reportRoutes.orNotFound.run(Request(uri = Uri.uri("/health-check"))).flatMap(_.as[String]).unsafeRunSync()
+val responseBody = reportRoutes.orNotFound.run(Request(uri = Uri.uri("/health-check"))).flatMap(_.bodyAsText.compile.string)
+println(responseBody.unsafeRunSync())
 ```
 
 ### `remoteHealthCheck`
@@ -55,7 +53,5 @@ reportRoutes.orNotFound.run(Request(uri = Uri.uri("/health-check"))).flatMap(_.a
 There's a way to build a healthcheck out of a request to a remote one:
 
 ```tut:book
-implicit val decoder: EntityDecoder[IO, HealthResult[Id]] = jsonOf
-
-val remoteCheck = remoteHealthCheck(Request[IO]())
+val remoteCheck = remoteHealthCheck[IO, Id](Request())
 ```

@@ -112,6 +112,14 @@ val http4sClient = module("http4s-client")
   )
   .dependsOn(core)
 
+val akkaHttp = module("akka-http")
+  .settings(
+    libraryDependencies ++= Seq(
+      "com.typesafe.akka" %% "akka-http" % "10.1.10"
+    )
+  )
+  .dependsOn(core)
+
 val circe = module("circe")
   .settings(
     libraryDependencies ++= Seq(
@@ -128,7 +136,7 @@ val sttp = module("sttp")
   )
   .dependsOn(core)
 
-val allModules = List(core, scalacache, doobie, redis, log4cats, http4s, http4sClient, circe, sttp)
+val allModules = List(core, scalacache, doobie, redis, log4cats, http4s, http4sClient, akkaHttp, circe, sttp)
 
 val lastStableVersion = settingKey[String]("Last tagged version")
 
@@ -152,7 +160,8 @@ val microsite = project
     scalacOptions --= Seq("-Ywarn-unused:imports"),
     libraryDependencies ++= compilerPlugins,
     libraryDependencies ++= Seq(
-      "org.http4s" %% "http4s-circe" % http4sVersion
+      "org.http4s" %% "http4s-circe" % http4sVersion,
+      "de.heikoseeberger" %% "akka-http-circe" % "1.29.1"
     ),
     skip in publish := true,
     buildInfoPackage := "sup.buildinfo",
