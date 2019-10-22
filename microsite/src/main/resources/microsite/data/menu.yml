@@ -19,6 +19,9 @@ options:
   - title: http4s / circe
     url: guide/http4s-circe.html
     menu_section: modules
+  - title: akka-http
+    url: guide/akkahttp.html
+    menu_section: modules
   - title: sttp
     url: guide/sttp.html
     menu_section: modules

@@ -18,6 +18,7 @@ import sup.HealthResult
 import scala.concurrent.Future
 import scala.util.Failure
 import scala.util.Success
+import akka.http.scaladsl.model.HttpRequest
 
 object akkahttp {
 
@@ -51,16 +52,18 @@ object akkahttp {
     healthCheck: HealthCheck[F, H],
     path: String = "health-check"
   )(
-    run: RequestContext => F ~> Future
+    run: HttpRequest => F ~> Future
   )(
     implicit marshaller: ToEntityMarshaller[HealthResult[H]]
   ): Route =
     akkaPath(path) {
-      get { requestCtx =>
-        onComplete(run(requestCtx)(healthCheckResponse(healthCheck))) {
-          case Success(response) => complete(response)
-          case Failure(error)    => failWith(error)
-        }(requestCtx)
+      get {
+        extractRequest { request =>
+          onComplete(run(request)(healthCheckResponse(healthCheck))) {
+            case Success(response) => complete(response)
+            case Failure(error)    => failWith(error)
+          }
+        }
       }
     }
 }

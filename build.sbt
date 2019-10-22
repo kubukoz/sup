@@ -160,7 +160,8 @@ val microsite = project
     scalacOptions --= Seq("-Ywarn-unused:imports"),
     libraryDependencies ++= compilerPlugins,
     libraryDependencies ++= Seq(
-      "org.http4s" %% "http4s-circe" % http4sVersion
+      "org.http4s" %% "http4s-circe" % http4sVersion,
+      "de.heikoseeberger" %% "akka-http-circe" % "1.29.1"
     ),
     skip in publish := true,
     buildInfoPackage := "sup.buildinfo",
