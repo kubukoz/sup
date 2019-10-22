@@ -68,9 +68,11 @@ val check: HealthCheck[Eff, Id] = HealthCheck.liftFBoolean {
 }
 
 def effToIO(token: Token): Eff ~> IO =
-  λ[Eff ~> IO](_.run(request.headers.find(_.is("B3-Trace-Id")).fold("")(_.value)))
+  λ[Eff ~> IO](_.run(token))
 
 val route: Route = healthCheckRoutesWithContext(check) { request =>
-  effToIO.andThen(λ[IO ~> Future](_.unsafeToFuture()))
+  val token = request.headers.find(_.is("B3-Trace-Id")).fold("")(_.value)
+
+  effToIO(token).andThen(λ[IO ~> Future](_.unsafeToFuture()))
 }
 ```
