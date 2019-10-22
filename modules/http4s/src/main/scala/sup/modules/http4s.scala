@@ -1,11 +1,14 @@
 package sup.modules
 
 import cats.effect.Sync
-import cats.kernel.Semigroup
-import cats.{Monad, Reducible}
+import cats.Monad
+import cats.Reducible
 import org.http4s.dsl.Http4sDsl
-import org.http4s.{EntityEncoder, HttpRoutes, Response}
-import sup.{Health, HealthCheck, HealthResult}
+import org.http4s.EntityEncoder
+import org.http4s.HttpRoutes
+import org.http4s.Response
+import sup.HealthCheck
+import sup.HealthResult
 import cats.implicits._
 
 object http4s {
@@ -18,7 +21,9 @@ object http4s {
   def healthCheckRoutes[F[_]: Sync, H[_]: Reducible](
     healthCheck: HealthCheck[F, H],
     path: String = "health-check"
-  )(implicit encoder: EntityEncoder[F, HealthResult[H]]): HttpRoutes[F] = {
+  )(
+    implicit encoder: EntityEncoder[F, HealthResult[H]]
+  ): HttpRoutes[F] = {
 
     val dsl = new Http4sDsl[F] {}
     import dsl._
@@ -31,7 +36,9 @@ object http4s {
 
   def healthCheckResponse[F[_]: Monad, H[_]: Reducible](
     healthCheck: HealthCheck[F, H]
-  )(implicit encoder: EntityEncoder[F, HealthResult[H]]): F[Response[F]] = {
+  )(
+    implicit encoder: EntityEncoder[F, HealthResult[H]]
+  ): F[Response[F]] = {
 
     val dsl = new Http4sDsl[F] {}
     import dsl._
