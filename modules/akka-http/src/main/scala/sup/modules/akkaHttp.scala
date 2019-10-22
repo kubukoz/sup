@@ -42,7 +42,9 @@ object akkahttp {
       }
     }
 
-  def healthCheckResponse[F[_]: Functor, H[_]: Reducible](healthCheck: HealthCheck[F, H]): F[(StatusCode, HealthResult[H])] =
+  def healthCheckResponse[F[_]: Functor, H[_]: Reducible](
+    healthCheck: HealthCheck[F, H]
+  ): F[(StatusCode, HealthResult[H])] =
     healthCheck.check.map { check =>
       if (check.value.reduce.isHealthy) StatusCodes.OK -> check
       else StatusCodes.ServiceUnavailable -> check
