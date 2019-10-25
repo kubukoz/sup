@@ -17,7 +17,11 @@ object doobie {
     * Note: Errors aren't recovered in this healthcheck. If you want error handling,
     * consider using [[HealthCheck.through]] with [[sup.mods.recoverToSick]].
     * */
-  def connectionCheck[F[_]: Bracket[?[_], Throwable]](xa: Transactor[F])(timeout: Option[FiniteDuration]): HealthCheck[F, Id] = {
+  def connectionCheck[F[_]: Bracket[?[_], Throwable]](
+    xa: Transactor[F]
+  )(
+    timeout: Option[FiniteDuration]
+  ): HealthCheck[F, Id] = {
     //zero means infinite in JDBC
     val actualTimeoutSeconds = timeout.foldMap(_.toSeconds.toInt)
 

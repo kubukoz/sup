@@ -48,7 +48,7 @@ object HealthCheck {
     * Lifts a Boolean-returning action to a healthcheck that yields Sick if the action returns false.
     * */
   def liftFBoolean[F[_]: Functor](fb: F[Boolean]): HealthCheck[F, Id] =
-    liftF(fb.map(Health.fromBoolean andThen HealthResult.one))
+    liftF(fb.map(Health.fromBoolean.andThen(HealthResult.one)))
 
   /**
     * Combines two healthchecks by running the first one and recovering with the second one in case of failure in F.
@@ -115,6 +115,7 @@ object HealthCheck {
   ): Monoid[HealthCheck[F, H]] =
     new Monoid[HealthCheck[F, H]] {
       override val empty: HealthCheck[F, H] = HealthCheck.const[F, H](M.empty)
+
       override def combine(x: HealthCheck[F, H], y: HealthCheck[F, H]): HealthCheck[F, H] = liftF {
         Applicative.monoid[F, HealthResult[H]].combine(x.check, y.check)
       }

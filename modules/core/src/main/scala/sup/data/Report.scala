@@ -20,6 +20,7 @@ object Report extends ReportInstances {
 }
 
 trait ReportInstances {
+
   implicit def catsReducibleForReport[G[_], H[_]](implicit F: Foldable[Nested[G, H, ?]]): Reducible[Report[G, H, ?]] =
     new ReportReducible[G, H]
 
@@ -30,6 +31,6 @@ trait ReportInstances {
 }
 
 private[data] class ReportReducible[G[_], H[_]](implicit F: Foldable[Nested[G, H, ?]])
-    extends NonEmptyReducible[Report[G, H, ?], Nested[G, H, ?]] {
+  extends NonEmptyReducible[Report[G, H, ?], Nested[G, H, ?]] {
   override def split[A](fa: Report[G, H, A]): (A, Nested[G, H, A]) = (fa.health, Nested(fa.checks))
 }

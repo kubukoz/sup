@@ -17,10 +17,10 @@ sealed trait Health extends Product with Serializable {
 
 object Health {
   case object Healthy extends Health
-  case object Sick    extends Health
+  case object Sick extends Health
 
   val healthy: Health = Healthy
-  val sick: Health    = Sick
+  val sick: Health = Sick
 
   val fromBoolean: Boolean => Health = {
     case true  => Healthy
@@ -39,7 +39,7 @@ object Health {
     * A monoid that'll return [[Sick]] if any of the combined values are sick, [[Healthy]] otherwise.
     * */
   implicit val allHealthyCommutativeMonoid: CommutativeMonoid[Health] = new CommutativeMonoid[Health] {
-    override val empty: Health                         = healthy
+    override val empty: Health = healthy
     override def combine(x: Health, y: Health): Health = if (x.isHealthy) y else sick
   }
 
