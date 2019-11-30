@@ -10,7 +10,7 @@ val kindProjectorVersion = "0.11.0"
 val fs2RedisVersion = "0.9.1"
 val h2Version = "1.4.200"
 val log4CatsVersion = "1.0.1"
-val http4sVersion = "0.21.0-M5"
+val http4sVersion = "0.21.0-M6"
 val circeVersion = "0.12.3"
 val sttpVersion = "1.7.2"
 
