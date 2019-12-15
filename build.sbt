@@ -3,7 +3,7 @@ val Scala_213 = "2.13.1"
 
 val catsEffectVersion = "2.0.0"
 val catsTaglessVersion = "0.10"
-val doobieVersion = "0.8.6"
+val doobieVersion = "0.8.7"
 val catsVersion = "2.0.0"
 val scalacacheVersion = "0.28.0"
 val kindProjectorVersion = "0.11.0"
