@@ -140,12 +140,24 @@ val allModules = List(core, scalacache, doobie, redis, log4cats, http4s, http4sC
 
 val lastStableVersion = settingKey[String]("Last tagged version")
 
+def dropMinor(version: String): String = version.split("\\.").init.mkString(".")
+
+def enumerateAnd(values: List[String]): String = {
+  val init = values.init
+  val last = values.last
+
+  if (values.length > 1) {
+    init.mkString(", ") + " and " + last
+  } else values.mkString
+}
+
 val microsite = project
   .settings(
     scalaVersion := Scala_212,
     crossScalaVersions := List(),
     micrositeName := "sup",
     micrositeDescription := "Functional healthchecks in Scala",
+    micrositeDocumentationUrl := "/guide",
     micrositeUrl := "https://sup.kubukoz.com",
     micrositeAuthor := "Jakub Kozłowski",
     micrositeTwitterCreator := "@kubukoz",
@@ -170,11 +182,14 @@ val microsite = project
     lastStableVersion := dynverGitDescribeOutput
       .value
       .map(_.ref.value.tail)
-      .getOrElse(throw new Exception("There's no output from dynver!"))
+      .getOrElse(throw new Exception("There's no output from dynver!")),
+    mdocVariables := Map(
+      "SCALA_VERSIONS" -> enumerateAnd((crossScalaVersions in core).value.toList.map(dropMinor))
+    )
   )
   .enablePlugins(MicrositesPlugin)
-  .dependsOn(allModules.map(x => x: ClasspathDep[ProjectReference]): _*)
   .enablePlugins(BuildInfoPlugin)
+  .dependsOn(allModules.map(x => x: ClasspathDep[ProjectReference]): _*)
 
 val sup =
   project

@@ -5,12 +5,12 @@ title: redis4cats
 
 sup has a redis4cats module:
 
-```tut:passthrough
+```scala mdoc:passthrough
 sup.microsite.sbtDependencies("redis")
 ```
 
 Imports:
-```tut:silent
+```scala mdoc:silent
 import sup._, sup.modules.redis._
 ```
 
@@ -20,7 +20,7 @@ import sup._, sup.modules.redis._
 
 You can build a connection check out of a `Ping` algebra (included in `RedisCommands`). Let's create one first:
 
-```tut:book
+```scala mdoc
 import dev.profunktor.redis4cats.algebra.Ping, cats.effect._
 
 implicit def ping: Ping[IO] = ???
@@ -28,7 +28,7 @@ implicit def ping: Ping[IO] = ???
 
 And now the health check:
 
-```tut:book
+```scala mdoc
 def redisCheck = pingCheck[IO, Throwable]
 ```
 
