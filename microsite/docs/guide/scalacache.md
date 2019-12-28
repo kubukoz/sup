@@ -1,9 +1,9 @@
 ---
 layout: docs
-title: Scalacache
+title: ScalaCache
 ---
 
-sup has a Scalacache module:
+sup has a [ScalaCache](https://cb372.github.io/scalacache) module:
 
 ```scala mdoc:passthrough
 sup.microsite.sbtDependencies("scalacache")

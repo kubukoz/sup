@@ -3,7 +3,7 @@ layout: docs
 title: http4s-circe
 ---
 
-sup has modules for http4s, http4s-client and circe:
+sup has modules for [http4s](https://http4s.org), http4s-client and [circe](https://circe.github.io/circe):
 
 ```scala mdoc:passthrough
 sup.microsite.sbtDependencies("http4s", "http4s-client", "circe")

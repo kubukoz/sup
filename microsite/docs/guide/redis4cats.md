@@ -3,7 +3,7 @@ layout: docs
 title: redis4cats
 ---
 
-sup has a redis4cats module:
+sup has a [redis4cats](https://redis4cats.profunktor.dev) module:
 
 ```scala mdoc:passthrough
 sup.microsite.sbtDependencies("redis")
