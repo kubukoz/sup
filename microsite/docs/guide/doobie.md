@@ -3,7 +3,7 @@ layout: docs
 title: doobie
 ---
 
-sup has a [doobie](https://tpolecat.github.io/doobie) module:
+sup has a <a href="https://tpolecat.github.io/doobie" target="_blank">doobie</a> module:
 
 ```scala mdoc:passthrough
 sup.microsite.sbtDependencies("doobie")

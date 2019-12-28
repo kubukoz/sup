@@ -3,7 +3,7 @@ layout: docs
 title: sttp
 ---
 
-sup has a module for [sttp](https://sttp.readthedocs.io/en/latest):
+sup has a module for <a href="https://sttp.readthedocs.io/en/latest" target="_blank">sttp</a>.
 
 ```scala mdoc:passthrough
 sup.microsite.sbtDependencies("sttp")
