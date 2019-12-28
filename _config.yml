@@ -1,0 +1,11 @@
+name: sup
+baseurl: ''
+description: Functional healthchecks in Scala
+highlighter: rouge
+docs: true
+collections:
+  tut:
+    output: true
+version: 0.7.0-M2+13-2c693ccf-SNAPSHOT
+org: com.kubukoz
+markdown: kramdown
