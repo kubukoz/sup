@@ -21,7 +21,7 @@ import sup._, sup.modules.sttp._
 There's a way to build a healthcheck out of a request and a backend:
 
 ```scala mdoc
-import com.softwaremill.sttp.{sttp => request, _}, cats.implicits._, cats.effect._
+import com.softwaremill.sttp.{sttp => request, _}, cats.effect._
 
 implicit def backend: SttpBackend[IO, Any] = ???
  

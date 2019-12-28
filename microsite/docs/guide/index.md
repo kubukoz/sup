@@ -155,8 +155,6 @@ val reporter: HealthReporter[IO, NonEmptyList, Id] = HealthReporter.fromChecks(k
 A healthcheck can be tagged with a label, e.g. a `String` with the dependency's name:
 
 ```scala mdoc
-import sup.mods._
-
 val kafkaTagged = kafka.through(mods.tagWith("kafka"))
 val postgresTagged = postgres.through(mods.tagWith("postgres"))
 

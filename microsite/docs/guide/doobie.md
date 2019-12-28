@@ -11,7 +11,7 @@ sup.microsite.sbtDependencies("doobie")
 
 Imports:
 ```scala mdoc:silent
-import sup._, sup.modules.doobie._
+import sup.modules.doobie._
 ```
 
 ## What's included

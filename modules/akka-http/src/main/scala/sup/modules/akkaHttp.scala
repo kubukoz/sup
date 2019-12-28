@@ -4,7 +4,6 @@ import akka.http.scaladsl.marshalling.ToEntityMarshaller
 import akka.http.scaladsl.model.StatusCode
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives.{path => akkaPath, _}
-import akka.http.scaladsl.server.RequestContext
 import akka.http.scaladsl.server.Route
 import cats.effect.Effect
 import cats.syntax.functor._
