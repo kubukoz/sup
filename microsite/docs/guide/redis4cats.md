@@ -11,7 +11,7 @@ sup.microsite.sbtDependencies("redis")
 
 Imports:
 ```scala mdoc:silent
-import sup._, sup.modules.redis._
+import sup.modules.redis._
 ```
 
 ## What's included

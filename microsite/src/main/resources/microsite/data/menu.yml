@@ -10,8 +10,8 @@ options:
   - title: Doobie
     url: guide/doobie.html
     menu_section: modules
-  - title: fs2-redis
-    url: guide/fs2-redis.html
+  - title: redis4cats
+    url: guide/redis4cats.html
     menu_section: modules
   - title: log4cats
     url: guide/log4cats.html

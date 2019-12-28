@@ -36,8 +36,7 @@ val compilerPlugins = List(
 
 val commonSettings = Seq(
   scalaVersion := Scala_212,
-  scalacOptions ++= Options.all(scalaVersion.value),
-  fork in Test := true,
+  scalacOptions --= Seq("-Xfatal-warnings"),
   name := "sup",
   updateOptions := updateOptions.value.withGigahorse(false), //may fix publishing bug
   libraryDependencies ++= Seq(
@@ -166,8 +165,7 @@ val microsite = project
     micrositeGitterChannel := false,
     micrositePushSiteWith := GitHub4s,
     micrositeGithubToken := sys.env.get("GITHUB_TOKEN"),
-    scalacOptions ++= Options.all(scalaVersion.value),
-    scalacOptions --= Seq("-Ywarn-unused:imports"),
+    scalacOptions --= Seq("-Xfatal-warnings"),
     libraryDependencies ++= compilerPlugins,
     libraryDependencies ++= Seq(
       "org.http4s" %% "http4s-circe" % http4sVersion,
