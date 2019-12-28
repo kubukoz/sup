@@ -17,24 +17,30 @@ layout: home
 
 For sbt:
 
-```tut:passthrough
+```scala mdoc:passthrough
 sup.microsite.sbtDependencies("core")
 ```
 
 For ammonite:
 
-```tut:passthrough
+```scala mdoc:passthrough
 sup.microsite.ammDependency("core")
 ```
 
 Imports:
-```tut:silent
+```scala mdoc:silent
 import sup._
 ```
 
 ## Usage
 
-Check out [the usage guide](guide). 
+Check out [the usage guide](guide/). 
+
+## Compatibility
+
+sup is cross-published for Scala @SCALA_VERSIONS@.
+
+The core module has a dependency on cats-core 2.x and cats-effect 2.x.
 
 ## Why?
 
@@ -77,9 +83,3 @@ Although some of these can be implemented by users and used with sup, they're no
 
 Another design decision is that health is binary - a service is either healthy or not,
 and there's no "unknown" state.
-
-## Compatibility
-
-sup is cross-published for Scala 2.12 and 2.13.
-
-The core module has a dependency on cats-core 1.x and cats-effect 1.x.

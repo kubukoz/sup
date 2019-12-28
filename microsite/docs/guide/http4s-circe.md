@@ -5,12 +5,12 @@ title: http4s-circe
 
 sup has modules for http4s, http4s-client and circe:
 
-```tut:passthrough
+```scala mdoc:passthrough
 sup.microsite.sbtDependencies("http4s", "http4s-client", "circe")
 ```
 
 Imports:
-```tut:silent
+```scala mdoc:silent
 import sup._
 import sup.modules.http4s._, sup.modules.http4sclient._, sup.modules.circe._
 ```
@@ -25,7 +25,7 @@ You just need some instances, a healthcheck and an `EntityEncoder[F, HealthResul
 The circe module provides circe `Encoder`/`Decoder` instances for all the important bits,
 so you can use them together with `http4s-circe` and bundle the whole thing up:
 
-```tut:book
+```scala mdoc
 import io.circe._, org.http4s.circe.CirceEntityCodec._, org.http4s._, org.http4s.implicits._, org.http4s.client._
 import cats.effect._, cats._, cats.data._, sup.data._
 
@@ -52,6 +52,6 @@ println(responseBody.unsafeRunSync())
 
 There's a way to build a healthcheck out of a request to a remote one:
 
-```tut:book
+```scala mdoc
 val remoteCheck = remoteHealthCheck[IO, Id](Request())
 ```
