@@ -3,7 +3,7 @@ layout: docs
 title: ScalaCache
 ---
 
-sup has a [ScalaCache](https://cb372.github.io/scalacache) module:
+sup has a <a href="https://cb372.github.io/scalacache" target="_blank">ScalaCache</a> module:
 
 ```scala mdoc:passthrough
 sup.microsite.sbtDependencies("scalacache")
