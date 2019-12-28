@@ -1,9 +1,9 @@
 ---
 layout: docs
-title: Doobie
+title: doobie
 ---
 
-sup has a Doobie module:
+sup has a [doobie](https://tpolecat.github.io/doobie) module:
 
 ```scala mdoc:passthrough
 sup.microsite.sbtDependencies("doobie")

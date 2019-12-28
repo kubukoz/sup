@@ -3,7 +3,7 @@ layout: docs
 title: log4cats
 ---
 
-sup has a log4cats module:
+sup has a [log4cats](https://christopherdavenport.github.io/log4cats) module:
 
 ```scala mdoc:passthrough
 sup.microsite.sbtDependencies("log4cats")

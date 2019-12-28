@@ -3,7 +3,7 @@ layout: docs
 title: akka-http
 ---
 
-sup has modules for akka-http and circe (although you can use any JSON library compatible with akka-http):
+sup has modules for [akka-http](https://doc.akka.io/docs/akka-http/current/index.html) and [circe](https://circe.github.io/circe/) (although you can use any JSON library compatible with akka-http):
 
 ```scala mdoc:passthrough
 sup.microsite.sbtDependencies("akka-http", "circe")

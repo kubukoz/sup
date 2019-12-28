@@ -3,7 +3,7 @@ layout: docs
 title: sttp
 ---
 
-sup has a module for sttp:
+sup has a module for [sttp](https://sttp.readthedocs.io/en/latest):
 
 ```scala mdoc:passthrough
 sup.microsite.sbtDependencies("sttp")
