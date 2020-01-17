@@ -2,7 +2,7 @@ val Scala_212 = "2.12.10"
 val Scala_213 = "2.13.1"
 
 val catsEffectVersion = "2.0.0"
-val catsTaglessVersion = "0.10"
+val catsTaglessVersion = "0.11"
 val doobieVersion = "0.8.8"
 val catsVersion = "2.0.0"
 val scalacacheVersion = "0.28.0"
