@@ -3,14 +3,14 @@ layout: docs
 title: sttp
 ---
 
-sup has a module for sttp:
+sup has a module for <a href="https://sttp.readthedocs.io/en/latest" target="_blank">sttp</a>.
 
-```tut:passthrough
+```scala mdoc:passthrough
 sup.microsite.sbtDependencies("sttp")
 ```
 
 Imports:
-```tut:silent
+```scala mdoc:silent
 import sup._, sup.modules.sttp._
 ```
 
@@ -20,8 +20,8 @@ import sup._, sup.modules.sttp._
 
 There's a way to build a healthcheck out of a request and a backend:
 
-```tut:book
-import com.softwaremill.sttp.{sttp => request, _}, cats.implicits._, cats.effect._
+```scala mdoc
+import com.softwaremill.sttp.{sttp => request, _}, cats.effect._
 
 implicit def backend: SttpBackend[IO, Any] = ???
  

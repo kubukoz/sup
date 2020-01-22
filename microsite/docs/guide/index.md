@@ -5,32 +5,37 @@ title: Usage guide
 
 # Usage guide
 
-* [Installation](#installation)
-* [Core concepts](#core-concepts)
-  + [Health](#health)
-  + [HealthResult](#healthresult)
-  + [HealthCheck](#healthcheck)
-* [Advanced concepts](#advanced-concepts)
-  + [HealthReporter](#healthreporter)
-  + [Tagging](#tagging)
-* [Modifiers](#modifiers)
+- [Usage guide](#usage-guide)
+  - [Installation](#installation)
+  - [Core concepts](#core-concepts)
+    - [Health](#health)
+    - [HealthResult](#healthresult)
+    - [HealthCheck](#healthcheck)
+  - [Advanced concepts](#advanced-concepts)
+    - [HealthReporter](#healthreporter)
+    - [Tagging](#tagging)
+  - [Modifiers](#modifiers)
+    - [timeoutToSick](#timeouttosick)
+    - [tagWith / untag](#tagwith--untag)
+    - [recoverToSick](#recovertosick)
+    - [surround](#surround)
   
 ## Installation
 
 For sbt:
 
-```tut:passthrough
+```scala mdoc:passthrough
 sup.microsite.sbtDependencies("core")
 ```
 
 For ammonite:
 
-```tut:passthrough
+```scala mdoc:passthrough
 sup.microsite.ammDependency("core")
 ```
 
 Imports:
-```tut:silent
+```scala mdoc:silent
 import sup._
 ```
 
@@ -52,11 +57,11 @@ It has a commutative monoid, which is equivalent to the "all" monoid for boolean
 
 That means `Health` values can be combined with the following semantics:
 
-\|+\| | **Sick** | **Healthy**
----|------|---------
-**Sick** | Sick | Sick
-**Healthy** | Sick | Healthy
----|-----|------
+| \|+\|       | **Sick** | **Healthy** |
+| ----------- | -------- | ----------- |
+| **Sick**    | Sick     | Sick        |
+| **Healthy** | Sick     | Healthy     |
+| ---         | -----    | ------      |
 
 
 ### HealthResult
@@ -99,13 +104,16 @@ This is really cool, because thanks to this we can combine two similar healhchec
 
 Let's start with some cats imports (assume they're available in the rest of the page):
 
-```tut:silent
+```scala mdoc:silent
 import cats._, cats.data._, cats.effect._, cats.implicits._
+
+implicit val contextShift: ContextShift[IO] = IO.contextShift(scala.concurrent.ExecutionContext.global)
+implicit val timer: Timer[IO] = IO.timer(scala.concurrent.ExecutionContext.global)
 ```
 
 and here's how healthchecks can be combined:
 
-```tut:book
+```scala mdoc
 //will always be Sick
 def queue1: HealthCheck[IO, Id] = HealthCheck.const(Health.Sick)
 
@@ -133,7 +141,9 @@ type HealthReporter[F[_], G[_], H[_]] = HealthCheck[F, Report[G, H, ?]]
 
 You can construct one from a sequence of healthchecks using the `HealthReporter.fromChecks` function:
 
-```tut:book
+```scala mdoc
+import sup.data.HealthReporter //Import actual HealthReporter
+
 val kafka: HealthCheck[IO, Id] = HealthCheck.const(Health.Healthy)
 val postgres: HealthCheck[IO, Id] = HealthCheck.const(Health.Healthy)
 
@@ -144,9 +154,7 @@ val reporter: HealthReporter[IO, NonEmptyList, Id] = HealthReporter.fromChecks(k
 
 A healthcheck can be tagged with a label, e.g. a `String` with the dependency's name:
 
-```tut:book
-import sup.mods._
-
+```scala mdoc
 val kafkaTagged = kafka.through(mods.tagWith("kafka"))
 val postgresTagged = postgres.through(mods.tagWith("postgres"))
 
@@ -164,11 +172,9 @@ Here are some example modifiers provided by sup:
 
 A check modified with `timeoutToSick` will be marked as sick if it doesn't complete within the given duration.
 
-```tut:book
+```scala mdoc
 import scala.concurrent.duration._
 
-implicit val contextShift: ContextShift[IO] = IO.contextShift(scala.concurrent.ExecutionContext.global)
-implicit val timer: Timer[IO] = IO.timer(scala.concurrent.ExecutionContext.global)
 val timedKafka = kafka.through(mods.timeoutToSick(5.seconds))
 ```
 
@@ -178,7 +184,7 @@ Other modifiers with timeouts include `timeoutToDefault` and `timeoutToFailure`.
 
 Tag a healthcheck with a value (or unwrap a tagged healthcheck):
 
-```tut:book
+```scala mdoc
 val taggedKafka2 = kafka.through(mods.tagWith("foo"))
 
 val untaggedKafka = taggedKafka2.through(mods.untag)
@@ -188,7 +194,7 @@ val untaggedKafka = taggedKafka2.through(mods.untag)
 
 Swallows any errors that might happen in the healthcheck's effect and falls back to `Sick`.
 
-```tut:book
+```scala mdoc
 val safeKafka = kafka.through(mods.recoverToSick)
 ```
 
@@ -196,6 +202,6 @@ val safeKafka = kafka.through(mods.recoverToSick)
 
 Surrounds a healthcheck with effectful actions.
 
-```tut:book
+```scala mdoc
 val surroundedKafka = kafka.through(mods.surround(IO(println("foo")))(result => IO(println(s"foo result: $result"))))
 ```

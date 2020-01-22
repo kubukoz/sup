@@ -3,14 +3,14 @@ layout: docs
 title: akka-http
 ---
 
-sup has modules for akka-http and circe (although you can use any JSON library compatible with akka-http):
+sup has modules for <a href="https://doc.akka.io/docs/akka-http/current/index.html" target="_blank">akka-http</a> and <a href="https://circe.github.io/circe/" target="_blank">circe</a> (although you can use any JSON library compatible with akka-http):
 
-```tut:passthrough
+```scala mdoc:passthrough
 sup.microsite.sbtDependencies("akka-http", "circe")
 ```
 
 Imports:
-```tut:silent
+```scala mdoc:silent
 import sup._
 import sup.modules.akkahttp._, sup.modules.circe._
 ```
@@ -29,7 +29,7 @@ To do so, you'll need:
 
 Once you have all three, use `healthCheckRoutes`:
 
-```tut:book
+```scala mdoc
 import cats.effect.IO, cats.Id
 import akka.http.scaladsl.server.Route
 import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport._
@@ -52,7 +52,7 @@ you can use `healthCheckRoutesWithContext` and provide a way to run the effect f
 
 For example:
 
-```tut:book
+```scala mdoc
 import cats.data.ReaderT, cats.~>
 import scala.concurrent.Future
 
@@ -63,14 +63,14 @@ type Eff[A] = ReaderT[IO, Token, A]
 
 def findUserByToken(token: Token): IO[Option[User]] = ???
 
-val check: HealthCheck[Eff, Id] = HealthCheck.liftFBoolean {
+val checkReader: HealthCheck[Eff, Id] = HealthCheck.liftFBoolean {
   ReaderT(findUserByToken).map(_.nonEmpty)
 }
 
 def effToIO(token: Token): Eff ~> IO =
   λ[Eff ~> IO](_.run(token))
 
-val route: Route = healthCheckRoutesWithContext(check) { request =>
+val route: Route = healthCheckRoutesWithContext(checkReader) { request =>
   val token = request.headers.find(_.is("B3-Trace-Id")).fold("")(_.value)
 
   effToIO(token).andThen(λ[IO ~> Future](_.unsafeToFuture()))

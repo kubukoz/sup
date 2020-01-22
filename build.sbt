@@ -1,16 +1,16 @@
 val Scala_212 = "2.12.10"
 val Scala_213 = "2.13.1"
 
-val catsEffectVersion = "2.1.0"
-val catsTaglessVersion = "0.10"
+val catsEffectVersion = "2.0.0"
+val catsTaglessVersion = "0.11"
 val doobieVersion = "0.8.8"
 val catsVersion = "2.1.0"
 val scalacacheVersion = "0.28.0"
 val kindProjectorVersion = "0.11.0"
-val fs2RedisVersion = "0.9.1"
+val fs2RedisVersion = "0.9.2"
 val h2Version = "1.4.200"
 val log4CatsVersion = "1.0.1"
-val http4sVersion = "0.21.0-M6"
+val http4sVersion = "0.21.0-RC1"
 val circeVersion = "0.12.3"
 val sttpVersion = "1.7.2"
 
@@ -36,8 +36,7 @@ val compilerPlugins = List(
 
 val commonSettings = Seq(
   scalaVersion := Scala_212,
-  scalacOptions ++= Options.all(scalaVersion.value),
-  fork in Test := true,
+  scalacOptions --= Seq("-Xfatal-warnings"),
   name := "sup",
   updateOptions := updateOptions.value.withGigahorse(false), //may fix publishing bug
   libraryDependencies ++= Seq(
@@ -140,12 +139,24 @@ val allModules = List(core, scalacache, doobie, redis, log4cats, http4s, http4sC
 
 val lastStableVersion = settingKey[String]("Last tagged version")
 
+def dropMinor(version: String): String = version.split("\\.").init.mkString(".")
+
+def enumerateAnd(values: List[String]): String = {
+  val init = values.init
+  val last = values.last
+
+  if (values.length > 1) {
+    init.mkString(", ") + " and " + last
+  } else values.mkString
+}
+
 val microsite = project
   .settings(
     scalaVersion := Scala_212,
     crossScalaVersions := List(),
     micrositeName := "sup",
     micrositeDescription := "Functional healthchecks in Scala",
+    micrositeDocumentationUrl := "/guide",
     micrositeUrl := "https://sup.kubukoz.com",
     micrositeAuthor := "Jakub Kozłowski",
     micrositeTwitterCreator := "@kubukoz",
@@ -154,10 +165,7 @@ val microsite = project
     micrositeGitterChannel := false,
     micrositePushSiteWith := GitHub4s,
     micrositeGithubToken := sys.env.get("GITHUB_TOKEN"),
-    //doesn't fork anyway though
-    fork in makeMicrosite := true,
-    scalacOptions ++= Options.all(scalaVersion.value),
-    scalacOptions --= Seq("-Ywarn-unused:imports"),
+    scalacOptions --= Seq("-Xfatal-warnings"),
     libraryDependencies ++= compilerPlugins,
     libraryDependencies ++= Seq(
       "org.http4s" %% "http4s-circe" % http4sVersion,
@@ -170,11 +178,14 @@ val microsite = project
     lastStableVersion := dynverGitDescribeOutput
       .value
       .map(_.ref.value.tail)
-      .getOrElse(throw new Exception("There's no output from dynver!"))
+      .getOrElse(throw new Exception("There's no output from dynver!")),
+    mdocVariables := Map(
+      "SCALA_VERSIONS" -> enumerateAnd((crossScalaVersions in core).value.toList.map(dropMinor))
+    )
   )
   .enablePlugins(MicrositesPlugin)
-  .dependsOn(allModules.map(x => x: ClasspathDep[ProjectReference]): _*)
   .enablePlugins(BuildInfoPlugin)
+  .dependsOn(allModules.map(x => x: ClasspathDep[ProjectReference]): _*)
 
 val sup =
   project

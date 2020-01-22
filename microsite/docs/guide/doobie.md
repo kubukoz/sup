@@ -1,17 +1,17 @@
 ---
 layout: docs
-title: Doobie
+title: doobie
 ---
 
-sup has a Doobie module:
+sup has a <a href="https://tpolecat.github.io/doobie" target="_blank">doobie</a> module:
 
-```tut:passthrough
+```scala mdoc:passthrough
 sup.microsite.sbtDependencies("doobie")
 ```
 
 Imports:
-```tut:silent
-import sup._, sup.modules.doobie._
+```scala mdoc:silent
+import sup.modules.doobie._
 ```
 
 ## What's included
@@ -20,7 +20,7 @@ import sup._, sup.modules.doobie._
 
 You can build a connection check out of a doobie `Transactor`. Let's create one first:
 
-```tut:book
+```scala mdoc
 import doobie._, cats.effect._
 
 def transactor: Transactor[IO] = ???
@@ -28,7 +28,7 @@ def transactor: Transactor[IO] = ???
 
 And now the health check:
 
-```tut:book
+```scala mdoc
 import scala.concurrent.duration._
 
 def doobieCheck = connectionCheck(transactor)(timeout = Some(5.seconds))

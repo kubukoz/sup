@@ -1,16 +1,16 @@
 ---
 layout: docs
-title: Scalacache
+title: ScalaCache
 ---
 
-sup has a Scalacache module:
+sup has a <a href="https://cb372.github.io/scalacache" target="_blank">ScalaCache</a> module:
 
-```tut:passthrough
+```scala mdoc:passthrough
 sup.microsite.sbtDependencies("scalacache")
 ```
 
 Imports:
-```tut:silent
+```scala mdoc:silent
 import sup._, sup.modules.scalacache._
 ```
 
@@ -23,8 +23,8 @@ You can make a healthcheck cached by transforming it with the `cached` function
 
 Let's grab a bunch of imports and define our Scalacache config:
 
-```tut:book
-import cats._, cats.effect._, cats.data._, scala.concurrent.duration._, scalacache._, sup.mods._, sup.data._
+```scala mdoc
+import cats._, cats.effect._, cats.data._, scala.concurrent.duration._, scalacache.{Id => _, _}, sup.mods._, sup.data._
 
 //you'll probably want to implement these
 implicit def cache[H[_]]: Cache[HealthResult[H]] = ???
@@ -33,7 +33,7 @@ implicit def mode[F[_]]: Mode[F] = ???
 
 Now, the health check:
 
-```tut:book
+```scala mdoc
 def queueCheck(queueName: String): HealthCheck[IO, Tagged[String, ?]] =
   HealthCheck.const[IO, Id](Health.Healthy).through(tagWith(queueName))
 
@@ -42,7 +42,7 @@ def q1 = queueCheck("foo").through(cached("queue-foo", Some(10.seconds)))
 
 Because a `HealthReporter` is just a special case of `HealthCheck`, the same modifier works for reporters:
 
-```tut:book
+```scala mdoc
 def reporter: HealthReporter[IO, NonEmptyList, Tagged[String, ?]] =
   HealthReporter.fromChecks(
     queueCheck("foo").through(cached("queue-foo", Some(10.seconds))),
