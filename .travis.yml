@@ -32,6 +32,4 @@ jobs:
       - sbt +test:compile +test microsite/makeMicrosite +publishLocal
     # run releases
     - stage: release
-      script: sbt microsite/publishMicrosite
-    - stage: release
-      script: sbt ci-release
+      script: sbt microsite/publishMicrosite ci-release
