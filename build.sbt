@@ -46,7 +46,7 @@ val commonSettings = Seq(
     "org.typelevel" %% "cats-laws" % catsVersion % Test,
     "org.typelevel" %% "cats-kernel-laws" % catsVersion % Test
   ) ++ compilerPlugins,
-  mimaPreviousArtifacts := Set()
+  mimaPreviousArtifacts := Set(organization.value %% name.value % "0.7.0")
 )
 
 val crossBuiltCommonSettings = commonSettings ++ Seq(crossScalaVersions := Seq(Scala_212, Scala_213))
