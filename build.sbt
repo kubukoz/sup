@@ -1,17 +1,17 @@
 val Scala_212 = "2.12.10"
 val Scala_213 = "2.13.1"
 
-val catsEffectVersion = "2.1.0"
+val catsEffectVersion = "2.1.1"
 val catsTaglessVersion = "0.11"
 val doobieVersion = "0.8.8"
 val catsVersion = "2.1.0"
 val scalacacheVersion = "0.28.0"
 val kindProjectorVersion = "0.11.0"
-val fs2RedisVersion = "0.9.2"
+val fs2RedisVersion = "0.9.3"
 val h2Version = "1.4.200"
 val log4CatsVersion = "1.0.1"
-val http4sVersion = "0.21.0-RC1"
-val circeVersion = "0.12.3"
+val http4sVersion = "0.21.0-RC5"
+val circeVersion = "0.13.0"
 val sttpVersion = "1.7.2"
 
 inThisBuild(
