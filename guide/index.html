@@ -1,0 +1,257 @@
+<html><head><title>sup: Usage guide</title><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Jakub Kozłowski" /><meta name="description" content="Functional healthchecks in Scala" /><meta name="og:image" content="/img/poster.png" /><meta name="image" property="og:image" content="/img/poster.png" /><meta name="og:title" content="sup: Usage guide" /><meta name="title" property="og:title" content="sup: Usage guide" /><meta name="og:site_name" content="sup" /><meta name="og:url" content="https://github.com/kubukoz/sup" /><meta name="og:type" content="website" /><meta name="og:description" content="Functional healthchecks in Scala" /><link rel="icon" type="image/png" href="/img/favicon.png" /><meta name="twitter:title" content="sup: Usage guide" /><meta name="twitter:image" content="https://sup.kubukoz.com/img/poster.png" /><meta name="twitter:description" content="Functional healthchecks in Scala" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:creator" content="@kubukoz" /><link rel="icon" type="image/png" sizes="16x16" href="/img/favicon16x16.png" /><link rel="icon" type="image/png" sizes="24x24" href="/img/favicon24x24.png" /><link rel="icon" type="image/png" sizes="32x32" href="/img/favicon32x32.png" /><link rel="icon" type="image/png" sizes="48x48" href="/img/favicon48x48.png" /><link rel="icon" type="image/png" sizes="57x57" href="/img/favicon57x57.png" /><link rel="icon" type="image/png" sizes="60x60" href="/img/favicon60x60.png" /><link rel="icon" type="image/png" sizes="64x64" href="/img/favicon64x64.png" /><link rel="icon" type="image/png" sizes="70x70" href="/img/favicon70x70.png" /><link rel="icon" type="image/png" sizes="72x72" href="/img/favicon72x72.png" /><link rel="icon" type="image/png" sizes="76x76" href="/img/favicon76x76.png" /><link rel="icon" type="image/png" sizes="96x96" href="/img/favicon96x96.png" /><link rel="icon" type="image/png" sizes="114x114" href="/img/favicon114x114.png" /><link rel="icon" type="image/png" sizes="120x120" href="/img/favicon120x120.png" /><link rel="icon" type="image/png" sizes="128x128" href="/img/favicon128x128.png" /><link rel="icon" type="image/png" sizes="144x144" href="/img/favicon144x144.png" /><link rel="icon" type="image/png" sizes="150x150" href="/img/favicon150x150.png" /><link rel="icon" type="image/png" sizes="152x152" href="/img/favicon152x152.png" /><link rel="icon" type="image/png" sizes="196x196" href="/img/favicon196x196.png" /><link rel="icon" type="image/png" sizes="310x310" href="/img/favicon310x310.png" /><link rel="icon" type="image/png" sizes="310x150" href="/img/favicon310x150.png" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/highlight/styles/vs.css" /><link rel="stylesheet" href="/css/light-style.css" /><script async="async">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-55943015-9' , 'auto');
+ga('send', 'pageview');
+      </script></head><body class="docs"><div id="wrapper"><div id="sidebar-wrapper"><div id="sidebar-brand"><a href="/" class="brand"><div class="brand-wrapper"></div><span>sup</span></a><button id="main-toggle" class="sidebar-toggle"><span class="close"></span></button></div><div class="sidebar-nav"> <div class="sidebar-nav-item active "><a href="/guide/" title="Usage guide" class="active">Usage guide</a></div> <div class="sidebar-nav-item  "><button type="button" title="Modules" class="button drop-nested">Modules</button><i class="fa fa-angle-right"></i><div class="sub-section"> <a href="/guide/scalacache.html" title="ScalaCache" class="">ScalaCache</a> <a href="/guide/doobie.html" title="doobie" class="">doobie</a> <a href="/guide/redis4cats.html" title="redis4cats" class="">redis4cats</a> <a href="/guide/log4cats.html" title="log4cats" class="">log4cats</a> <a href="/guide/http4s-circe.html" title="http4s / circe" class="">http4s / circe</a> <a href="/guide/akkahttp.html" title="akka-http" class="">akka-http</a> <a href="/guide/sttp.html" title="sttp" class="">sttp</a></div></div></div></div><div id="page-content-wrapper"><div class="nav"><div class="container-fluid"><div class="row"><div class="col-lg-12"><div class="action-menu pull-left clearfix"><a href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars" aria-hidden="true"></i></a></div><ul class="pull-right"><li id="gh-eyes-item" class="hidden-xs"><a href="https://github.com/kubukoz/sup" target="_blank" rel="noopener noreferrer"><i class="fa fa-eye"></i><span>Watchers<span id="eyes" class="label label-default">--</span></span></a></li><li id="gh-stars-item" class="hidden-xs"><a href="https://github.com/kubukoz/sup" target="_blank" rel="noopener noreferrer"><i class="fa fa-star-o"></i><span>Stars<span id="stars" class="label label-default">--</span></span></a></li></ul></div></div></div></div><div id="content" data-github-owner="kubukoz" data-github-repo="sup"><div class="content-wrapper"><section><h1 id="usage-guide">Usage guide</h1>
+
+<ul>
+  <li><a href="#usage-guide">Usage guide</a>
+    <ul>
+      <li><a href="#installation">Installation</a></li>
+      <li><a href="#core-concepts">Core concepts</a>
+        <ul>
+          <li><a href="#health">Health</a></li>
+          <li><a href="#healthresult">HealthResult</a></li>
+          <li><a href="#healthcheck">HealthCheck</a></li>
+        </ul>
+      </li>
+      <li><a href="#advanced-concepts">Advanced concepts</a>
+        <ul>
+          <li><a href="#healthreporter">HealthReporter</a></li>
+          <li><a href="#tagging">Tagging</a></li>
+        </ul>
+      </li>
+      <li><a href="#modifiers">Modifiers</a>
+        <ul>
+          <li><a href="#timeouttosick">timeoutToSick</a></li>
+          <li><a href="#tagwith--untag">tagWith / untag</a></li>
+          <li><a href="#recovertosick">recoverToSick</a></li>
+          <li><a href="#surround">surround</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="installation">Installation</h2>
+
+<p>For sbt:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"com.kubukoz"</span> <span class="o">%%</span> <span class="s">"sup-core"</span> <span class="o">%</span> <span class="s">"0.7.0"</span>
+</code></pre></div></div>
+
+<p>For ammonite:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import $ivy.`com.kubukoz::sup-core:0.7.0`
+</code></pre></div></div>
+
+<p>Imports:</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">sup._</span>
+</code></pre></div></div>
+
+<h2 id="core-concepts">Core concepts</h2>
+
+<ul>
+  <li><a href="#health">Health</a></li>
+  <li><a href="#healthresult">HealthResult</a></li>
+  <li><a href="#healthcheck">HealthCheck</a></li>
+</ul>
+
+<h3 id="health">Health</h3>
+
+<p><code class="highlighter-rouge">Health</code> is a boolean-like health status. In ADT notation:</p>
+
+<div class="language-haskell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">data</span> <span class="kt">Health</span> <span class="o">=</span> <span class="kt">Sick</span> <span class="o">|</span> <span class="kt">Healthy</span>
+</code></pre></div></div>
+
+<p>It has a commutative monoid, which is equivalent to the “all” monoid for booleans.</p>
+
+<p>That means <code class="highlighter-rouge">Health</code> values can be combined with the following semantics:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>|+|</th>
+      <th><strong>Sick</strong></th>
+      <th><strong>Healthy</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Sick</strong></td>
+      <td>Sick</td>
+      <td>Sick</td>
+    </tr>
+    <tr>
+      <td><strong>Healthy</strong></td>
+      <td>Sick</td>
+      <td>Healthy</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="healthresult">HealthResult</h3>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//simplified</span>
+<span class="k">type</span> <span class="kt">HealthResult</span><span class="o">[</span><span class="kt">H</span><span class="o">[</span><span class="k">_</span><span class="o">]]</span> <span class="k">=</span> <span class="n">H</span><span class="o">[</span><span class="kt">Health</span><span class="o">]</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">HealthResult</code> is a wrapper over a collection <code class="highlighter-rouge">H</code> of <code class="highlighter-rouge">Health</code>.
+There are no limitations about what kind of collection that must be, but it’s recommended
+that it has a <code class="highlighter-rouge">cats.Foldable</code> instance. For a single Health, <code class="highlighter-rouge">cats.Id</code> can be used.</p>
+
+<p>Other examples of a suitable type include:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">cats.Id</code>: there’s only one result.</li>
+  <li><code class="highlighter-rouge">sup.Tagged[String, ?]</code>: there’s only one result, tagged with a String (e.g. the dependency’s name)</li>
+  <li><code class="highlighter-rouge">cats.data.NonEmptyList</code>: there are multiple checks</li>
+  <li><code class="highlighter-rouge">sup.data.Report[cats.Id, cats.data.NonEmptyList, ?]</code>: there’s one check, and a <code class="highlighter-rouge">NonEmptyList</code> of checks</li>
+  <li><code class="highlighter-rouge">sup.data.Report[sup.Tagged[String, ?], NonEmptyList, ?]</code>: there’s one check, and a <code class="highlighter-rouge">NonEmptyList</code> of checks tagged with a <code class="highlighter-rouge">String</code>.</li>
+</ul>
+
+<p>(<code class="highlighter-rouge">sup.data.Report[F, G, ?]</code> is equivalent to <code class="highlighter-rouge">cats.data.OneAnd[Nested[F, G, ?], ?]</code>)</p>
+
+<p><code class="highlighter-rouge">HealthResult[H]</code> has a <code class="highlighter-rouge">Monoid</code> for any <code class="highlighter-rouge">H[_]: Applicative</code>, although most of its usages will be transparent to the user.</p>
+
+<h3 id="healthcheck">HealthCheck</h3>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//simplified</span>
+<span class="k">trait</span> <span class="nc">HealthCheck</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]</span>, <span class="kt">H</span><span class="o">[</span><span class="k">_</span><span class="o">]]</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="nf">check</span><span class="k">:</span> <span class="kt">F</span><span class="o">[</span><span class="kt">HealthResult</span><span class="o">[</span><span class="kt">H</span><span class="o">]]</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">HealthCheck[F, H]</code> is a health-checking action with effects of type <code class="highlighter-rouge">F</code> that’ll result in a collection <code class="highlighter-rouge">H</code> of <code class="highlighter-rouge">Health</code>.</p>
+
+<p>Similarly to <code class="highlighter-rouge">HealthResult</code>, a <code class="highlighter-rouge">HealthCheck[F, H]</code> has a monoid for any <code class="highlighter-rouge">F[_]: Applicative, H[_]: Applicative</code>.
+This is really cool, because thanks to this we can combine two similar healhchecks into one that’ll check both
+(sequentially or in parallel, depending on the applicative of F - to enforce parallel execution use <code class="highlighter-rouge">HealthCheck.parTupled</code>).</p>
+
+<p>Let’s start with some cats imports (assume they’re available in the rest of the page):</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">cats._</span><span class="o">,</span> <span class="nv">cats</span><span class="o">.</span><span class="py">data</span><span class="o">.</span><span class="py">_</span><span class="o">,</span> <span class="nv">cats</span><span class="o">.</span><span class="py">effect</span><span class="o">.</span><span class="py">_</span><span class="o">,</span> <span class="nv">cats</span><span class="o">.</span><span class="py">implicits</span><span class="o">.</span><span class="py">_</span>
+
+<span class="k">implicit</span> <span class="k">val</span> <span class="nv">contextShift</span><span class="k">:</span> <span class="kt">ContextShift</span><span class="o">[</span><span class="kt">IO</span><span class="o">]</span> <span class="k">=</span> <span class="nv">IO</span><span class="o">.</span><span class="py">contextShift</span><span class="o">(</span><span class="nv">scala</span><span class="o">.</span><span class="py">concurrent</span><span class="o">.</span><span class="py">ExecutionContext</span><span class="o">.</span><span class="py">global</span><span class="o">)</span>
+<span class="k">implicit</span> <span class="k">val</span> <span class="nv">timer</span><span class="k">:</span> <span class="kt">Timer</span><span class="o">[</span><span class="kt">IO</span><span class="o">]</span> <span class="k">=</span> <span class="nv">IO</span><span class="o">.</span><span class="py">timer</span><span class="o">(</span><span class="nv">scala</span><span class="o">.</span><span class="py">concurrent</span><span class="o">.</span><span class="py">ExecutionContext</span><span class="o">.</span><span class="py">global</span><span class="o">)</span>
+</code></pre></div></div>
+
+<p>and here’s how healthchecks can be combined:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//will always be Sick</span>
+<span class="k">def</span> <span class="nf">queue1</span><span class="k">:</span> <span class="kt">HealthCheck</span><span class="o">[</span><span class="kt">IO</span>, <span class="kt">Id</span><span class="o">]</span> <span class="k">=</span> <span class="nv">HealthCheck</span><span class="o">.</span><span class="py">const</span><span class="o">(</span><span class="nv">Health</span><span class="o">.</span><span class="py">Sick</span><span class="o">)</span>
+
+<span class="c1">//will always be Healthy</span>
+<span class="k">def</span> <span class="nf">queue2</span><span class="k">:</span> <span class="kt">HealthCheck</span><span class="o">[</span><span class="kt">IO</span>, <span class="kt">Id</span><span class="o">]</span> <span class="k">=</span> <span class="nv">HealthCheck</span><span class="o">.</span><span class="py">const</span><span class="o">(</span><span class="nv">Health</span><span class="o">.</span><span class="py">Healthy</span><span class="o">)</span>
+
+<span class="c1">//will always be Sick</span>
+<span class="k">def</span> <span class="nf">queues</span> <span class="k">=</span> <span class="n">queue1</span> <span class="o">|+|</span> <span class="n">queue2</span>
+</code></pre></div></div>
+
+<h2 id="advanced-concepts">Advanced concepts</h2>
+
+<p>In sup, a single dependency’s healthcheck has the same underlying structure as a whole service’s healthcheck
+consisting of multiple dependencies’ checks.</p>
+
+<h3 id="healthreporter">HealthReporter</h3>
+
+<p>A healthcheck wrapping multiple healthchecks is called a <code class="highlighter-rouge">HealthReporter</code>. Here’s how it’s defined in sup:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">sup.data.Report</span>
+
+<span class="k">type</span> <span class="kt">HealthReporter</span><span class="o">[</span><span class="kt">F</span><span class="o">[</span><span class="k">_</span><span class="o">]</span>, <span class="kt">G</span><span class="o">[</span><span class="k">_</span><span class="o">]</span>, <span class="kt">H</span><span class="o">[</span><span class="k">_</span><span class="o">]]</span> <span class="k">=</span> <span class="nc">HealthCheck</span><span class="o">[</span><span class="kt">F</span>, <span class="kt">Report</span><span class="o">[</span><span class="kt">G</span>, <span class="kt">H</span>, <span class="kt">?</span><span class="o">]]</span>
+</code></pre></div></div>
+
+<p>You can construct one from a sequence of healthchecks using the <code class="highlighter-rouge">HealthReporter.fromChecks</code> function:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">sup.data.HealthReporter</span> <span class="c1">//Import actual HealthReporter //Import actual HealthReporter</span>
+
+<span class="k">val</span> <span class="nv">kafka</span><span class="k">:</span> <span class="kt">HealthCheck</span><span class="o">[</span><span class="kt">IO</span>, <span class="kt">Id</span><span class="o">]</span> <span class="k">=</span> <span class="nv">HealthCheck</span><span class="o">.</span><span class="py">const</span><span class="o">(</span><span class="nv">Health</span><span class="o">.</span><span class="py">Healthy</span><span class="o">)</span>
+<span class="c1">// kafka: HealthCheck[IO, Id] = sup.HealthCheck$$anon$1@29613418</span>
+<span class="k">val</span> <span class="nv">postgres</span><span class="k">:</span> <span class="kt">HealthCheck</span><span class="o">[</span><span class="kt">IO</span>, <span class="kt">Id</span><span class="o">]</span> <span class="k">=</span> <span class="nv">HealthCheck</span><span class="o">.</span><span class="py">const</span><span class="o">(</span><span class="nv">Health</span><span class="o">.</span><span class="py">Healthy</span><span class="o">)</span>
+<span class="c1">// postgres: HealthCheck[IO, Id] = sup.HealthCheck$$anon$1@27f25abd</span>
+
+<span class="k">val</span> <span class="nv">reporter</span><span class="k">:</span> <span class="kt">HealthReporter</span><span class="o">[</span><span class="kt">IO</span>, <span class="kt">NonEmptyList</span>, <span class="kt">Id</span><span class="o">]</span> <span class="k">=</span> <span class="nv">HealthReporter</span><span class="o">.</span><span class="py">fromChecks</span><span class="o">(</span><span class="n">kafka</span><span class="o">,</span> <span class="n">postgres</span><span class="o">)</span>
+<span class="c1">// reporter: HealthReporter[IO, NonEmptyList, Id] = sup.HealthCheck$$anon$1@4efdd559</span>
+</code></pre></div></div>
+
+<h3 id="tagging">Tagging</h3>
+
+<p>A healthcheck can be tagged with a label, e.g. a <code class="highlighter-rouge">String</code> with the dependency’s name:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="nv">kafkaTagged</span> <span class="k">=</span> <span class="nv">kafka</span><span class="o">.</span><span class="py">through</span><span class="o">(</span><span class="nv">mods</span><span class="o">.</span><span class="py">tagWith</span><span class="o">(</span><span class="s">"kafka"</span><span class="o">))</span>
+<span class="c1">// kafkaTagged: HealthCheck[IO, sup.data.Tagged[String, H]] = sup.HealthCheck$$anon$1@2cec2f5e</span>
+<span class="k">val</span> <span class="nv">postgresTagged</span> <span class="k">=</span> <span class="nv">postgres</span><span class="o">.</span><span class="py">through</span><span class="o">(</span><span class="nv">mods</span><span class="o">.</span><span class="py">tagWith</span><span class="o">(</span><span class="s">"postgres"</span><span class="o">))</span>
+<span class="c1">// postgresTagged: HealthCheck[IO, sup.data.Tagged[String, H]] = sup.HealthCheck$$anon$1@47a148f4</span>
+
+<span class="k">val</span> <span class="nv">taggedReporter</span> <span class="k">=</span> <span class="nv">HealthReporter</span><span class="o">.</span><span class="py">fromChecks</span><span class="o">(</span><span class="n">kafkaTagged</span><span class="o">,</span> <span class="n">postgresTagged</span><span class="o">)</span>
+<span class="c1">// taggedReporter: HealthReporter[IO, NonEmptyList, sup.data.Tagged[String, H]] = sup.HealthCheck$$anon$1@71f8eeaa</span>
+</code></pre></div></div>
+
+<h2 id="modifiers">Modifiers</h2>
+
+<p>sup provides a variety of ways to customize a healthcheck. These include <code class="highlighter-rouge">through</code>, <code class="highlighter-rouge">mapK</code>, <code class="highlighter-rouge">transform</code>, <code class="highlighter-rouge">mapResult</code> and <code class="highlighter-rouge">leftMapK</code>.
+Check out the predefined modifiers in the <code class="highlighter-rouge">sup.mods</code> object or create your own.</p>
+
+<p>Here are some example modifiers provided by sup:</p>
+
+<h3 id="timeouttosick"><code class="highlighter-rouge">timeoutToSick</code></h3>
+
+<p>A check modified with <code class="highlighter-rouge">timeoutToSick</code> will be marked as sick if it doesn’t complete within the given duration.</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">scala.concurrent.duration._</span>
+
+<span class="k">val</span> <span class="nv">timedKafka</span> <span class="k">=</span> <span class="nv">kafka</span><span class="o">.</span><span class="py">through</span><span class="o">(</span><span class="nv">mods</span><span class="o">.</span><span class="py">timeoutToSick</span><span class="o">(</span><span class="mf">5.</span><span class="n">seconds</span><span class="o">))</span>
+<span class="c1">// timedKafka: HealthCheck[IO, Id] = sup.HealthCheck$$anon$1@194d9b1b</span>
+</code></pre></div></div>
+
+<p>Other modifiers with timeouts include <code class="highlighter-rouge">timeoutToDefault</code> and <code class="highlighter-rouge">timeoutToFailure</code>.</p>
+
+<h3 id="tagwith--untag"><code class="highlighter-rouge">tagWith</code> / <code class="highlighter-rouge">untag</code></h3>
+
+<p>Tag a healthcheck with a value (or unwrap a tagged healthcheck):</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="nv">taggedKafka2</span> <span class="k">=</span> <span class="nv">kafka</span><span class="o">.</span><span class="py">through</span><span class="o">(</span><span class="nv">mods</span><span class="o">.</span><span class="py">tagWith</span><span class="o">(</span><span class="s">"foo"</span><span class="o">))</span>
+<span class="c1">// taggedKafka2: HealthCheck[IO, sup.data.Tagged[String, H]] = sup.HealthCheck$$anon$1@95de923</span>
+
+<span class="k">val</span> <span class="nv">untaggedKafka</span> <span class="k">=</span> <span class="nv">taggedKafka2</span><span class="o">.</span><span class="py">through</span><span class="o">(</span><span class="nv">mods</span><span class="o">.</span><span class="py">untag</span><span class="o">)</span>
+<span class="c1">// untaggedKafka: HealthCheck[IO, Id] = sup.HealthCheck$$anon$1@1b51dc98</span>
+</code></pre></div></div>
+
+<h3 id="recovertosick"><code class="highlighter-rouge">recoverToSick</code></h3>
+
+<p>Swallows any errors that might happen in the healthcheck’s effect and falls back to <code class="highlighter-rouge">Sick</code>.</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="nv">safeKafka</span> <span class="k">=</span> <span class="nv">kafka</span><span class="o">.</span><span class="py">through</span><span class="o">(</span><span class="nv">mods</span><span class="o">.</span><span class="py">recoverToSick</span><span class="o">)</span>
+<span class="c1">// safeKafka: HealthCheck[IO, Id] = sup.HealthCheck$$anon$1@61785680</span>
+</code></pre></div></div>
+
+<h3 id="surround"><code class="highlighter-rouge">surround</code></h3>
+
+<p>Surrounds a healthcheck with effectful actions.</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">val</span> <span class="nv">surroundedKafka</span> <span class="k">=</span> <span class="nv">kafka</span><span class="o">.</span><span class="py">through</span><span class="o">(</span><span class="nv">mods</span><span class="o">.</span><span class="py">surround</span><span class="o">(</span><span class="nc">IO</span><span class="o">(</span><span class="nf">println</span><span class="o">(</span><span class="s">"foo"</span><span class="o">)))(</span><span class="n">result</span> <span class="k">=&gt;</span> <span class="nc">IO</span><span class="o">(</span><span class="nf">println</span><span class="o">(</span><span class="n">s</span><span class="s">"foo result: $result"</span><span class="o">))))</span>
+<span class="c1">// surroundedKafka: HealthCheck[IO, Id] = sup.HealthCheck$$anon$1@74d72013</span>
+</code></pre></div></div>
+</section></div></div></div></div><script src="/highlight/highlight.pack.js"></script><script>
+// For all code blocks, copy the language from the containing div
+// to the inner code tag (where hljs expects it to be)
+const langPrefix = 'language-';
+document.querySelectorAll(`div[class^='${langPrefix}']`).forEach(function(div) {
+  div.classList.forEach(function(cssClass) {
+    if (cssClass.startsWith(langPrefix)) {
+      const lang = cssClass.substring(langPrefix.length);
+      div.querySelectorAll('pre code').forEach(function(code) {
+        code.classList.add(lang);
+      });
+    }
+  });
+});
+
+hljs.configure({languages:['scala','java','bash']});
+hljs.initHighlightingOnLoad();
+      </script><script>console.info('\x57\x65\x62\x73\x69\x74\x65\x20\x62\x75\x69\x6c\x74\x20\x77\x69\x74\x68\x3a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x5f\x5f\x20\x20\x20\x20\x5f\x5f\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x5f\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x5f\x20\x5f\x5f\x0a\x20\x20\x20\x5f\x5f\x5f\x5f\x5f\x2f\x20\x2f\x5f\x20\x20\x2f\x20\x2f\x5f\x20\x20\x20\x20\x20\x20\x5f\x5f\x5f\x5f\x20\x5f\x5f\x5f\x20\x20\x28\x5f\x29\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x20\x20\x5f\x5f\x5f\x5f\x5f\x28\x5f\x29\x20\x2f\x5f\x5f\x5f\x5f\x20\x20\x5f\x5f\x5f\x5f\x5f\x0a\x20\x20\x2f\x20\x5f\x5f\x5f\x2f\x20\x5f\x5f\x20\x5c\x2f\x20\x5f\x5f\x2f\x5f\x5f\x5f\x5f\x5f\x2f\x20\x5f\x5f\x20\x60\x5f\x5f\x20\x5c\x2f\x20\x2f\x20\x5f\x5f\x5f\x2f\x20\x5f\x5f\x5f\x2f\x20\x5f\x5f\x20\x5c\x2f\x20\x5f\x5f\x5f\x2f\x20\x2f\x20\x5f\x5f\x2f\x20\x5f\x20\x5c\x2f\x20\x5f\x5f\x5f\x2f\x0a\x20\x28\x5f\x5f\x20\x20\x29\x20\x2f\x5f\x2f\x20\x2f\x20\x2f\x5f\x2f\x5f\x5f\x5f\x5f\x5f\x2f\x20\x2f\x20\x2f\x20\x2f\x20\x2f\x20\x2f\x20\x2f\x20\x2f\x5f\x5f\x2f\x20\x2f\x20\x20\x2f\x20\x2f\x5f\x2f\x20\x28\x5f\x5f\x20\x20\x29\x20\x2f\x20\x2f\x5f\x2f\x20\x20\x5f\x5f\x28\x5f\x5f\x20\x20\x29\x0a\x2f\x5f\x5f\x5f\x5f\x2f\x5f\x2e\x5f\x5f\x5f\x2f\x5c\x5f\x5f\x2f\x20\x20\x20\x20\x20\x2f\x5f\x2f\x20\x2f\x5f\x2f\x20\x2f\x5f\x2f\x5f\x2f\x5c\x5f\x5f\x5f\x2f\x5f\x2f\x20\x20\x20\x5c\x5f\x5f\x5f\x5f\x2f\x5f\x5f\x5f\x5f\x2f\x5f\x2f\x5c\x5f\x5f\x2f\x5c\x5f\x5f\x5f\x2f\x5f\x5f\x5f\x5f\x2f\x0a\x0a\x68\x74\x74\x70\x73\x3a\x2f\x2f\x34\x37\x64\x65\x67\x2e\x67\x69\x74\x68\x75\x62\x2e\x69\x6f\x2f\x73\x62\x74\x2d\x6d\x69\x63\x72\x6f\x73\x69\x74\x65\x73')</script><script src="/js/docs.js"></script></body></html>
