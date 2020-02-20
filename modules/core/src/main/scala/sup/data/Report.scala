@@ -25,9 +25,7 @@ trait ReportInstances {
     new ReportReducible[G, H]
 
   implicit def catsShowForReport[G[_], H[_], A: Show](implicit showGha: Show[G[H[A]]]): Show[Report[G, H, A]] =
-    Show.show { report =>
-      show"Report(health = ${report.health}, checks = ${report.checks})"
-    }
+    Show.show(report => show"Report(health = ${report.health}, checks = ${report.checks})")
 }
 
 private[data] class ReportReducible[G[_], H[_]](implicit F: Foldable[Nested[G, H, ?]])

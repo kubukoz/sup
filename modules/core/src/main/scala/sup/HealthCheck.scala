@@ -73,9 +73,7 @@ object HealthCheck {
     * */
   def tupled[F[_]: Apply, H[_], I[_]](a: HealthCheck[F, H], b: HealthCheck[F, I]): HealthCheck[F, Tuple2K[H, I, ?]] =
     liftF {
-      (a.check, b.check).mapN { (ac, bc) =>
-        HealthResult(Tuple2K(ac.value, bc.value))
-      }
+      (a.check, b.check).mapN((ac, bc) => HealthResult(Tuple2K(ac.value, bc.value)))
     }
 
   /**
@@ -88,9 +86,7 @@ object HealthCheck {
     b: HealthCheck[F, I]
   ): HealthCheck[F, Tuple2K[H, I, ?]] =
     liftF {
-      (a.check, b.check).parMapN { (ac, bc) =>
-        HealthResult(Tuple2K(ac.value, bc.value))
-      }
+      (a.check, b.check).parMapN((ac, bc) => HealthResult(Tuple2K(ac.value, bc.value)))
     }
 
   /**
@@ -101,9 +97,7 @@ object HealthCheck {
     * */
   def race[F[_]: Concurrent, H[_], I[_]](a: HealthCheck[F, H], b: HealthCheck[F, I]): HealthCheck[F, EitherK[H, I, ?]] =
     liftF {
-      a.check.race(b.check).map { e =>
-        HealthResult(EitherK(e.bimap(_.value, _.value)))
-      }
+      a.check.race(b.check).map(e => HealthResult(EitherK(e.bimap(_.value, _.value))))
     }
 
   implicit def functorK[F[_]: Functor]: FunctorK[HealthCheck[F, ?[_]]] = new FunctorK[HealthCheck[F, ?[_]]] {

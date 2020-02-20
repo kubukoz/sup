@@ -1,4 +1,5 @@
 package sup
+
 import cats.kernel.laws.discipline.EqTests
 import cats.kernel.laws.discipline.MonoidTests
 import cats.tagless.laws.discipline.FunctorKTests

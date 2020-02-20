@@ -1,4 +1,5 @@
 package sup
+
 import cats.Eq
 import cats.arrow.FunctionK
 import org.scalacheck.{Arbitrary, Gen}

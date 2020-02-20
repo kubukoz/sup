@@ -17,9 +17,7 @@ object sttp {
     implicit backend: SttpBackend[F, Nothing]
   ): HealthCheck[F, Id] =
     HealthCheck.liftFBoolean {
-      backend.send(call).map { response =>
-        !response.isClientError && !response.isServerError
-      }
+      backend.send(call).map(response => !response.isClientError && !response.isServerError)
     }
 
   /**
