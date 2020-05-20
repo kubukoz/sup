@@ -104,11 +104,9 @@ object HealthCheck {
     override def mapK[G[_], H[_]](fgh: HealthCheck[F, G])(gh: G ~> H): HealthCheck[F, H] = fgh.mapK(gh)
   }
 
-  implicit def checkMonoid[F[_]: Applicative, H[_]: Applicative](
-    implicit M: Monoid[Health]
-  ): Monoid[HealthCheck[F, H]] =
+  implicit def checkMonoid[F[_]: Applicative, H[_]: Applicative]: Monoid[HealthCheck[F, H]] =
     new Monoid[HealthCheck[F, H]] {
-      override val empty: HealthCheck[F, H] = HealthCheck.const[F, H](M.empty)
+      override val empty: HealthCheck[F, H] = HealthCheck.const[F, H](Monoid.empty[Health])
 
       override def combine(x: HealthCheck[F, H], y: HealthCheck[F, H]): HealthCheck[F, H] = liftF {
         Applicative.monoid[F, HealthResult[H]].combine(x.check, y.check)

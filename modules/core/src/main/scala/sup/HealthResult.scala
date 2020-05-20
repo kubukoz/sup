@@ -23,9 +23,9 @@ object HealthResult {
     def mapK[F[_], G[_]](hf: HealthResult[F])(fg: F ~> G): HealthResult[G] = new HealthResult[G](fg(hf.value))
   }
 
-  implicit def monoid[H[_]: Applicative](implicit M: Monoid[Health]): Monoid[HealthResult[H]] =
+  implicit def monoid[H[_]: Applicative]: Monoid[HealthResult[H]] =
     new Monoid[HealthResult[H]] {
-      override val empty: HealthResult[H] = HealthResult.const[H](M.empty)
+      override val empty: HealthResult[H] = HealthResult.const[H](Monoid.empty[Health])
 
       override def combine(x: HealthResult[H], y: HealthResult[H]): HealthResult[H] =
         HealthResult(Applicative.monoid[H, Health].combine(x.value, y.value))

@@ -7,6 +7,80 @@ import cats.Id
 import cats.Reducible
 import cats.Show
 import cats.~>
+import sup.Health
+import cats.Foldable
+import sup.data.TaggedT.Incorrect
+import sup.data.TaggedT.Correct
+import sup.HealthCheck
+import cats.effect.IO
+import sup.HealthResult
+
+sealed trait TaggedT[+L, +R] extends Product with Serializable {
+
+  def fold[A](incorrect: L => A, correct: => A): A = this match {
+    case Incorrect(error, _) => incorrect(error)
+    case Correct(_)          => correct
+  }
+
+  def toEither: Either[L, Unit] = fold(Left(_), Right(()))
+}
+
+object TaggedT {
+  final case class Incorrect[L, R](error: L, value: R) extends TaggedT[L, R]
+  final case class Correct[R](value: R) extends TaggedT[Nothing, R]
+
+  def incorrect[L](error: L): TaggedT[L, Health] = Incorrect(error, Health.Sick)
+  val correct: TaggedT[Nothing, Health] = Correct(Health.Healthy)
+
+  implicit def catsReducibleForTaggedT[L]: Reducible[TaggedT[L, *]] =
+    new Reducible[TaggedT[L, *]] {
+
+      def foldLeft[A, B](fa: TaggedT[L, A], b: B)(f: (B, A) => B): B =
+        fa match {
+          case Incorrect(_, a) => f(b, a)
+          case Correct(a)      => f(b, a)
+        }
+
+      def foldRight[A, B](fa: TaggedT[L, A], lb: Eval[B])(f: (A, Eval[B]) => Eval[B]): Eval[B] = fa match {
+        case Incorrect(_, a) => f(a, lb)
+        case Correct(a)      => f(a, lb)
+      }
+
+      def reduceLeftTo[A, B](fa: TaggedT[L, A])(f: A => B)(g: (B, A) => B): B =
+        fa match {
+          case Incorrect(_, a) => f(a)
+          case Correct(a)      => f(a)
+        }
+
+      def reduceRightTo[A, B](fa: TaggedT[L, A])(f: A => B)(g: (A, Eval[B]) => Eval[B]): Eval[B] = fa match {
+        case Incorrect(_, a) => Eval.later(f(a))
+        case Correct(a)      => Eval.later(f(a))
+      }
+
+    }
+
+}
+
+object Demo extends App {
+  final case class MyErr(msg: String)
+  implicit val showMyErr: Show[MyErr] = e => show"MyErr(${e.msg})"
+
+  def demoL: TaggedT[MyErr, Health] = TaggedT.incorrect(MyErr("woops"))
+  def demoR: TaggedT[MyErr, Health] = TaggedT.correct
+
+  implicit def show[A: Show, B]: Show[TaggedT[A, B]] = t => t.fold("Sick: " + _.show, "Healthy")
+  println(demoL.reduce) //Sick
+  println(demoR.reduce) //Healthy
+  println(demoL.show) //Sick: MyErr
+  println(demoR.show) //Healthy
+
+  val hc1 = HealthCheck.liftF(IO(HealthResult(demoL)))
+  val hc2 = HealthCheck.liftF(IO(HealthResult(demoR)))
+
+  val reporter = HealthReporter.fromChecks(hc1, hc2)
+  println(reporter.check.unsafeRunSync().value.health)
+  println(reporter.check.unsafeRunSync().value.checks.map(_.toEither))
+}
 
 final case class Tagged[Tag, H](tag: Tag, health: H)
 
