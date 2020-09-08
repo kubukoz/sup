@@ -1,10 +1,10 @@
 val Scala_212 = "2.12.11"
 val Scala_213 = "2.13.2"
 
-val catsEffectVersion = "2.1.4"
+val catsEffectVersion = "2.2.0"
 val catsTaglessVersion = "0.11"
-val doobieVersion = "0.9.0"
-val catsVersion = "2.2.0"
+val doobieVersion = "0.9.2"
+val catsVersion = "2.1.1"
 val scalacacheVersion = "0.28.0"
 val kindProjectorVersion = "0.11.0"
 val fs2RedisVersion = "0.10.2"
