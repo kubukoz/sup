@@ -10,7 +10,7 @@ val kindProjectorVersion = "0.11.0"
 val fs2RedisVersion = "0.10.3"
 val h2Version = "1.4.200"
 val log4CatsVersion = "1.1.1"
-val http4sVersion = "0.21.7"
+val http4sVersion = "0.21.8"
 val circeVersion = "0.13.0"
 val sttpVersion = "1.7.2"
 
@@ -114,7 +114,7 @@ val http4sClient = module("http4s-client")
 val akkaHttp = module("akka-http")
   .settings(
     libraryDependencies ++= Seq(
-      "com.typesafe.akka" %% "akka-http" % "10.1.12"
+      "com.typesafe.akka" %% "akka-http" % "10.2.1"
     )
   )
   .dependsOn(core)
