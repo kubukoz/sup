@@ -1,6 +1,5 @@
 package sup.modules
 
-import cats.effect.Sync
 import cats.Monad
 import cats.Reducible
 import org.http4s.dsl.Http4sDsl
@@ -13,12 +12,11 @@ import cats.implicits._
 
 object http4s {
 
-  /**
-    * Builds a HttpRoutes value that'll check the result of the healthcheck, and,
+  /** Builds a HttpRoutes value that'll check the result of the healthcheck, and,
     * if it's sick, return ServiceUnavailable (Ok otherwise). See [[healthCheckResponse]]
     * for an alternative that doesn't provide a route matcher.
-    * */
-  def healthCheckRoutes[F[_]: Sync, H[_]: Reducible](
+    */
+  def healthCheckRoutes[F[_]: Monad, H[_]: Reducible](
     healthCheck: HealthCheck[F, H],
     path: String = "health-check"
   )(
@@ -28,9 +26,8 @@ object http4s {
     val dsl = new Http4sDsl[F] {}
     import dsl._
 
-    HttpRoutes.of[F] {
-      case GET -> Root / `path` =>
-        healthCheckResponse(healthCheck)
+    HttpRoutes.of[F] { case GET -> Root / `path` =>
+      healthCheckResponse(healthCheck)
     }
   }
 

@@ -1,21 +1,21 @@
 package sup.modules
 
-import sup.{HealthCheckEndoMod, HealthResult}
-import _root_.scalacache.{Cache, Flags, Mode}
-
 import scala.concurrent.duration.Duration
+
+import _root_.scalacache.Cache
+import _root_.scalacache.Flags
+import sup.HealthCheckEndoMod
+import sup.HealthResult
 
 object scalacache {
 
-  /**
-    * Caches a healthcheck for the given amount of time (or forever, if `ttl` is empty).
-    * */
+  /** Caches a healthcheck for the given amount of time (or forever, if `ttl` is empty).
+    */
   def cached[F[_], H[_]](
     key: String,
     ttl: Option[Duration]
   )(
-    implicit cache: Cache[HealthResult[H]],
-    mode: Mode[F],
+    implicit cache: Cache[F, HealthResult[H]],
     flags: Flags
-  ): HealthCheckEndoMod[F, H] = _.transform(action => cache.cachingForMemoizeF(key)(ttl)(action))
+  ): HealthCheckEndoMod[F, H] = _.transform(cache.cachingForMemoizeF(key)(ttl))
 }

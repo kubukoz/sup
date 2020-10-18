@@ -33,3 +33,4 @@ import scala.concurrent.duration._
 
 def doobieCheck = connectionCheck(transactor)(timeout = Some(5.seconds))
 ```
+

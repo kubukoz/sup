@@ -13,8 +13,8 @@ class HealthCheckCatsInstancesTests extends CatsSuite {
   import ScalacheckInstances._
 
   checkAll(
-    "FunctorK[HealthCheck[Option, ?[_]]",
-    FunctorKTests[HealthCheck[Option, ?[_]]].functorK[Try, Option, List, Int]
+    "FunctorK[HealthCheck[Option, *[_]]",
+    FunctorKTests[HealthCheck[Option, *[_]]].functorK[Try, Option, List, Int]
   )
   checkAll("Monoid[HealthCheck[Try, Option]]", MonoidTests[HealthCheck[Try, Option]].monoid)
   checkAll("Eq[HealthCheck[Try, Option]]", EqTests[HealthCheck[Try, Option]].eqv)
