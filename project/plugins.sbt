@@ -1,4 +1,4 @@
-addSbtPlugin("com.geirsson" % "sbt-ci-release" % "1.5.3")
+addSbtPlugin("com.geirsson" % "sbt-ci-release" % "1.5.4")
 addSbtPlugin("com.47deg" % "sbt-microsites" % "1.2.1")
 addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.10.0")
 addSbtPlugin("com.typesafe" % "sbt-mima-plugin" % "0.8.1")
