@@ -6,8 +6,8 @@ val catsTaglessVersion = "0.12"
 val doobieVersion = "0.9.4"
 val catsVersion = "2.3.0"
 val scalacacheVersion = "0.28.0"
-val kindProjectorVersion = "0.11.1"
-val fs2RedisVersion = "0.11.0"
+val kindProjectorVersion = "0.11.2"
+val fs2RedisVersion = "0.10.3"
 val h2Version = "1.4.200"
 val log4CatsVersion = "1.1.1"
 val http4sVersion = "0.21.13"
@@ -42,7 +42,7 @@ val commonSettings = Seq(
   libraryDependencies ++= Seq(
     "org.typelevel" %% "cats-tagless-laws" % catsTaglessVersion % Test,
     "org.typelevel" %% "cats-effect-laws" % catsEffectVersion % Test,
-    "org.typelevel" %% "cats-testkit-scalatest" % "2.0.0" % Test,
+    "org.typelevel" %% "cats-testkit-scalatest" % "2.1.0" % Test,
     "org.typelevel" %% "cats-laws" % catsVersion % Test,
     "org.typelevel" %% "cats-kernel-laws" % catsVersion % Test
   ) ++ compilerPlugins,
