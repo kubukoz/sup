@@ -114,7 +114,7 @@ val http4sClient = module("http4s-client")
 val akkaHttp = module("akka-http")
   .settings(
     libraryDependencies ++= Seq(
-      "com.typesafe.akka" %% "akka-http" % "10.2.2"
+      "com.typesafe.akka" %% "akka-http" % "10.2.3"
     )
   )
   .dependsOn(core)
