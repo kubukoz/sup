@@ -1,0 +1,103 @@
+<!DOCTYPE html><html><head><title>sup: akka-http</title><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Jakub Kozłowski" /><meta name="description" content="Functional healthchecks in Scala" /><meta name="og:image" content="/img/poster.png" /><meta name="image" property="og:image" content="/img/poster.png" /><meta name="og:title" content="sup: akka-http" /><meta name="title" property="og:title" content="sup: akka-http" /><meta name="og:site_name" content="sup" /><meta name="og:url" content="https://github.com/kubukoz/sup" /><meta name="og:type" content="website" /><meta name="og:description" content="Functional healthchecks in Scala" /><link rel="icon" type="image/png" href="/img/favicon.png" /><meta name="twitter:title" content="sup: akka-http" /><meta name="twitter:image" content="https://sup.kubukoz.com/img/poster.png" /><meta name="twitter:description" content="Functional healthchecks in Scala" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:creator" content="@kubukoz" /><link rel="icon" type="image/png" sizes="16x16" href="/img/favicon16x16.png" /><link rel="icon" type="image/png" sizes="24x24" href="/img/favicon24x24.png" /><link rel="icon" type="image/png" sizes="32x32" href="/img/favicon32x32.png" /><link rel="icon" type="image/png" sizes="48x48" href="/img/favicon48x48.png" /><link rel="icon" type="image/png" sizes="57x57" href="/img/favicon57x57.png" /><link rel="icon" type="image/png" sizes="60x60" href="/img/favicon60x60.png" /><link rel="icon" type="image/png" sizes="64x64" href="/img/favicon64x64.png" /><link rel="icon" type="image/png" sizes="70x70" href="/img/favicon70x70.png" /><link rel="icon" type="image/png" sizes="72x72" href="/img/favicon72x72.png" /><link rel="icon" type="image/png" sizes="76x76" href="/img/favicon76x76.png" /><link rel="icon" type="image/png" sizes="96x96" href="/img/favicon96x96.png" /><link rel="icon" type="image/png" sizes="114x114" href="/img/favicon114x114.png" /><link rel="icon" type="image/png" sizes="120x120" href="/img/favicon120x120.png" /><link rel="icon" type="image/png" sizes="128x128" href="/img/favicon128x128.png" /><link rel="icon" type="image/png" sizes="144x144" href="/img/favicon144x144.png" /><link rel="icon" type="image/png" sizes="150x150" href="/img/favicon150x150.png" /><link rel="icon" type="image/png" sizes="152x152" href="/img/favicon152x152.png" /><link rel="icon" type="image/png" sizes="196x196" href="/img/favicon196x196.png" /><link rel="icon" type="image/png" sizes="310x310" href="/img/favicon310x310.png" /><link rel="icon" type="image/png" sizes="310x150" href="/img/favicon310x150.png" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" /><link rel="stylesheet" href="/highlight/styles/vs.css" /><link rel="stylesheet" href="/css/light-style.css" /><script async="async">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-55943015-9' , 'auto');
+ga('send', 'pageview');
+      </script></head><body class="docs"><div id="wrapper"><div id="sidebar-wrapper"><div id="sidebar-brand"><a href="/" class="brand"><div class="brand-wrapper"></div><span>sup</span></a><button id="main-toggle" class="sidebar-toggle"><span class="close"></span></button></div><div class="sidebar-nav"> <div class="sidebar-nav-item  "><a href="/guide/" title="Usage guide" class="">Usage guide</a></div> <div class="sidebar-nav-item  open"><button type="button" title="Modules" class="button drop-nested">Modules</button><i class="fa fa-angle-right"></i><div class="sub-section"> <a href="/guide/scalacache.html" title="ScalaCache" class="">ScalaCache</a> <a href="/guide/doobie.html" title="doobie" class="">doobie</a> <a href="/guide/redis4cats.html" title="redis4cats" class="">redis4cats</a> <a href="/guide/log4cats.html" title="log4cats" class="">log4cats</a> <a href="/guide/http4s-circe.html" title="http4s / circe" class="">http4s / circe</a> <a href="/guide/akkahttp.html" title="akka-http" class="active">akka-http</a> <a href="/guide/sttp.html" title="sttp" class="">sttp</a></div></div></div></div><div id="page-content-wrapper"><div class="nav"><div class="container-fluid"><div class="row"><div class="col-lg-12"><div class="action-menu pull-left clearfix"><a href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars" aria-hidden="true"></i></a></div><ul class="pull-right"><li id="gh-eyes-item" class="hidden-xs"><a href="https://github.com/kubukoz/sup" target="_blank" rel="noopener noreferrer"><i class="fa fa-eye"></i><span>Watchers<span id="eyes" class="label label-default">--</span></span></a></li><li id="gh-stars-item" class="hidden-xs"><a href="https://github.com/kubukoz/sup" target="_blank" rel="noopener noreferrer"><i class="fa fa-star-o"></i><span>Stars<span id="stars" class="label label-default">--</span></span></a></li></ul></div></div></div></div><div id="content" data-github-owner="kubukoz" data-github-repo="sup"><div class="content-wrapper"><section><p>sup has modules for <a href="https://doc.akka.io/docs/akka-http/current/index.html" target="_blank">akka-http</a> and <a href="https://circe.github.io/circe/" target="_blank">circe</a> (although you can use any JSON library compatible with akka-http):</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
+  <span class="s">"com.kubukoz"</span> <span class="o">%%</span> <span class="s">"sup-akka-http"</span> <span class="o">%</span> <span class="s">"0.7.0"</span><span class="o">,</span>
+  <span class="s">"com.kubukoz"</span> <span class="o">%%</span> <span class="s">"sup-circe"</span> <span class="o">%</span> <span class="s">"0.7.0"</span>
+<span class="o">)</span>
+</code></pre></div></div>
+
+<p>Imports:</p>
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">sup._</span>
+<span class="k">import</span> <span class="nn">sup.modules.akkahttp._</span><span class="o">,</span> <span class="nv">sup</span><span class="o">.</span><span class="py">modules</span><span class="o">.</span><span class="py">circe</span><span class="o">.</span><span class="py">_</span>
+</code></pre></div></div>
+
+<h2 id="whats-included">What’s included</h2>
+
+<h3 id="healthcheckroutes-healthcheckresponse"><code class="highlighter-rouge">healthCheckRoutes</code>, <code class="highlighter-rouge">healthCheckResponse</code></h3>
+
+<p>It is possible to create a <code class="highlighter-rouge">Route</code> from a health check.</p>
+
+<p>To do so, you’ll need:</p>
+
+<ul>
+  <li>a <code class="highlighter-rouge">cats.effect.Effect</code> instance for your health check’s effect type</li>
+  <li>a <code class="highlighter-rouge">Reducible</code> instance for your container of results</li>
+  <li>and a way to serialize the results (as defined per the implicit <code class="highlighter-rouge">ToEntityMarshaller[HealthResult[H]]</code>).</li>
+</ul>
+
+<p>Once you have all three, use <code class="highlighter-rouge">healthCheckRoutes</code>:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">cats.effect.IO</span><span class="o">,</span> <span class="nv">cats</span><span class="o">.</span><span class="py">Id</span>
+<span class="k">import</span> <span class="nn">akka.http.scaladsl.server.Route</span>
+<span class="k">import</span> <span class="nn">de.heikoseeberger.akkahttpcirce.FailFastCirceSupport._</span>
+
+<span class="k">val</span> <span class="nv">check</span><span class="k">:</span> <span class="kt">HealthCheck</span><span class="o">[</span><span class="kt">IO</span>, <span class="kt">Id</span><span class="o">]</span> <span class="k">=</span> <span class="nv">HealthCheck</span><span class="o">.</span><span class="py">const</span><span class="o">(</span><span class="nv">Health</span><span class="o">.</span><span class="py">healthy</span><span class="o">)</span>
+<span class="c1">// check: HealthCheck[IO, Id] = sup.HealthCheck$$anon$1@5fb81fcb</span>
+
+<span class="k">val</span> <span class="nv">routes</span><span class="k">:</span> <span class="kt">Route</span> <span class="o">=</span> <span class="nf">healthCheckRoutes</span><span class="o">(</span><span class="n">check</span><span class="o">)</span>
+<span class="c1">// routes: akka.http.scaladsl.server.RequestContext =&gt; concurrent.Future[akka.http.scaladsl.server.RouteResult] = akka.http.scaladsl.server.directives.BasicDirectives$$Lambda$10285/0x0000000102ef4040@18cbbff5</span>
+</code></pre></div></div>
+
+<p>You can customize the path at which the health checks will be available (the default is <code class="highlighter-rouge">path("health-check")</code>).</p>
+
+<p>Alternatively, you can get a raw response built from a check, inside the effect, using <code class="highlighter-rouge">healthCheckResponse</code> directly
+and constructing your Route manually from that.</p>
+
+<h3 id="healthcheckrouteswithcontext"><code class="highlighter-rouge">healthCheckRoutesWithContext</code></h3>
+
+<p>If your health check’s effect type requires information provided by the request (e.g. a tracing token header),
+you can use <code class="highlighter-rouge">healthCheckRoutesWithContext</code> and provide a way to run the effect from a request.</p>
+
+<p>For example:</p>
+
+<div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nn">cats.data.ReaderT</span><span class="o">,</span> <span class="n">cats</span><span class="o">.~&gt;</span>
+<span class="k">import</span> <span class="nn">scala.concurrent.Future</span>
+
+<span class="k">case</span> <span class="k">class</span> <span class="nc">User</span><span class="o">()</span>
+<span class="k">type</span> <span class="kt">Token</span> <span class="o">=</span> <span class="nc">String</span>
+
+<span class="k">type</span> <span class="kt">Eff</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">ReaderT</span><span class="o">[</span><span class="kt">IO</span>, <span class="kt">Token</span>, <span class="kt">A</span><span class="o">]</span>
+
+<span class="k">def</span> <span class="nf">findUserByToken</span><span class="o">(</span><span class="n">token</span><span class="k">:</span> <span class="kt">Token</span><span class="o">)</span><span class="k">:</span> <span class="kt">IO</span><span class="o">[</span><span class="kt">Option</span><span class="o">[</span><span class="kt">User</span><span class="o">]]</span> <span class="k">=</span> <span class="o">???</span>
+
+<span class="k">val</span> <span class="nv">checkReader</span><span class="k">:</span> <span class="kt">HealthCheck</span><span class="o">[</span><span class="kt">Eff</span>, <span class="kt">Id</span><span class="o">]</span> <span class="k">=</span> <span class="nv">HealthCheck</span><span class="o">.</span><span class="py">liftFBoolean</span> <span class="o">{</span>
+  <span class="nc">ReaderT</span><span class="o">(</span><span class="n">findUserByToken</span><span class="o">).</span><span class="py">map</span><span class="o">(</span><span class="nv">_</span><span class="o">.</span><span class="py">nonEmpty</span><span class="o">)</span>
+<span class="o">}</span>
+<span class="c1">// checkReader: HealthCheck[Eff, Id] = sup.HealthCheck$$anon$1@77d0b99d</span>
+
+<span class="k">def</span> <span class="nf">effToIO</span><span class="o">(</span><span class="n">token</span><span class="k">:</span> <span class="kt">Token</span><span class="o">)</span><span class="k">:</span> <span class="kt">Eff</span> <span class="kt">~&gt;</span> <span class="kt">IO</span> <span class="o">=</span>
+  <span class="n">λ</span><span class="o">[</span><span class="kt">Eff</span> <span class="kt">~&gt;</span> <span class="kt">IO</span><span class="o">](</span><span class="nv">_</span><span class="o">.</span><span class="py">run</span><span class="o">(</span><span class="n">token</span><span class="o">))</span>
+
+<span class="k">val</span> <span class="nv">route</span><span class="k">:</span> <span class="kt">Route</span> <span class="o">=</span> <span class="nf">healthCheckRoutesWithContext</span><span class="o">(</span><span class="n">checkReader</span><span class="o">)</span> <span class="o">{</span> <span class="n">request</span> <span class="k">=&gt;</span>
+  <span class="k">val</span> <span class="nv">token</span> <span class="k">=</span> <span class="nv">request</span><span class="o">.</span><span class="py">headers</span><span class="o">.</span><span class="py">find</span><span class="o">(</span><span class="nv">_</span><span class="o">.</span><span class="py">is</span><span class="o">(</span><span class="s">"B3-Trace-Id"</span><span class="o">)).</span><span class="py">fold</span><span class="o">(</span><span class="s">""</span><span class="o">)(</span><span class="nv">_</span><span class="o">.</span><span class="py">value</span><span class="o">)</span>
+
+  <span class="nf">effToIO</span><span class="o">(</span><span class="n">token</span><span class="o">).</span><span class="py">andThen</span><span class="o">(</span><span class="n">λ</span><span class="o">[</span><span class="kt">IO</span> <span class="kt">~&gt;</span> <span class="kt">Future</span><span class="o">](</span><span class="nv">_</span><span class="o">.</span><span class="py">unsafeToFuture</span><span class="o">()))</span>
+<span class="o">}</span>
+<span class="c1">// route: akka.http.scaladsl.server.RequestContext =&gt; Future[akka.http.scaladsl.server.RouteResult] = akka.http.scaladsl.server.directives.BasicDirectives$$Lambda$10285/0x0000000102ef4040@5482832a</span>
+</code></pre></div></div>
+</section></div></div></div></div><script src="/highlight/highlight.pack.js"></script><script>
+// For all code blocks, copy the language from the containing div
+// to the inner code tag (where hljs expects it to be)
+const langPrefix = 'language-';
+document.querySelectorAll(`div[class^='${langPrefix}']`).forEach(function(div) {
+  div.classList.forEach(function(cssClass) {
+    if (cssClass.startsWith(langPrefix)) {
+      const lang = cssClass.substring(langPrefix.length);
+      div.querySelectorAll('pre code').forEach(function(code) {
+        code.classList.add(lang);
+      });
+    }
+  });
+});
+
+hljs.configure({languages:['scala','java','bash']});
+hljs.initHighlightingOnLoad();
+      </script><script>console.info('\x57\x65\x62\x73\x69\x74\x65\x20\x62\x75\x69\x6c\x74\x20\x77\x69\x74\x68\x3a\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x5f\x5f\x20\x20\x20\x20\x5f\x5f\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x5f\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x5f\x20\x5f\x5f\x0a\x20\x20\x20\x5f\x5f\x5f\x5f\x5f\x2f\x20\x2f\x5f\x20\x20\x2f\x20\x2f\x5f\x20\x20\x20\x20\x20\x20\x5f\x5f\x5f\x5f\x20\x5f\x5f\x5f\x20\x20\x28\x5f\x29\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x5f\x20\x20\x5f\x5f\x5f\x5f\x5f\x28\x5f\x29\x20\x2f\x5f\x5f\x5f\x5f\x20\x20\x5f\x5f\x5f\x5f\x5f\x0a\x20\x20\x2f\x20\x5f\x5f\x5f\x2f\x20\x5f\x5f\x20\x5c\x2f\x20\x5f\x5f\x2f\x5f\x5f\x5f\x5f\x5f\x2f\x20\x5f\x5f\x20\x60\x5f\x5f\x20\x5c\x2f\x20\x2f\x20\x5f\x5f\x5f\x2f\x20\x5f\x5f\x5f\x2f\x20\x5f\x5f\x20\x5c\x2f\x20\x5f\x5f\x5f\x2f\x20\x2f\x20\x5f\x5f\x2f\x20\x5f\x20\x5c\x2f\x20\x5f\x5f\x5f\x2f\x0a\x20\x28\x5f\x5f\x20\x20\x29\x20\x2f\x5f\x2f\x20\x2f\x20\x2f\x5f\x2f\x5f\x5f\x5f\x5f\x5f\x2f\x20\x2f\x20\x2f\x20\x2f\x20\x2f\x20\x2f\x20\x2f\x20\x2f\x5f\x5f\x2f\x20\x2f\x20\x20\x2f\x20\x2f\x5f\x2f\x20\x28\x5f\x5f\x20\x20\x29\x20\x2f\x20\x2f\x5f\x2f\x20\x20\x5f\x5f\x28\x5f\x5f\x20\x20\x29\x0a\x2f\x5f\x5f\x5f\x5f\x2f\x5f\x2e\x5f\x5f\x5f\x2f\x5c\x5f\x5f\x2f\x20\x20\x20\x20\x20\x2f\x5f\x2f\x20\x2f\x5f\x2f\x20\x2f\x5f\x2f\x5f\x2f\x5c\x5f\x5f\x5f\x2f\x5f\x2f\x20\x20\x20\x5c\x5f\x5f\x5f\x5f\x2f\x5f\x5f\x5f\x5f\x2f\x5f\x2f\x5c\x5f\x5f\x2f\x5c\x5f\x5f\x5f\x2f\x5f\x5f\x5f\x5f\x2f\x0a\x0a\x68\x74\x74\x70\x73\x3a\x2f\x2f\x34\x37\x64\x65\x67\x2e\x67\x69\x74\x68\x75\x62\x2e\x69\x6f\x2f\x73\x62\x74\x2d\x6d\x69\x63\x72\x6f\x73\x69\x74\x65\x73')</script><script src="/js/docs.js"></script></body></html>
