@@ -1,16 +1,16 @@
 val Scala_212 = "2.12.11"
 val Scala_213 = "2.13.2"
 
-val catsEffectVersion = "2.3.1"
+val catsEffectVersion = "2.4.0"
 val catsTaglessVersion = "0.12"
-val doobieVersion = "0.10.0"
-val catsVersion = "2.3.1"
+val doobieVersion = "0.9.4"
+val catsVersion = "2.4.0"
 val scalacacheVersion = "0.28.0"
-val kindProjectorVersion = "0.11.2"
+val kindProjectorVersion = "0.11.3"
 val fs2RedisVersion = "0.10.3"
 val h2Version = "1.4.200"
 val log4CatsVersion = "1.1.1"
-val http4sVersion = "0.21.15"
+val http4sVersion = "0.21.18"
 val circeVersion = "0.13.0"
 val sttpVersion = "1.7.2"
 
@@ -42,7 +42,7 @@ val commonSettings = Seq(
   libraryDependencies ++= Seq(
     "org.typelevel" %% "cats-tagless-laws" % catsTaglessVersion % Test,
     "org.typelevel" %% "cats-effect-laws" % catsEffectVersion % Test,
-    "org.typelevel" %% "cats-testkit-scalatest" % "2.1.0" % Test,
+    "org.typelevel" %% "cats-testkit-scalatest" % "2.1.1" % Test,
     "org.typelevel" %% "cats-laws" % catsVersion % Test,
     "org.typelevel" %% "cats-kernel-laws" % catsVersion % Test
   ) ++ compilerPlugins,
@@ -114,7 +114,7 @@ val http4sClient = module("http4s-client")
 val akkaHttp = module("akka-http")
   .settings(
     libraryDependencies ++= Seq(
-      "com.typesafe.akka" %% "akka-http" % "10.2.2"
+      "com.typesafe.akka" %% "akka-http" % "10.2.3"
     )
   )
   .dependsOn(core)
