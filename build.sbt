@@ -9,7 +9,7 @@ val scalacacheVersion = "0.28.0"
 val kindProjectorVersion = "0.11.3"
 val fs2RedisVersion = "0.10.3"
 val h2Version = "1.4.200"
-val log4CatsVersion = "1.1.1"
+val log4CatsVersion = "1.2.0"
 val http4sVersion = "0.21.19"
 val circeVersion = "0.13.0"
 val sttpVersion = "1.7.2"
@@ -89,7 +89,7 @@ val redis = module("redis")
 val log4cats = module("log4cats")
   .settings(
     libraryDependencies ++= Seq(
-      "io.chrisdavenport" %% "log4cats-core" % log4CatsVersion
+      "org.typelevel" %% "log4cats-core" % log4CatsVersion
     )
   )
   .dependsOn(core)
