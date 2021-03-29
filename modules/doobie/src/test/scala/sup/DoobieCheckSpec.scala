@@ -2,12 +2,11 @@ package sup
 
 import _root_.doobie.Transactor
 import cats.effect.Async
-import cats.effect.ContextShift
 import cats.effect.IO
-import cats.effect.Timer
 import scala.concurrent.duration._
 import cats.implicits._
 import scala.concurrent.ExecutionContext
+import cats.effect.Temporal
 
 class DoobieCheckSpec extends BaseIOTest {
 
@@ -18,7 +17,7 @@ class DoobieCheckSpec extends BaseIOTest {
     Transactor.fromDriverManager[F]("org.h2.Driver", "jdbcfoobarnope")
 
   implicit val cs: ContextShift[IO] = IO.contextShift(ExecutionContext.global)
-  implicit val timer: Timer[IO] = IO.timer(ExecutionContext.global)
+  implicit val timer: Temporal[IO] = IO.timer(ExecutionContext.global)
 
   "IO H2 check" when {
     "the database responds before the timeout" should {
