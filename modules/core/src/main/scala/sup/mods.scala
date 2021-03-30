@@ -2,25 +2,26 @@ package sup
 
 import cats.data.{EitherK, Tuple2K}
 import cats.{Applicative, ApplicativeError, FlatMap, Functor, Id, Semigroup}
-import cats.effect.{Concurrent, Timer}
+import cats.effect.Concurrent
 
 import scala.concurrent.duration.FiniteDuration
 import cats.effect.implicits._
 import cats.implicits._
 import sup.data.Tagged
+import cats.effect.Temporal
 
 object mods {
 
   /**
     * Fail the health check with [[Health.Sick]] in case the check takes longer than `duration`.
     * */
-  def timeoutToSick[F[_]: Concurrent: Timer, H[_]: Applicative](duration: FiniteDuration): HealthCheckEndoMod[F, H] =
+  def timeoutToSick[F[_]: Concurrent: Temporal, H[_]: Applicative](duration: FiniteDuration): HealthCheckEndoMod[F, H] =
     timeoutToDefault(Health.Sick, duration)
 
   /**
     * Fallback to the provided value in case the check takes longer than `duration`.
     * */
-  def timeoutToDefault[F[_]: Concurrent: Timer, H[_]: Applicative](
+  def timeoutToDefault[F[_]: Concurrent: Temporal, H[_]: Applicative](
     default: Health,
     duration: FiniteDuration
   ): HealthCheckEndoMod[F, H] =
@@ -32,7 +33,7 @@ object mods {
     * Fail the health check with a failure (as defined by [[Concurrent.timeout]] for F)
     * in case the check takes longer than `duration`.
     * */
-  def timeoutToFailure[F[_]: Concurrent: Timer, H[_]](duration: FiniteDuration): HealthCheckEndoMod[F, H] =
+  def timeoutToFailure[F[_]: Concurrent: Temporal, H[_]](duration: FiniteDuration): HealthCheckEndoMod[F, H] =
     _.transform {
       _.timeout(duration)
     }
