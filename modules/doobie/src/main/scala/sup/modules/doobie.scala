@@ -17,7 +17,7 @@ object doobie {
     * Note: Errors aren't recovered in this healthcheck. If you want error handling,
     * consider using [[HealthCheck.through]] with [[sup.mods.recoverToSick]].
     * */
-  def connectionCheck[F[_]: Bracket[?[_], Throwable]](
+  def connectionCheck[F[_]: Bracket[*[_], Throwable]](
     xa: Transactor[F]
   )(
     timeout: Option[FiniteDuration]

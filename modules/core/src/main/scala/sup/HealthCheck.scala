@@ -55,10 +55,10 @@ object HealthCheck {
     *
     * If H and I are the same, the result's EitherK can be combined to a single H/I container using `mods.mergeEitherK`.
     * */
-  def either[F[_]: ApplicativeError[?[_], E], E, H[_], I[_]](
+  def either[F[_]: ApplicativeError[*[_], E], E, H[_], I[_]](
     a: HealthCheck[F, H],
     b: HealthCheck[F, I]
-  ): HealthCheck[F, EitherK[H, I, ?]] =
+  ): HealthCheck[F, EitherK[H, I, *]] =
     liftF {
       a.check
         .map(ar => EitherK.left[I](ar.value))
@@ -71,7 +71,7 @@ object HealthCheck {
     *
     * If H and I are the same, the result's Tuple2K can be combined to a single H/I container using `mods.mergeTuple2K`.
     * */
-  def tupled[F[_]: Apply, H[_], I[_]](a: HealthCheck[F, H], b: HealthCheck[F, I]): HealthCheck[F, Tuple2K[H, I, ?]] =
+  def tupled[F[_]: Apply, H[_], I[_]](a: HealthCheck[F, H], b: HealthCheck[F, I]): HealthCheck[F, Tuple2K[H, I, *]] =
     liftF {
       (a.check, b.check).mapN((ac, bc) => HealthResult(Tuple2K(ac.value, bc.value)))
     }
@@ -84,7 +84,7 @@ object HealthCheck {
   def parTupled[F[_]: NonEmptyParallel, H[_], I[_]](
     a: HealthCheck[F, H],
     b: HealthCheck[F, I]
-  ): HealthCheck[F, Tuple2K[H, I, ?]] =
+  ): HealthCheck[F, Tuple2K[H, I, *]] =
     liftF {
       (a.check, b.check).parMapN((ac, bc) => HealthResult(Tuple2K(ac.value, bc.value)))
     }
@@ -95,12 +95,12 @@ object HealthCheck {
     *
     * If H and I are the same, the result's EitherK can be combined to a single H/I container using `mods.mergeEitherK`.
     * */
-  def race[F[_]: Concurrent, H[_], I[_]](a: HealthCheck[F, H], b: HealthCheck[F, I]): HealthCheck[F, EitherK[H, I, ?]] =
+  def race[F[_]: Concurrent, H[_], I[_]](a: HealthCheck[F, H], b: HealthCheck[F, I]): HealthCheck[F, EitherK[H, I, *]] =
     liftF {
       a.check.race(b.check).map(e => HealthResult(EitherK(e.bimap(_.value, _.value))))
     }
 
-  implicit def functorK[F[_]: Functor]: FunctorK[HealthCheck[F, ?[_]]] = new FunctorK[HealthCheck[F, ?[_]]] {
+  implicit def functorK[F[_]: Functor]: FunctorK[HealthCheck[F, *[_]]] = new FunctorK[HealthCheck[F, *[_]]] {
     override def mapK[G[_], H[_]](fgh: HealthCheck[F, G])(gh: G ~> H): HealthCheck[F, H] = fgh.mapK(gh)
   }
 

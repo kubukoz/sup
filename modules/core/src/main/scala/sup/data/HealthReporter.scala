@@ -50,6 +50,6 @@ object HealthReporter {
 
   def fromResults[G[_]: Reducible: Functor, H[_]: Reducible](
     results: G[HealthResult[H]]
-  ): HealthResult[Report[G, H, ?]] =
+  ): HealthResult[Report[G, H, *]] =
     HealthResult(Report.fromResults[G, H, Health](results.map(_.value)))
 }

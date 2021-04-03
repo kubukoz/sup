@@ -48,19 +48,19 @@ object mods {
   /**
     * Tag a health check with a value.
     * */
-  def tagWith[F[_]: Functor, Tag](tag: Tag): HealthCheckMod[F, Id, F, Tagged[Tag, ?]] =
+  def tagWith[F[_]: Functor, Tag](tag: Tag): HealthCheckMod[F, Id, F, Tagged[Tag, *]] =
     _.mapResult(_.transform(Tagged(tag, _)))
 
   /**
     * Unwrap a tagged health check (dual of `tagWith`).
     * */
-  def untag[F[_]: Functor, Tag]: HealthCheckMod[F, Tagged[Tag, ?], F, Id] =
+  def untag[F[_]: Functor, Tag]: HealthCheckMod[F, Tagged[Tag, *], F, Id] =
     _.mapResult(_.transform[Id](_.health))
 
   /**
     * Combines containers in a Tuple2K using the given semigroup. Useful in conjunction with HealthCheck.{`tupled`, `parTupled`}.
     * */
-  def combineTuple2K[F[_]: Functor, H[_]](implicit S: Semigroup[H[Health]]): HealthCheckMod[F, Tuple2K[H, H, ?], F, H] =
+  def combineTuple2K[F[_]: Functor, H[_]](implicit S: Semigroup[H[Health]]): HealthCheckMod[F, Tuple2K[H, H, *], F, H] =
     _.mapResult {
       _.transform(tuple => tuple.first |+| tuple.second)
     }
@@ -68,7 +68,7 @@ object mods {
   /**
     * Merges an EitherK of the same container type. Useful in conjunction with HealthCheck.{`either`, `race`}.
     * */
-  def mergeEitherK[F[_]: Functor, H[_]]: HealthCheckMod[F, EitherK[H, H, ?], F, H] = _.mapResult {
+  def mergeEitherK[F[_]: Functor, H[_]]: HealthCheckMod[F, EitherK[H, H, *], F, H] = _.mapResult {
     _.transform(_.run.merge)
   }
 

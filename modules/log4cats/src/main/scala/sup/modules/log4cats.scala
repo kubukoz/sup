@@ -1,7 +1,7 @@
 package sup.modules
 
 import cats.{FlatMap, Show}
-import io.chrisdavenport.log4cats.MessageLogger
+import org.typelevel.log4cats.MessageLogger
 import cats.implicits._
 import sup.{mods, Health, HealthCheckEndoMod}
 

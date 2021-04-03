@@ -1,18 +1,19 @@
-val Scala_212 = "2.12.11"
-val Scala_213 = "2.13.2"
+val Scala_213 = "2.13.5"
+val Scala_3 = "3.0.0-RC1"
 
 val catsEffectVersion = "2.4.1"
 val catsTaglessVersion = "0.12"
-val doobieVersion = "0.9.4"
-val catsVersion = "2.4.2"
+val doobieVersion = "0.12.1"
+val catsVersion = "2.5.0"
 val scalacacheVersion = "0.28.0"
 val kindProjectorVersion = "0.11.3"
-val fs2RedisVersion = "0.10.3"
+val fs2RedisVersion = "0.13.1"
 val h2Version = "1.4.200"
-val log4CatsVersion = "1.1.1"
+val log4CatsVersion = "2.0.1"
 val http4sVersion = "0.21.21"
 val circeVersion = "0.13.0"
 val sttpVersion = "1.7.2"
+val akkaHttpVersion = "10.2.4"
 
 inThisBuild(
   List(
@@ -30,12 +31,8 @@ inThisBuild(
   )
 )
 
-val compilerPlugins = List(
-  compilerPlugin(("org.typelevel" % "kind-projector" % kindProjectorVersion).cross(CrossVersion.full))
-)
-
 val commonSettings = Seq(
-  scalaVersion := Scala_212,
+  scalaVersion := Scala_213,
   scalacOptions --= Seq("-Xfatal-warnings"),
   name := "sup",
   updateOptions := updateOptions.value.withGigahorse(false), //may fix publishing bug
@@ -45,11 +42,14 @@ val commonSettings = Seq(
     "org.typelevel" %% "cats-testkit-scalatest" % "2.1.1" % Test,
     "org.typelevel" %% "cats-laws" % catsVersion % Test,
     "org.typelevel" %% "cats-kernel-laws" % catsVersion % Test
-  ) ++ compilerPlugins,
+  ) ++ {
+    if (isDotty.value) Nil else compilerPlugin(("org.typelevel" % "kind-projector" % kindProjectorVersion).cross(CrossVersion.full)) :: Nil
+
+  },
   mimaPreviousArtifacts := Set(organization.value %% name.value % "0.7.0")
 )
 
-val crossBuiltCommonSettings = commonSettings ++ Seq(crossScalaVersions := Seq(Scala_212, Scala_213))
+val crossBuiltCommonSettings = commonSettings ++ Seq(crossScalaVersions := Seq(Scala_213, Scala_3))
 
 def module(moduleName: String): Project =
   Project(moduleName, file("modules") / moduleName).settings(crossBuiltCommonSettings).settings(name += s"-$moduleName")
@@ -89,7 +89,7 @@ val redis = module("redis")
 val log4cats = module("log4cats")
   .settings(
     libraryDependencies ++= Seq(
-      "io.chrisdavenport" %% "log4cats-core" % log4CatsVersion
+      "org.typelevel" %% "log4cats-core" % log4CatsVersion
     )
   )
   .dependsOn(core)
@@ -114,7 +114,7 @@ val http4sClient = module("http4s-client")
 val akkaHttp = module("akka-http")
   .settings(
     libraryDependencies ++= Seq(
-      "com.typesafe.akka" %% "akka-http" % "10.2.3"
+      "com.typesafe.akka" %% "akka-http" % akkaHttpVersion
     )
   )
   .dependsOn(core)
@@ -152,7 +152,7 @@ def enumerateAnd(values: List[String]): String = {
 
 val microsite = project
   .settings(
-    scalaVersion := Scala_212,
+    scalaVersion := Scala_213,
     crossScalaVersions := List(),
     micrositeName := "sup",
     micrositeDescription := "Functional healthchecks in Scala",
@@ -166,7 +166,10 @@ val microsite = project
     micrositePushSiteWith := GitHub4s,
     micrositeGithubToken := sys.env.get("GITHUB_TOKEN"),
     scalacOptions --= Seq("-Xfatal-warnings"),
-    libraryDependencies ++= compilerPlugins,
+    libraryDependencies ++= {
+      if (isDotty.value) Nil else compilerPlugin(("org.typelevel" % "kind-projector" % kindProjectorVersion).cross(CrossVersion.full)) :: Nil
+
+    },
     libraryDependencies ++= Seq(
       "org.http4s" %% "http4s-circe" % http4sVersion,
       "de.heikoseeberger" %% "akka-http-circe" % "1.29.1"
