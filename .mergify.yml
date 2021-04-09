@@ -2,7 +2,7 @@ pull_request_rules:
   - name: automatically merge Scala Steward PRs on CI success
     conditions:
       - author=scala-steward
-      - status-success=Travis CI - Pull Request
+      - status-success=Build and Test
       - body~=labels:.*semver-patch.*
     actions:
       merge:
