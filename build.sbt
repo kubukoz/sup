@@ -176,7 +176,6 @@ def enumerateAnd(values: List[String]): String = {
 val microsite = project
   .settings(
     scalaVersion := Scala_212,
-    crossScalaVersions := List(),
     micrositeName := "sup",
     micrositeDescription := "Functional healthchecks in Scala",
     micrositeDocumentationUrl := "/guide",
@@ -215,4 +214,4 @@ val sup =
     .in(file("."))
     .settings(commonSettings)
     .settings(skip in publish := true, crossScalaVersions := List(), mimaPreviousArtifacts := Set.empty)
-    .aggregate((microsite :: allModules).map(x => x: ProjectReference): _*)
+    .aggregate((/* microsite ::  */ allModules).map(x => x: ProjectReference): _*)
