@@ -4,6 +4,7 @@ import cats.Id
 import sup.HealthCheck
 import scala.concurrent.duration._
 import cats.implicits._
+import cats.effect.BracketThrow
 
 object doobie {
   import _root_.doobie._
@@ -15,13 +16,13 @@ object doobie {
     * Note: Errors aren't recovered in this healthcheck. If you want error handling,
     * consider using [[HealthCheck.through]] with [[sup.mods.recoverToSick]].
     */
-  def connectionCheck[F[_]](xa: Transactor[F])(timeout: Option[FiniteDuration]): HealthCheck[F, Id] = ??? /* {
-//     // todo: needs updating after doobie releases 1.x milestones
-//     //zero means infinite in JDBC
-//     val actualTimeoutSeconds = timeout.foldMap(_.toSeconds.toInt)
+  def connectionCheck[F[_]: BracketThrow](xa: Transactor[F])(timeout: Option[FiniteDuration]): HealthCheck[F, Id] = {
+    // todo: needs updating after doobie releases 1.x milestones
+    //zero means infinite in JDBC
+    val actualTimeoutSeconds = timeout.foldMap(_.toSeconds.toInt)
 
-//     HealthCheck.liftFBoolean {
-//       FC.isValid(actualTimeoutSeconds).transact(xa)
-//     }
-  } */
+    HealthCheck.liftFBoolean {
+      FC.isValid(actualTimeoutSeconds).transact(xa)
+    }
+  }
 }
