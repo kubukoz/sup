@@ -2,7 +2,6 @@ package sup.modules
 
 import cats.Id
 import sup.HealthCheck
-import cats.effect.Bracket
 import scala.concurrent.duration._
 import cats.implicits._
 
