@@ -173,6 +173,7 @@ def enumerateAnd(values: List[String]): String = {
   } else values.mkString
 }
 
+/*
 val microsite = project
   .settings(
     scalaVersion := Scala_212,
@@ -208,7 +209,7 @@ val microsite = project
   .enablePlugins(MicrositesPlugin)
   .enablePlugins(BuildInfoPlugin)
   .dependsOn(allModules.map(x => x: ClasspathDep[ProjectReference]): _*)
-
+ */
 val sup =
   project
     .in(file("."))
