@@ -1,4 +1,4 @@
-val Scala_212 = "2.12.12"
+val Scala_212 = "2.12.13"
 val Scala_213 = "2.13.5"
 
 val catsEffectVersion = "2.4.1"
@@ -14,7 +14,7 @@ val http4sVersion = "0.21.21"
 val circeVersion = "0.13.0"
 val sttpVersion = "1.7.2"
 
-val GraalVM11 = "graalvm-ce-java11@20.3.0"
+val GraalVM11 = "graalvm-ce-java11@21.0.0.2"
 
 ThisBuild / scalaVersion := Scala_212
 ThisBuild / crossScalaVersions := Seq(Scala_212, Scala_213)
@@ -26,7 +26,7 @@ ThisBuild / githubWorkflowBuild := Seq(
 //sbt-ci-release settings
 ThisBuild / githubWorkflowTargetTags ++= Seq("v*")
 ThisBuild / githubWorkflowPublishTargetBranches := Seq(
-  RefPredicate.StartsWith(Ref.Branch("main")),
+  RefPredicate.StartsWith(Ref.Branch("master")),
   RefPredicate.StartsWith(Ref.Tag("v"))
 )
 ThisBuild / githubWorkflowPublishPreamble := Seq(
