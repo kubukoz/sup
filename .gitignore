@@ -6,3 +6,9 @@ target/
 **/secret.conf
 **/.DS_Store
 .vscode/
+
+metals.sbt
+project/metals.sbt
+project/project/
+
+.bsp

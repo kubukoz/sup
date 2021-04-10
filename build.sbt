@@ -1,5 +1,5 @@
-val Scala_212 = "2.12.11"
-val Scala_213 = "2.13.2"
+val Scala_212 = "2.12.13"
+val Scala_213 = "2.13.5"
 
 val catsEffectVersion = "2.4.1"
 val catsTaglessVersion = "0.11"
@@ -13,6 +13,32 @@ val log4CatsVersion = "1.1.1"
 val http4sVersion = "0.21.22"
 val circeVersion = "0.13.0"
 val sttpVersion = "1.7.2"
+
+val GraalVM11 = "graalvm-ce-java11@21.0.0.2"
+
+ThisBuild / scalaVersion := Scala_212
+ThisBuild / crossScalaVersions := Seq(Scala_212, Scala_213)
+ThisBuild / githubWorkflowJavaVersions := Seq(GraalVM11)
+ThisBuild / githubWorkflowBuild := Seq(
+  WorkflowStep.Sbt(List("test", "mimaReportBinaryIssues"))
+)
+
+//sbt-ci-release settings
+ThisBuild / githubWorkflowTargetTags ++= Seq("v*")
+ThisBuild / githubWorkflowPublishTargetBranches := Seq(
+  RefPredicate.StartsWith(Ref.Branch("master")),
+  RefPredicate.StartsWith(Ref.Tag("v"))
+)
+ThisBuild / githubWorkflowPublishPreamble := Seq(
+  WorkflowStep.Use(UseRef.Public("olafurpg", "setup-gpg", "v3"))
+)
+ThisBuild / githubWorkflowPublish := Seq(WorkflowStep.Sbt(List("ci-release")))
+ThisBuild / githubWorkflowEnv ++= List(
+  "PGP_PASSPHRASE",
+  "PGP_SECRET",
+  "SONATYPE_PASSWORD",
+  "SONATYPE_USERNAME"
+).map(envKey => envKey -> s"$${{ secrets.$envKey }}").toMap
 
 inThisBuild(
   List(
@@ -35,7 +61,6 @@ val compilerPlugins = List(
 )
 
 val commonSettings = Seq(
-  scalaVersion := Scala_212,
   scalacOptions --= Seq("-Xfatal-warnings"),
   name := "sup",
   updateOptions := updateOptions.value.withGigahorse(false), //may fix publishing bug
@@ -49,10 +74,8 @@ val commonSettings = Seq(
   mimaPreviousArtifacts := Set(organization.value %% name.value % "0.7.0")
 )
 
-val crossBuiltCommonSettings = commonSettings ++ Seq(crossScalaVersions := Seq(Scala_212, Scala_213))
-
 def module(moduleName: String): Project =
-  Project(moduleName, file("modules") / moduleName).settings(crossBuiltCommonSettings).settings(name += s"-$moduleName")
+  Project(moduleName, file("modules") / moduleName).settings(commonSettings).settings(name += s"-$moduleName")
 
 val core = module("core").settings(
   libraryDependencies ++= Seq(
