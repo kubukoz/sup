@@ -28,7 +28,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         scala: [2.12.13, 2.13.5]
-        java: [graalvm-ce-java11@21.0.0.2]
+        java: [graalvm-ce-java11@21.0.0]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout current branch (full)
@@ -70,12 +70,12 @@ jobs:
   publish:
     name: Publish Artifacts
     needs: [build]
-    if: github.event_name != 'pull_request' && (startsWith(github.ref, 'refs/heads/master') || startsWith(github.ref, 'refs/tags/v'))
+    if: github.event_name != 'pull_request' && (startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/tags/v'))
     strategy:
       matrix:
         os: [ubuntu-latest]
         scala: [2.12.13]
-        java: [graalvm-ce-java11@21.0.0.2]
+        java: [graalvm-ce-java11@21.0.0]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout current branch (full)
