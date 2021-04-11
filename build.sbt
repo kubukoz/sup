@@ -40,6 +40,24 @@ ThisBuild / githubWorkflowEnv ++= List(
   "SONATYPE_USERNAME"
 ).map(envKey => envKey -> s"$${{ secrets.$envKey }}").toMap
 
+ThisBuild / githubWorkflowAddedJobs ++= Seq(
+  WorkflowJob(
+    "microsite",
+    "Microsite",
+    githubWorkflowJobSetup.value.toList ::: List(
+      WorkflowStep.Use(
+        UseRef.Public("ruby", "setup-ruby", "v1"),
+        params = Map("ruby-version" -> "2.7"),
+        name = Some("Setup Ruby")
+      ),
+      WorkflowStep.Run(List("gem install jekyll -v 4.0.0"), name = Some("Setup Jekyll")),
+      WorkflowStep.Sbt(List("microsite/makeMicrosite"), name = Some("Build the microsite"))
+    ),
+    javas = List(GraalVM11),
+    scalas = List(Scala_212)
+  )
+)
+
 inThisBuild(
   List(
     organization := "com.kubukoz",
@@ -173,10 +191,8 @@ def enumerateAnd(values: List[String]): String = {
   } else values.mkString
 }
 
-/*
 val microsite = project
   .settings(
-    scalaVersion := Scala_212,
     micrositeName := "sup",
     micrositeDescription := "Functional healthchecks in Scala",
     micrositeDocumentationUrl := "/guide",
@@ -195,6 +211,7 @@ val microsite = project
       "de.heikoseeberger" %% "akka-http-circe" % "1.29.1"
     ),
     skip in publish := true,
+    mimaPreviousArtifacts := Set.empty,
     buildInfoPackage := "sup.buildinfo",
     micrositeAnalyticsToken := "UA-55943015-9",
     buildInfoKeys := Seq[BuildInfoKey](lastStableVersion),
@@ -206,13 +223,14 @@ val microsite = project
       "SCALA_VERSIONS" -> enumerateAnd((crossScalaVersions in core).value.toList.map(dropMinor))
     )
   )
+  .enablePlugins(MdocPlugin)
   .enablePlugins(MicrositesPlugin)
   .enablePlugins(BuildInfoPlugin)
   .dependsOn(allModules.map(x => x: ClasspathDep[ProjectReference]): _*)
- */
+
 val sup =
   project
     .in(file("."))
     .settings(commonSettings)
     .settings(skip in publish := true, crossScalaVersions := List(), mimaPreviousArtifacts := Set.empty)
-    .aggregate((/* microsite ::  */ allModules).map(x => x: ProjectReference): _*)
+    .aggregate((microsite :: allModules).map(x => x: ProjectReference): _*)
