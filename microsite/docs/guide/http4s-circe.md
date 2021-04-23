@@ -26,11 +26,12 @@ The circe module provides circe `Encoder`/`Decoder` instances for all the import
 so you can use them together with `http4s-circe` and bundle the whole thing up:
 
 ```scala mdoc
-import io.circe._, org.http4s.circe.CirceEntityCodec._, org.http4s._, org.http4s.implicits._, org.http4s.client._
+import org.http4s.circe.CirceEntityCodec._, org.http4s._, org.http4s.implicits._, org.http4s.client._
+import cats.effect.unsafe.implicits._
 import cats.effect._, cats._, cats.data._, sup.data._
 
 implicit val client: Client[IO] = Client.fromHttpApp(HttpApp.notFound[IO])
- 
+
 val healthcheck: HealthCheck[IO, Id] = statusCodeHealthCheck(Request[IO]())
 
 val routes = healthCheckRoutes(healthcheck)
@@ -44,7 +45,7 @@ val report = HealthReporter.fromChecks(
 
 val reportRoutes = healthCheckRoutes(report)
 
-val responseBody = reportRoutes.orNotFound.run(Request(uri = Uri.uri("/health-check"))).flatMap(_.bodyAsText.compile.string)
+val responseBody = reportRoutes.orNotFound.run(Request(uri = Uri.uri("/health-check"))).flatMap(_.bodyText.compile.string)
 println(responseBody.unsafeRunSync())
 ```
 

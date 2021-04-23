@@ -24,17 +24,16 @@ You can make a healthcheck cached by transforming it with the `cached` function
 Let's grab a bunch of imports and define our Scalacache config:
 
 ```scala mdoc
-import cats._, cats.effect._, cats.data._, scala.concurrent.duration._, scalacache.{Id => _, _}, sup.mods._, sup.data._
+import cats._, cats.effect._, cats.data._, scala.concurrent.duration._, scalacache._, sup.mods._, sup.data._
 
-//you'll probably want to implement these
-implicit def cache[H[_]]: Cache[HealthResult[H]] = ???
-implicit def mode[F[_]]: Mode[F] = ???
+//you'll probably want to implement this
+implicit def cache[H[_]]: Cache[IO, HealthResult[H]] = ???
 ```
 
 Now, the health check:
 
 ```scala mdoc
-def queueCheck(queueName: String): HealthCheck[IO, Tagged[String, ?]] =
+def queueCheck(queueName: String): HealthCheck[IO, Tagged[String, *]] =
   HealthCheck.const[IO, Id](Health.Healthy).through(tagWith(queueName))
 
 def q1 = queueCheck("foo").through(cached("queue-foo", Some(10.seconds)))
@@ -43,7 +42,7 @@ def q1 = queueCheck("foo").through(cached("queue-foo", Some(10.seconds)))
 Because a `HealthReporter` is just a special case of `HealthCheck`, the same modifier works for reporters:
 
 ```scala mdoc
-def reporter: HealthReporter[IO, NonEmptyList, Tagged[String, ?]] =
+def reporter: HealthReporter[IO, NonEmptyList, Tagged[String, *]] =
   HealthReporter.fromChecks(
     queueCheck("foo").through(cached("queue-foo", Some(10.seconds))),
     queueCheck("bar")

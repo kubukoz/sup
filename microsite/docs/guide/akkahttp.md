@@ -23,20 +23,35 @@ It is possible to create a `Route` from a health check.
 
 To do so, you'll need:
 
-- a `cats.effect.Effect` instance for your health check's effect type
 - a `Reducible` instance for your container of results
-- and a way to serialize the results (as defined per the implicit `ToEntityMarshaller[HealthResult[H]]`).
+- a way to serialize the results (as defined per the implicit `ToEntityMarshaller[HealthResult[H]]`).
+- a `cats.effect.std.Dispatcher[F]` instance for your health check's `F[_]`, or `cats.effect.Async[F]` (see examples below)
 
 Once you have all three, use `healthCheckRoutes`:
 
 ```scala mdoc
-import cats.effect.IO, cats.Id
+import cats.effect.IO, cats.effect.Resource, cats.Id
+import akka.actor.ActorSystem
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.Http.ServerBinding
 import akka.http.scaladsl.server.Route
 import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport._
 
+// just some boilerplate to manage akka server
+def serve(routes: Route): Resource[IO, ServerBinding] =
+  Resource.make(IO(ActorSystem()))(as => IO.fromFuture(IO(as.terminate())).void).flatMap { implicit system =>
+    Resource.make(IO.fromFuture(IO(Http().newServerAt("localhost", 8080).bind(routes))))(binding => IO.fromFuture(IO(binding.unbind())).void)
+  }
+
 val check: HealthCheck[IO, Id] = HealthCheck.const(Health.healthy)
 
-val routes: Route = healthCheckRoutes(check)
+// You can return this from your IOApp's `run`
+val app = AkkaSup.instance[IO].flatMap { akkaSup =>
+
+  val routes: Route = akkaSup.healthCheckRoutes[Id](check)
+
+  serve(routes)
+}.useForever
 ```
 
 You can customize the path at which the health checks will be available (the default is `path("health-check")`).
@@ -55,6 +70,8 @@ For example:
 ```scala mdoc
 import cats.data.ReaderT, cats.~>
 import scala.concurrent.Future
+//for IORuntime
+import cats.effect.unsafe.implicits._
 
 case class User()
 type Token = String
@@ -70,7 +87,7 @@ val checkReader: HealthCheck[Eff, Id] = HealthCheck.liftFBoolean {
 def effToIO(token: Token): Eff ~> IO =
   λ[Eff ~> IO](_.run(token))
 
-val route: Route = healthCheckRoutesWithContext(checkReader) { request =>
+val route: Route = AkkaSup.healthCheckRoutesWithContext(checkReader) { request =>
   val token = request.headers.find(_.is("B3-Trace-Id")).fold("")(_.value)
 
   effToIO(token).andThen(λ[IO ~> Future](_.unsafeToFuture()))

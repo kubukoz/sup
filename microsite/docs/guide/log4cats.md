@@ -22,14 +22,14 @@ The log4cats module of sup provides a simple modifier that logs a message before
 and a message with the result of the healthcheck:
 
 ```scala mdoc
-import cats._, cats.implicits._, cats.effect._, cats.data._
-import io.chrisdavenport.log4cats.Logger, io.chrisdavenport.log4cats.extras._
+import cats._, cats.implicits._, cats.data._
+import org.typelevel.log4cats.Logger, org.typelevel.log4cats.extras._
 
 val healthCheck: HealthCheck[Id, Id] = HealthCheck.const(Health.Healthy)
 
-implicit val logger: Logger[Writer[Chain[LogMessage], ?]] = WriterLogger()
- 
+implicit val logger: Logger[Writer[Chain[LogMessage], *]] = WriterLogger()
+
 val loggedCheck = healthCheck.leftMapK(WriterT.liftK[Id, Chain[LogMessage]]).through(logged("foo"))
-  
+
 val (logs, result) = loggedCheck.check.run.leftMap(_.toList)
-``` 
+```

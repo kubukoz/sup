@@ -2,22 +2,21 @@ package sup.modules
 
 import cats.Id
 import sup.HealthCheck
-import cats.effect.Bracket
 import scala.concurrent.duration._
 import cats.implicits._
+import cats.effect.kernel.MonadCancelThrow
 
 object doobie {
   import _root_.doobie._
   import _root_.doobie.implicits._
 
-  /**
-    * A healthcheck that checks whether a connection produced by the transactor is valid.
+  /** A healthcheck that checks whether a connection produced by the transactor is valid.
     * If `timeoutSeconds` is empty, there's no timeout. You should probably have a timeout, though.
     *
     * Note: Errors aren't recovered in this healthcheck. If you want error handling,
     * consider using [[HealthCheck.through]] with [[sup.mods.recoverToSick]].
-    * */
-  def connectionCheck[F[_]: Bracket[?[_], Throwable]](
+    */
+  def connectionCheck[F[_]: MonadCancelThrow](
     xa: Transactor[F]
   )(
     timeout: Option[FiniteDuration]

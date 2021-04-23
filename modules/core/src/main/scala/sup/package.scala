@@ -1,7 +1,7 @@
 import sup.data.Report
 
 package object sup {
-  type HealthReporter[F[_], G[_], H[_]] = HealthCheck[F, Report[G, H, ?]]
+  type HealthReporter[F[_], G[_], H[_]] = HealthCheck[F, Report[G, H, *]]
 
   type HealthCheckMod[F[_], H[_], G[_], I[_]] = HealthCheck[F, H] => HealthCheck[G, I]
 

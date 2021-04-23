@@ -10,8 +10,9 @@ class RedisCheckSpec extends AnyWordSpec with Matchers {
   "Either check" when {
     "Right" should {
       "be Healthy" in {
-        implicit val ping: Ping[Either[String, ?]] = new Ping[Either[String, ?]] {
+        implicit val ping: Ping[Either[String, *]] = new Ping[Either[String, *]] {
           override val ping: Either[String, String] = Right("pong")
+          override def select(index: Int): Either[String, Unit] = Left("Not implemented")
         }
 
         val healthCheck = redis.pingCheck
@@ -22,8 +23,9 @@ class RedisCheckSpec extends AnyWordSpec with Matchers {
 
     "Left" should {
       "be Sick" in {
-        implicit val ping: Ping[Either[String, ?]] = new Ping[Either[String, ?]] {
+        implicit val ping: Ping[Either[String, *]] = new Ping[Either[String, *]] {
           override val ping: Either[String, String] = Left("boo")
+          override def select(index: Int): Either[String, Unit] = Left("Not implemented")
         }
 
         val healthCheck = modules.redis.pingCheck

@@ -1,18 +1,18 @@
 val Scala_212 = "2.12.13"
 val Scala_213 = "2.13.5"
 
-val catsEffectVersion = "2.4.1"
+val catsEffectVersion = "3.0.2"
 val catsTaglessVersion = "0.13.0"
-val doobieVersion = "0.9.4"
-val catsVersion = "2.6.0"
-val scalacacheVersion = "0.28.0"
+val doobieVersion = "1.0.0-M1"
+val catsVersion = "2.5.0"
+val scalacacheVersion = "1.0.0-M2"
 val kindProjectorVersion = "0.11.3"
-val fs2RedisVersion = "0.10.3"
+val redis4catsVersion = "1.0.0-RC2"
 val h2Version = "1.4.200"
-val log4CatsVersion = "1.1.1"
-val http4sVersion = "0.21.22"
+val log4CatsVersion = "2.0.0"
+val http4sVersion = "1.0.0-M21"
 val circeVersion = "0.13.0"
-val sttpVersion = "1.7.2"
+val sttpVersion = "3.2.0"
 
 val GraalVM11 = "graalvm-ce-java11@21.0.0"
 
@@ -52,12 +52,14 @@ inThisBuild(
         "kubukoz@gmail.com",
         url("https://kubukoz.com")
       )
-    )
+    ),
+    versionScheme := Some("early-semver")
   )
 )
 
 val compilerPlugins = List(
-  compilerPlugin(("org.typelevel" % "kind-projector" % kindProjectorVersion).cross(CrossVersion.full))
+  compilerPlugin(("org.typelevel" % "kind-projector" % kindProjectorVersion).cross(CrossVersion.full)),
+  compilerPlugin(("com.kubukoz" % "better-tostring" % "0.2.10").cross(CrossVersion.full))
 )
 
 val commonSettings = Seq(
@@ -67,11 +69,13 @@ val commonSettings = Seq(
   libraryDependencies ++= Seq(
     "org.typelevel" %% "cats-tagless-laws" % catsTaglessVersion % Test,
     "org.typelevel" %% "cats-effect-laws" % catsEffectVersion % Test,
+    "org.typelevel" %% "cats-effect-testkit" % catsEffectVersion % Test,
     "org.typelevel" %% "cats-testkit-scalatest" % "2.1.3" % Test,
     "org.typelevel" %% "cats-laws" % catsVersion % Test,
     "org.typelevel" %% "cats-kernel-laws" % catsVersion % Test
   ) ++ compilerPlugins,
-  mimaPreviousArtifacts := Set(organization.value %% name.value % "0.7.0")
+  mimaPreviousArtifacts := Set.empty
+  // mimaPreviousArtifacts := Set(organization.value %% name.value % "0.7.0")
 )
 
 def module(moduleName: String): Project =
@@ -79,7 +83,7 @@ def module(moduleName: String): Project =
 
 val core = module("core").settings(
   libraryDependencies ++= Seq(
-    "org.typelevel" %% "cats-effect" % catsEffectVersion,
+    "org.typelevel" %% "cats-effect-kernel" % catsEffectVersion,
     "org.typelevel" %% "cats-tagless-core" % catsTaglessVersion
   )
 )
@@ -104,7 +108,7 @@ val doobie = module("doobie")
 val redis = module("redis")
   .settings(
     libraryDependencies ++= Seq(
-      "dev.profunktor" %% "redis4cats-effects" % fs2RedisVersion
+      "dev.profunktor" %% "redis4cats-effects" % redis4catsVersion
     )
   )
   .dependsOn(core)
@@ -112,7 +116,7 @@ val redis = module("redis")
 val log4cats = module("log4cats")
   .settings(
     libraryDependencies ++= Seq(
-      "io.chrisdavenport" %% "log4cats-core" % log4CatsVersion
+      "org.typelevel" %% "log4cats-core" % log4CatsVersion
     )
   )
   .dependsOn(core)
@@ -137,7 +141,8 @@ val http4sClient = module("http4s-client")
 val akkaHttp = module("akka-http")
   .settings(
     libraryDependencies ++= Seq(
-      "com.typesafe.akka" %% "akka-http" % "10.2.3"
+      "com.typesafe.akka" %% "akka-http" % "10.2.4",
+      "org.typelevel" %% "cats-effect-std" % catsEffectVersion
     )
   )
   .dependsOn(core)
@@ -153,12 +158,13 @@ val circe = module("circe")
 val sttp = module("sttp")
   .settings(
     libraryDependencies ++= Seq(
-      "com.softwaremill.sttp" %% "core" % sttpVersion
+      "com.softwaremill.sttp.client3" %% "core" % sttpVersion
     )
   )
   .dependsOn(core)
 
-val allModules = List(core, scalacache, doobie, redis, log4cats, http4s, http4sClient, akkaHttp, circe, sttp)
+val allModules =
+  List(core, scalacache, doobie, redis, log4cats, http4s, http4sClient, akkaHttp, circe, sttp)
 
 val lastStableVersion = settingKey[String]("Last tagged version")
 
@@ -176,7 +182,8 @@ def enumerateAnd(values: List[String]): String = {
 /*
 val microsite = project
   .settings(
-    scalaVersion := Scala_212,
+    scalaVersion := Scala_213,
+    crossScalaVersions := Seq(),
     micrositeName := "sup",
     micrositeDescription := "Functional healthchecks in Scala",
     micrositeDocumentationUrl := "/guide",
@@ -192,9 +199,10 @@ val microsite = project
     libraryDependencies ++= compilerPlugins,
     libraryDependencies ++= Seq(
       "org.http4s" %% "http4s-circe" % http4sVersion,
-      "de.heikoseeberger" %% "akka-http-circe" % "1.29.1"
+      "com.typesafe.akka" %% "akka-stream" % "2.6.12",
+      "de.heikoseeberger" %% "akka-http-circe" % "1.36.0"
     ),
-    skip in publish := true,
+    publish / skip := true,
     buildInfoPackage := "sup.buildinfo",
     micrositeAnalyticsToken := "UA-55943015-9",
     buildInfoKeys := Seq[BuildInfoKey](lastStableVersion),
@@ -203,7 +211,7 @@ val microsite = project
       .map(_.ref.value.tail)
       .getOrElse(throw new Exception("There's no output from dynver!")),
     mdocVariables := Map(
-      "SCALA_VERSIONS" -> enumerateAnd((crossScalaVersions in core).value.toList.map(dropMinor))
+      "SCALA_VERSIONS" -> enumerateAnd((core / crossScalaVersions).value.toList.map(dropMinor))
     )
   )
   .enablePlugins(MicrositesPlugin)
@@ -214,5 +222,5 @@ val sup =
   project
     .in(file("."))
     .settings(commonSettings)
-    .settings(skip in publish := true, crossScalaVersions := List(), mimaPreviousArtifacts := Set.empty)
-    .aggregate((/* microsite ::  */ allModules).map(x => x: ProjectReference): _*)
+    .settings(publish / skip := true, crossScalaVersions := List(), mimaPreviousArtifacts := Set.empty)
+    .aggregate( /* microsite ::  */ allModules.map(x => x: ProjectReference): _*)
