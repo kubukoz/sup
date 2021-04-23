@@ -8,6 +8,6 @@ import sup.data.Tagged
 class TaggedCatsInstancesTests extends CatsSuite {
   import ScalacheckInstances._
 
-  checkAll("Reducible[Tagged[String, ?]]", ReducibleTests[Tagged[String, ?]].reducible[List, Int, Int])
+  checkAll("Reducible[Tagged[String, *]]", ReducibleTests[Tagged[String, *]].reducible[List, Int, Int])
   checkAll("Eq[Tagged[String, Int]]", EqTests[Tagged[String, Int]].eqv)
 }

@@ -1,16 +1,18 @@
 package sup.modules
 
-import cats.{FlatMap, Show}
-import io.chrisdavenport.log4cats.MessageLogger
+import cats.FlatMap
+import cats.Show
 import cats.implicits._
-import sup.{mods, Health, HealthCheckEndoMod}
+import org.typelevel.log4cats.MessageLogger
+import sup.Health
+import sup.HealthCheckEndoMod
+import sup.mods
 
 object log4cats {
 
-  /**
-    * Wraps a healthcheck with a debug log message before and after making the call.
+  /** Wraps a healthcheck with a debug log message before and after making the call.
     * See [[mods.surround]] for a more customizable version.
-    * */
+    */
   def logged[F[_]: MessageLogger: FlatMap, H[_]](
     label: String
   )(

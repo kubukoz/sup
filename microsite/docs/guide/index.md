@@ -15,11 +15,11 @@ title: Usage guide
     - [HealthReporter](#healthreporter)
     - [Tagging](#tagging)
   - [Modifiers](#modifiers)
-    - [timeoutToSick](#timeouttosick)
-    - [tagWith / untag](#tagwith--untag)
-    - [recoverToSick](#recovertosick)
-    - [surround](#surround)
-  
+    - [`timeoutToSick`](#timeouttosick)
+    - [`tagWith` / `untag`](#tagwith--untag)
+    - [`recoverToSick`](#recovertosick)
+    - [`surround`](#surround)
+
 ## Installation
 
 For sbt:
@@ -78,12 +78,12 @@ that it has a `cats.Foldable` instance. For a single Health, `cats.Id` can be us
 Other examples of a suitable type include:
 
 - `cats.Id`: there's only one result.
-- `sup.Tagged[String, ?]`: there's only one result, tagged with a String (e.g. the dependency's name)
+- `sup.Tagged[String, *]`: there's only one result, tagged with a String (e.g. the dependency's name)
 - `cats.data.NonEmptyList`: there are multiple checks
-- `sup.data.Report[cats.Id, cats.data.NonEmptyList, ?]`: there's one check, and a `NonEmptyList` of checks
-- `sup.data.Report[sup.Tagged[String, ?], NonEmptyList, ?]`: there's one check, and a `NonEmptyList` of checks tagged with a `String`.
+- `sup.data.Report[cats.Id, cats.data.NonEmptyList, *]`: there's one check, and a `NonEmptyList` of checks
+- `sup.data.Report[sup.Tagged[String, *], NonEmptyList, *]`: there's one check, and a `NonEmptyList` of checks tagged with a `String`.
 
-(`sup.data.Report[F, G, ?]` is equivalent to `cats.data.OneAnd[Nested[F, G, ?], ?]`)
+(`sup.data.Report[F, G, *]` is equivalent to `cats.data.OneAnd[Nested[F, G, *], *]`)
 
 `HealthResult[H]` has a `Monoid` for any `H[_]: Applicative`, although most of its usages will be transparent to the user.
 
@@ -94,7 +94,7 @@ Other examples of a suitable type include:
 trait HealthCheck[F[_], H[_]] {
   def check: F[HealthResult[H]]
 }
-``` 
+```
 
 `HealthCheck[F, H]` is a health-checking action with effects of type `F` that'll result in a collection `H` of `Health`.
 
@@ -105,10 +105,7 @@ This is really cool, because thanks to this we can combine two similar healhchec
 Let's start with some cats imports (assume they're available in the rest of the page):
 
 ```scala mdoc:silent
-import cats._, cats.data._, cats.effect._, cats.implicits._
-
-implicit val contextShift: ContextShift[IO] = IO.contextShift(scala.concurrent.ExecutionContext.global)
-implicit val timer: Timer[IO] = IO.timer(scala.concurrent.ExecutionContext.global)
+import cats._, cats.data._, cats.effect._, cats.implicits._, cats.effect.unsafe.implicits._
 ```
 
 and here's how healthchecks can be combined:
@@ -136,7 +133,7 @@ A healthcheck wrapping multiple healthchecks is called a `HealthReporter`. Here'
 ```scala
 import sup.data.Report
 
-type HealthReporter[F[_], G[_], H[_]] = HealthCheck[F, Report[G, H, ?]]
+type HealthReporter[F[_], G[_], H[_]] = HealthCheck[F, Report[G, H, *]]
 ```
 
 You can construct one from a sequence of healthchecks using the `HealthReporter.fromChecks` function:
@@ -150,7 +147,7 @@ val postgres: HealthCheck[IO, Id] = HealthCheck.const(Health.Healthy)
 val reporter: HealthReporter[IO, NonEmptyList, Id] = HealthReporter.fromChecks(kafka, postgres)
 ```
 
-### Tagging  
+### Tagging
 
 A healthcheck can be tagged with a label, e.g. a `String` with the dependency's name:
 
