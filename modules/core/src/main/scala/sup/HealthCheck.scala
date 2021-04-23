@@ -51,14 +51,16 @@ object HealthCheck {
     *
     * If H and I are the same, the result's EitherK can be combined to a single H/I container using `mods.mergeEitherK`.
     */
-  def either[F[_]: ApplicativeError[*[_], E], E, H[_], I[_]](
+  def either[F[_], H[_], I[_]](
     a: HealthCheck[F, H],
     b: HealthCheck[F, I]
+  )(
+    implicit F: ApplicativeError[F, _]
   ): HealthCheck[F, EitherK[H, I, *]] =
     liftF {
-      a.check
-        .map(ar => EitherK.left[I](ar.value))
-        .orElse(b.check.map(br => EitherK.right[H](br.value)))
+      F.handleErrorWith(
+        a.check.map(ar => EitherK.left[I](ar.value))
+      )(_ => b.check.map(br => EitherK.right[H](br.value)))
         .map(HealthResult(_))
     }
 

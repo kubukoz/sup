@@ -14,16 +14,20 @@ object mods {
 
   /** Fail the health check with [[Health.Sick]] in case the check takes longer than `duration`.
     */
-  def timeoutToSick[F[_]: GenTemporal[*[_], E], E, H[_]: Applicative](
+  def timeoutToSick[F[_], H[_]: Applicative](
     duration: FiniteDuration
+  )(
+    implicit F: GenTemporal[F, _]
   ): HealthCheckEndoMod[F, H] =
     timeoutToDefault(Health.Sick, duration)
 
   /** Fallback to the provided value in case the check takes longer than `duration`.
     */
-  def timeoutToDefault[F[_]: GenTemporal[*[_], E], E, H[_]: Applicative](
+  def timeoutToDefault[F[_], H[_]: Applicative](
     default: Health,
     duration: FiniteDuration
+  )(
+    implicit F: GenTemporal[F, _]
   ): HealthCheckEndoMod[F, H] =
     _.transform {
       _.timeoutTo(duration, HealthResult(default.pure[H]).pure[F])
@@ -39,9 +43,9 @@ object mods {
 
   /** Recover any errors that might happen in F (to a Sick result)
     */
-  def recoverToSick[F[_], H[_]: Applicative, E](implicit F: ApplicativeError[F, E]): HealthCheckEndoMod[F, H] =
+  def recoverToSick[F[_], H[_]: Applicative](implicit F: ApplicativeError[F, _]): HealthCheckEndoMod[F, H] =
     _.transform {
-      _.orElse(HealthResult.const[H](Health.Sick).pure[F])
+      F.handleError(_)(_ => HealthResult.const[H](Health.Sick))
     }
 
   /** Tag a health check with a value.
