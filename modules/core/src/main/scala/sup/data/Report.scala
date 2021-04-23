@@ -10,7 +10,7 @@ import cats.kernel.Monoid
 
 /** A more specific version of [[cats.data.OneAnd]] combined with [[cats.data.Nested]].
   */
-case class Report[G[_], H[_], A](health: A, checks: G[H[A]])
+final case class Report[G[_], H[_], A](health: A, checks: G[H[A]])
 
 object Report extends ReportInstances {
 
