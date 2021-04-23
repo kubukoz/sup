@@ -21,7 +21,6 @@ object doobie {
   )(
     timeout: Option[FiniteDuration]
   ): HealthCheck[F, Id] = {
-    // todo: needs updating after doobie releases 1.x milestones
     //zero means infinite in JDBC
     val actualTimeoutSeconds = timeout.foldMap(_.toSeconds.toInt)
 
