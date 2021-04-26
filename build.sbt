@@ -70,7 +70,7 @@ val commonSettings = Seq(
     "org.typelevel" %% "cats-tagless-laws" % catsTaglessVersion % Test,
     "org.typelevel" %% "cats-effect-laws" % catsEffectVersion % Test,
     "org.typelevel" %% "cats-effect-testkit" % catsEffectVersion % Test,
-    "org.typelevel" %% "cats-testkit-scalatest" % "2.1.3" % Test,
+    "org.typelevel" %% "cats-testkit-scalatest" % "2.1.4" % Test,
     "org.typelevel" %% "cats-laws" % catsVersion % Test,
     "org.typelevel" %% "cats-kernel-laws" % catsVersion % Test
   ) ++ compilerPlugins,
