@@ -59,7 +59,7 @@ inThisBuild(
 
 val compilerPlugins = List(
   compilerPlugin(("org.typelevel" % "kind-projector" % kindProjectorVersion).cross(CrossVersion.full)),
-  compilerPlugin(("com.kubukoz" % "better-tostring" % "0.3.0").cross(CrossVersion.full))
+  compilerPlugin(("com.kubukoz" % "better-tostring" % "0.3.1").cross(CrossVersion.full))
 )
 
 val commonSettings = Seq(
