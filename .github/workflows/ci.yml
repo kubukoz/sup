@@ -9,9 +9,9 @@ name: Continuous Integration
 
 on:
   pull_request:
-    branches: ['*']
+    branches: ['**']
   push:
-    branches: ['*']
+    branches: ['**']
     tags: [v*]
 
 env:
@@ -54,9 +54,9 @@ jobs:
           key: ${{ runner.os }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}
 
       - name: Check that workflows are up to date
-        run: sbt ++${{ matrix.scala }} githubWorkflowCheck
+        run: sbt --client '++${{ matrix.scala }}; githubWorkflowCheck'
 
-      - run: sbt ++${{ matrix.scala }} test mimaReportBinaryIssues
+      - run: sbt --client '++${{ matrix.scala }}; test; mimaReportBinaryIssues'
 
       - name: Compress target directories
         run: tar cf targets.tar modules/sttp/target modules/http4s/target modules/scalacache/target modules/doobie/target modules/log4cats/target modules/akka-http/target modules/circe/target modules/http4s-client/target modules/redis/target modules/core/target target project/target
@@ -122,4 +122,4 @@ jobs:
 
       - uses: olafurpg/setup-gpg@v3
 
-      - run: sbt ++${{ matrix.scala }} ci-release
+      - run: sbt --client '++${{ matrix.scala }}; ci-release'
