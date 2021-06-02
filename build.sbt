@@ -12,7 +12,7 @@ val h2Version = "1.4.200"
 val log4CatsVersion = "2.1.1"
 val http4sVersion = "1.0.0-M22"
 val circeVersion = "0.14.1"
-val sttpVersion = "3.3.5"
+val sttpVersion = "3.3.6"
 
 val GraalVM11 = "graalvm-ce-java11@21.0.0"
 
