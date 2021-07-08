@@ -13,6 +13,8 @@ val log4CatsVersion = "2.1.1"
 val http4sVersion = "1.0.0-M22"
 val circeVersion = "0.14.1"
 val sttpVersion = "3.3.11"
+val cassandraVersion = "4.12.0"
+val testcontainersScalaVersion = "0.39.5"
 
 val GraalVM11 = "graalvm-ce-java11@21.0.0"
 
@@ -105,6 +107,17 @@ val doobie = module("doobie")
   )
   .dependsOn(core % "compile->compile;test->test")
 
+val cassandra = module("cassandra")
+  .settings(
+    libraryDependencies ++= Seq(
+      "com.datastax.oss" % "java-driver-core" % cassandraVersion,
+      "com.dimafeng" %% "testcontainers-scala-scalatest" % testcontainersScalaVersion % Test,
+      "com.dimafeng" %% "testcontainers-scala-cassandra" % testcontainersScalaVersion % Test
+    )
+  )
+  .dependsOn(core % "compile->compile;test->test")
+
+
 val redis = module("redis")
   .settings(
     libraryDependencies ++= Seq(
@@ -164,7 +177,7 @@ val sttp = module("sttp")
   .dependsOn(core)
 
 val allModules =
-  List(core, scalacache, doobie, redis, log4cats, http4s, http4sClient, akkaHttp, circe, sttp)
+  List(core, scalacache, doobie, redis, log4cats, http4s, http4sClient, akkaHttp, circe, sttp, cassandra)
 
 val lastStableVersion = settingKey[String]("Last tagged version")
 
