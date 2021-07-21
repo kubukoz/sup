@@ -106,11 +106,13 @@ val doobie = module("doobie")
 
 val cassandra = module("cassandra")
   .settings(
-    libraryDependencies ++= Seq("com.datastax.oss" % "java-driver-core" % cassandraVersion,
+    libraryDependencies ++= Seq(
+      "com.datastax.oss" % "java-driver-core" % cassandraVersion,
       "com.dimafeng" %% "testcontainers-scala-scalatest" % testcontainersScalaVersion % Test,
-      "com.dimafeng" %% "testcontainers-scala-cassandra" % testcontainersScalaVersion % Test)
+      "com.dimafeng" %% "testcontainers-scala-cassandra" % testcontainersScalaVersion % Test
+    )
   )
-  .dependsOn(core)
+  .dependsOn(core % "compile->compile;test->test")
 
 val redis = module("redis")
   .settings(
