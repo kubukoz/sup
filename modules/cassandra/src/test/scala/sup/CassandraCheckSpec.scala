@@ -1,8 +1,12 @@
 package sup
 
-import cats.effect.{Blocker, ContextShift, IO}
-import com.datastax.oss.driver.api.core.{CqlSession, CqlSessionBuilder}
-import com.dimafeng.testcontainers.{CassandraContainer, Container, ForAllTestContainer}
+import cats.effect.Blocker
+import cats.effect.ContextShift
+import cats.effect.IO
+import com.datastax.oss.driver.api.core.CqlSession
+import com.datastax.oss.driver.api.core.CqlSessionBuilder
+import com.dimafeng.testcontainers.CassandraContainer
+import com.dimafeng.testcontainers.ForAllTestContainer
 import org.scalatest.flatspec.AnyFlatSpec
 
 import java.net.InetSocketAddress
@@ -17,18 +21,18 @@ class CassandraCheckSpec extends AnyFlatSpec with ForAllTestContainer {
     assert(cassandra.connectionCheck[IO](createSession.unsafeRunSync()).check.unsafeRunSync().value.isHealthy)
   }
 
-
   it should "return an unhealthy result when cassandra is not available" in {
     val session = createSession.unsafeRunSync()
     container.stop()
     assert(!cassandra.connectionCheck[IO](session).through(mods.recoverToSick).check.unsafeRunSync().value.isHealthy)
   }
 
-  private def createSession: IO[CqlSession] = {
-    IO(new CqlSessionBuilder()
-      .withLocalDatacenter("datacenter1")
-      .addContactPoint(InetSocketAddress.createUnresolved("localhost", container.container.getFirstMappedPort))
-      .build())
-  }
+  private def createSession: IO[CqlSession] =
+    IO(
+      new CqlSessionBuilder()
+        .withLocalDatacenter("datacenter1")
+        .addContactPoint(InetSocketAddress.createUnresolved(container.host, container.container.getFirstMappedPort))
+        .build()
+    )
 
 }
