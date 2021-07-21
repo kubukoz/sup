@@ -59,7 +59,7 @@ jobs:
       - run: sbt --client '++${{ matrix.scala }}; test; mimaReportBinaryIssues'
 
       - name: Compress target directories
-        run: tar cf targets.tar modules/sttp/target modules/http4s/target modules/scalacache/target modules/doobie/target modules/log4cats/target modules/akka-http/target modules/circe/target modules/http4s-client/target modules/redis/target modules/core/target target project/target
+        run: tar cf targets.tar modules/sttp/target modules/http4s/target modules/scalacache/target modules/doobie/target modules/log4cats/target modules/cassandra/target modules/akka-http/target modules/circe/target modules/http4s-client/target modules/redis/target modules/core/target target project/target
 
       - name: Upload target directories
         uses: actions/upload-artifact@v2
