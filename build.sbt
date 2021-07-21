@@ -110,7 +110,8 @@ val cassandra = module("cassandra")
       "com.datastax.oss" % "java-driver-core" % cassandraVersion,
       "com.dimafeng" %% "testcontainers-scala-scalatest" % testcontainersScalaVersion % Test,
       "com.dimafeng" %% "testcontainers-scala-cassandra" % testcontainersScalaVersion % Test
-    )
+    ),
+    mimaPreviousArtifacts := Set()
   )
   .dependsOn(core % "compile->compile;test->test")
 
