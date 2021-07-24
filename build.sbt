@@ -1,7 +1,7 @@
 import sbt.internal.ProjectMatrix
 
 val Scala_212 = "2.12.13"
-val Scala_213 = "2.13.5"
+val Scala_213 = "2.13.6"
 val Scala_3 = "3.0.1"
 
 val scala2Only = Seq(Scala_212, Scala_213)
