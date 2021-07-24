@@ -1,6 +1,6 @@
 import sbt.internal.ProjectMatrix
 
-val Scala_212 = "2.12.13"
+val Scala_212 = "2.12.14"
 val Scala_213 = "2.13.5"
 val Scala_3 = "3.0.1"
 
