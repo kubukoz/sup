@@ -2,6 +2,7 @@ package sup.modules
 
 import cats.implicits._
 import cats.{ApplicativeError, Id}
+import cats.catsInstancesForId
 import dev.profunktor.redis4cats.algebra.Ping
 import sup.{Health, HealthCheck, HealthResult}
 
