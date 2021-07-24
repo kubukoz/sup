@@ -1,23 +1,32 @@
+import sbt.internal.ProjectMatrix
+
 val Scala_212 = "2.12.13"
-val Scala_213 = "2.13.6"
+val Scala_213 = "2.13.5"
+val Scala_3 = "3.0.1"
+
+val scala2Only = Seq(Scala_212, Scala_213)
+val scala2And3 = scala2Only :+ Scala_3
 
 val catsEffectVersion = "3.1.1"
 val catsTaglessVersion = "0.14.0"
-val doobieVersion = "1.0.0-M2"
+val doobieVersion = "1.0.0-M5"
 val catsVersion = "2.6.1"
 val scalacacheVersion = "1.0.0-M2"
 val kindProjectorVersion = "0.13.0"
-val redis4catsVersion = "1.0.0-RC3"
+val redis4catsVersion = "1.0.0"
 val h2Version = "1.4.200"
-val log4CatsVersion = "2.1.0"
-val http4sVersion = "1.0.0-M21"
-val circeVersion = "0.13.0"
-val sttpVersion = "3.3.3"
+val log4CatsVersion = "2.1.1"
+val http4sVersion = "1.0.0-M22"
+val akkaHttpVersion = "10.2.4"
+val circeVersion = "0.14.1"
+val sttpVersion = "3.3.11"
+val cassandraVersion = "4.12.0"
+val testcontainersScalaVersion = "0.39.5"
 
 val GraalVM11 = "graalvm-ce-java11@21.0.0"
 
 ThisBuild / scalaVersion := Scala_212
-ThisBuild / crossScalaVersions := Seq(Scala_212, Scala_213)
+ThisBuild / crossScalaVersions := Seq(Scala_212, Scala_213, Scala_3)
 ThisBuild / githubWorkflowJavaVersions := Seq(GraalVM11)
 ThisBuild / githubWorkflowBuild := Seq(
   WorkflowStep.Sbt(List("test", "mimaReportBinaryIssues"))
@@ -57,9 +66,12 @@ inThisBuild(
   )
 )
 
+val scala2CompilerPlugins = List(
+  compilerPlugin(("org.typelevel" % "kind-projector" % kindProjectorVersion).cross(CrossVersion.full))
+)
+
 val compilerPlugins = List(
-  compilerPlugin(("org.typelevel" % "kind-projector" % kindProjectorVersion).cross(CrossVersion.full)),
-  compilerPlugin(("com.kubukoz" % "better-tostring" % "0.3.1").cross(CrossVersion.full))
+  compilerPlugin(("com.kubukoz" % "better-tostring" % "0.3.5").cross(CrossVersion.full))
 )
 
 val commonSettings = Seq(
@@ -67,33 +79,38 @@ val commonSettings = Seq(
   name := "sup",
   updateOptions := updateOptions.value.withGigahorse(false), //may fix publishing bug
   libraryDependencies ++= Seq(
-    "org.typelevel" %% "cats-tagless-laws" % catsTaglessVersion % Test,
     "org.typelevel" %% "cats-effect-laws" % catsEffectVersion % Test,
     "org.typelevel" %% "cats-effect-testkit" % catsEffectVersion % Test,
-    "org.typelevel" %% "cats-testkit-scalatest" % "2.1.4" % Test,
+    "org.typelevel" %% "cats-testkit-scalatest" % "2.1.5" % Test,
     "org.typelevel" %% "cats-laws" % catsVersion % Test,
     "org.typelevel" %% "cats-kernel-laws" % catsVersion % Test
-  ) ++ compilerPlugins,
+  ) ++ compilerPlugins ++ (CrossVersion.partialVersion(scalaVersion.value) match {
+    case Some((2, _)) => scala2CompilerPlugins :+ ("org.typelevel" %% "cats-tagless-laws" % catsTaglessVersion % Test)
+    case _            => Seq.empty
+  }),
   mimaPreviousArtifacts := Set.empty
   // mimaPreviousArtifacts := Set(organization.value %% name.value % "0.7.0")
 )
 
-def module(moduleName: String): Project =
-  Project(moduleName, file("modules") / moduleName).settings(commonSettings).settings(name += s"-$moduleName")
+def module(moduleName: String) =
+  ProjectMatrix(moduleName, file("modules") / moduleName).settings(commonSettings).settings(name += s"-$moduleName")
 
-val core = module("core").settings(
-  libraryDependencies ++= Seq(
-    "org.typelevel" %% "cats-effect-kernel" % catsEffectVersion,
-    "org.typelevel" %% "cats-tagless-core" % catsTaglessVersion
+val core = module("core")
+  .settings(
+    libraryDependencies ++= Seq(
+      "org.typelevel" %% "cats-effect-kernel" % catsEffectVersion
+    ) ++ (CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, _)) => Seq("org.typelevel" %% "cats-tagless-core" % catsTaglessVersion)
+      case _            => Seq.empty
+    })
   )
-)
+  .jvmPlatform(scala2And3)
 
 val scalacache = module("scalacache")
   .settings(
-    libraryDependencies ++= Seq(
-      "com.github.cb372" %% "scalacache-core" % scalacacheVersion
-    )
+    libraryDependencies ++= Seq("com.github.cb372" %% "scalacache-core" % scalacacheVersion)
   )
+  .jvmPlatform(scala2Only)
   .dependsOn(core)
 
 val doobie = module("doobie")
@@ -103,6 +120,18 @@ val doobie = module("doobie")
       "com.h2database" % "h2" % h2Version % Test
     )
   )
+  .jvmPlatform(scala2And3)
+  .dependsOn(core % "compile->compile;test->test")
+
+val cassandra = module("cassandra")
+  .settings(
+    libraryDependencies ++= Seq(
+      "com.datastax.oss" % "java-driver-core" % cassandraVersion,
+      "com.dimafeng" %% "testcontainers-scala-scalatest" % testcontainersScalaVersion % Test,
+      "com.dimafeng" %% "testcontainers-scala-cassandra" % testcontainersScalaVersion % Test
+    )
+  )
+  .jvmPlatform(scala2And3)
   .dependsOn(core % "compile->compile;test->test")
 
 val redis = module("redis")
@@ -111,6 +140,7 @@ val redis = module("redis")
       "dev.profunktor" %% "redis4cats-effects" % redis4catsVersion
     )
   )
+  .jvmPlatform(scala2And3)
   .dependsOn(core)
 
 val log4cats = module("log4cats")
@@ -119,6 +149,7 @@ val log4cats = module("log4cats")
       "org.typelevel" %% "log4cats-core" % log4CatsVersion
     )
   )
+  .jvmPlatform(scala2And3)
   .dependsOn(core)
 
 val http4s = module("http4s")
@@ -128,6 +159,7 @@ val http4s = module("http4s")
       "org.http4s" %% "http4s-dsl" % http4sVersion
     )
   )
+  .jvmPlatform(scala2And3)
   .dependsOn(core)
 
 val http4sClient = module("http4s-client")
@@ -136,15 +168,17 @@ val http4sClient = module("http4s-client")
       "org.http4s" %% "http4s-client" % http4sVersion
     )
   )
+  .jvmPlatform(scala2And3)
   .dependsOn(core)
 
 val akkaHttp = module("akka-http")
   .settings(
     libraryDependencies ++= Seq(
-      "com.typesafe.akka" %% "akka-http" % "10.2.4",
+      "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
       "org.typelevel" %% "cats-effect-std" % catsEffectVersion
     )
   )
+  .jvmPlatform(scala2Only)
   .dependsOn(core)
 
 val circe = module("circe")
@@ -153,6 +187,7 @@ val circe = module("circe")
       "io.circe" %% "circe-core" % circeVersion
     )
   )
+  .jvmPlatform(scala2And3)
   .dependsOn(core)
 
 val sttp = module("sttp")
@@ -161,10 +196,11 @@ val sttp = module("sttp")
       "com.softwaremill.sttp.client3" %% "core" % sttpVersion
     )
   )
+  .jvmPlatform(scala2And3)
   .dependsOn(core)
 
 val allModules =
-  List(core, scalacache, doobie, redis, log4cats, http4s, http4sClient, akkaHttp, circe, sttp)
+  List(core, scalacache, doobie, redis, log4cats, http4s, http4sClient, akkaHttp, circe, sttp, cassandra)
 
 val lastStableVersion = settingKey[String]("Last tagged version")
 
@@ -223,4 +259,4 @@ val sup =
     .in(file("."))
     .settings(commonSettings)
     .settings(publish / skip := true, crossScalaVersions := List(), mimaPreviousArtifacts := Set.empty)
-    .aggregate( /* microsite ::  */ allModules.map(x => x: ProjectReference): _*)
+    .aggregate( /* microsite ::  */ allModules.flatMap(_.projectRefs): _*)
