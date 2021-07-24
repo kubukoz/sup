@@ -38,7 +38,7 @@ To ensure that our applications handle failure properly, and that we can react t
 knowing what exactly doesn't work, we also track its health by
 [monitoring](https://docs.microsoft.com/en-us/azure/architecture/best-practices/monitoring), tracing and other diagnostics.
 
-We also use healthchecks.
+We also use health checks.
 
 ## Health checks
 
