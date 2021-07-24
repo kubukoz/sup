@@ -1,5 +1,6 @@
 package sup
 
+import cats.catsInstancesForId
 import cats.effect.IO
 import cats.effect.Resource
 import com.datastax.oss.driver.api.core.CqlSession
