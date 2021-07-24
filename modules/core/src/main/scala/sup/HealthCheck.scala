@@ -4,8 +4,6 @@ import cats.data.{EitherK, Tuple2K}
 import cats.{~>, Applicative, ApplicativeError, Apply, Eq, Functor, Id, Monoid, NonEmptyParallel}
 import cats.implicits._
 import cats.effect.kernel.implicits._
-import cats.tagless.FunctorK
-import cats.tagless.implicits._
 import cats.effect.kernel.GenConcurrent
 
 /** A health check.
@@ -30,7 +28,7 @@ abstract class HealthCheck[F[_], H[_]] {
     HealthCheck.liftF(check.map(f))
 }
 
-object HealthCheck {
+object HealthCheck extends HealthCheckTaglessInstances {
 
   /** A healthcheck that always returns the supplied health value.
     */
@@ -99,10 +97,6 @@ object HealthCheck {
     liftF {
       GenConcurrent[F].race(a.check, b.check).map(e => HealthResult(EitherK(e.bimap(_.value, _.value))))
     }
-
-  implicit def functorK[F[_]: Functor]: FunctorK[HealthCheck[F, *[_]]] = new FunctorK[HealthCheck[F, *[_]]] {
-    override def mapK[G[_], H[_]](fgh: HealthCheck[F, G])(gh: G ~> H): HealthCheck[F, H] = fgh.mapK(gh)
-  }
 
   implicit def checkMonoid[F[_]: Applicative, H[_]: Applicative](
     implicit M: Monoid[Health]

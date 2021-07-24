@@ -17,13 +17,13 @@ object circe {
     Encoder.forProduct2("tag", "health")(tagged => (tagged.tag, tagged.health))
 
   implicit def taggedCirceDecoder[Tag: Decoder, H: Decoder]: Decoder[Tagged[Tag, H]] =
-    Decoder.forProduct2("tag", "health")(Tagged.apply)
+    Decoder.forProduct2("tag", "health")(Tagged.apply[Tag, H])
 
   implicit def reportCirceEncoder[G[_], H[_], A: Encoder](implicit H: Encoder[G[H[A]]]): Encoder[Report[G, H, A]] =
     Encoder.forProduct2("health", "checks")(report => (report.health, report.checks))
 
   implicit def reportCirceDecoder[G[_], H[_], A: Decoder](implicit H: Decoder[G[H[A]]]): Decoder[Report[G, H, A]] =
-    Decoder.forProduct2("health", "checks")(Report.apply)
+    Decoder.forProduct2("health", "checks")(Report.apply[G, H, A])
 
   implicit def healthResultCirceEncoder[H[_]](implicit E: Encoder[H[Health]]): Encoder[HealthResult[H]] =
     E.contramap(_.value)

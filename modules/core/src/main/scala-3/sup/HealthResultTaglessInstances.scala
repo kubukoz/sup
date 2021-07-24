@@ -1,0 +1,3 @@
+package sup
+
+trait HealthResultTaglessInstances
