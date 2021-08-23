@@ -21,7 +21,7 @@ val akkaHttpVersion = "10.2.4"
 val circeVersion = "0.14.1"
 val sttpVersion = "3.3.11"
 val cassandraVersion = "4.12.0"
-val testcontainersScalaVersion = "0.39.5"
+val testcontainersScalaVersion = "0.39.6"
 
 val GraalVM11 = "graalvm-ce-java11@21.0.0"
 
