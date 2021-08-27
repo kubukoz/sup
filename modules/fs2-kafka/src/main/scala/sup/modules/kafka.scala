@@ -1,36 +1,25 @@
 package sup.modules
 
-import cats.Id
-import cats.effect.kernel.Temporal
-import fs2.kafka.KafkaAdminClient
-import org.apache.kafka.common.errors.UnknownTopicOrPartitionException
-import cats.implicits._
-import sup.{mods, Health, HealthCheck, HealthResult}
 import cats._
-
-import scala.concurrent.duration.FiniteDuration
+import cats.implicits._
+import fs2.kafka.KafkaAdminClient
+import org.apache.kafka.common.errors.{TimeoutException, UnknownTopicOrPartitionException}
+import sup.{Health, HealthCheck, HealthResult}
 
 object kafka {
 
-  def clusterCheck[F[_]: Temporal](client: KafkaAdminClient[F], timeout: FiniteDuration) =
-    HealthCheck
-      .liftF {
-        client.describeCluster.clusterId.as(HealthResult.one(Health.healthy))
+  def clusterCheck[F[_]: MonadThrow](client: KafkaAdminClient[F]): HealthCheck[F, Id] =
+    HealthCheck.liftF {
+      client.describeCluster.clusterId.as(HealthResult.one(Health.healthy)).recover { case _: TimeoutException =>
+        HealthResult.one(Health.sick)
       }
-      .through(mods.timeoutToSick(timeout))
+    }
 
-  def topicsCheck[F[_]: Temporal](
-    client: KafkaAdminClient[F],
-    timeout: FiniteDuration
-  )(
-    topicName: String*
-  ): HealthCheck[F, Id] =
-    HealthCheck
-      .liftFBoolean {
-        client.describeTopics(topicName.toList).map(_.keySet.exists(topicName.contains)).recover {
-          case _: UnknownTopicOrPartitionException => false
-        }
+  def topicsCheck[F[_]: MonadThrow](client: KafkaAdminClient[F])(topicNames: String*): HealthCheck[F, Id] =
+    HealthCheck.liftFBoolean {
+      client.describeTopics(topicNames.toList).map(result => topicNames.forall(result.keySet.contains)).recover {
+        case _: UnknownTopicOrPartitionException => false
       }
-      .through(mods.timeoutToSick(timeout))
+    }
 
 }
