@@ -9,7 +9,7 @@ val scala2And3 = scala2Only :+ Scala_3
 
 val catsEffectVersion = "3.1.1"
 val catsTaglessVersion = "0.14.0"
-val doobieVersion = "1.0.0-M5"
+val doobieVersion = "1.0.0-RC1"
 val catsVersion = "2.6.1"
 val scalacacheVersion = "1.0.0-M2"
 val fs2KafkaVersion = "2.2.0"
