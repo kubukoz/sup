@@ -6,6 +6,7 @@ val catsTaglessVersion = "0.11"
 val doobieVersion = "0.9.4"
 val catsVersion = "2.6.1"
 val scalacacheVersion = "0.28.0"
+val fs2KafkaVersion = "1.8.0"
 val kindProjectorVersion = "0.11.3"
 val fs2RedisVersion = "0.10.3"
 val h2Version = "1.4.200"
@@ -172,7 +173,31 @@ val sttp = module("sttp")
   )
   .dependsOn(core)
 
-val allModules = List(core, scalacache, doobie, redis, log4cats, http4s, http4sClient, akkaHttp, circe, sttp, cassandra)
+val kafka = module("fs2-kafka")
+  .settings(
+    libraryDependencies ++= Seq(
+      "com.github.fd4s" %% "fs2-kafka" % fs2KafkaVersion,
+      "com.dimafeng" %% "testcontainers-scala-scalatest" % testcontainersScalaVersion % Test,
+      "com.dimafeng" %% "testcontainers-scala-kafka" % testcontainersScalaVersion % Test
+    ),
+    mimaPreviousArtifacts := Set()
+  )
+  .dependsOn(core % "compile->compile;test->test")
+
+val allModules = List(
+  core,
+  scalacache,
+  doobie,
+  redis,
+  log4cats,
+  http4s,
+  http4sClient,
+  akkaHttp,
+  circe,
+  sttp,
+  cassandra,
+  kafka
+)
 
 val lastStableVersion = settingKey[String]("Last tagged version")
 
