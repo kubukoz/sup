@@ -76,7 +76,7 @@ val commonSettings = Seq(
     "org.typelevel" %% "cats-kernel-laws" % catsVersion % Test
   ) ++ compilerPlugins,
   mimaPreviousArtifacts := {
-    val lastCompatible = if (Set("sup-kafka", "sup-cassandra").contains(name.value)) "0.8.2" else "0.7.0"
+    val lastCompatible = if (Set("sup-fs2-kafka", "sup-cassandra").contains(name.value)) "0.8.2" else "0.7.0"
     Set(organization.value %% name.value % lastCompatible)
   }
 )
