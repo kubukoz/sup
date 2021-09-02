@@ -28,6 +28,8 @@ val GraalVM11 = "graalvm-ce-java11@21.0.0"
 
 ThisBuild / scalaVersion := Scala_212
 ThisBuild / crossScalaVersions := Seq(Scala_212, Scala_213, Scala_3)
+// Using sbt-projectmatrix, Scala versions are mapped to different modules, hence we only need to run CI on one
+ThisBuild / githubWorkflowScalaVersions := Seq(Scala_212)
 ThisBuild / githubWorkflowJavaVersions := Seq(GraalVM11)
 ThisBuild / githubWorkflowBuild := Seq(
   WorkflowStep.Sbt(List("test", "mimaReportBinaryIssues"))
