@@ -75,7 +75,10 @@ val commonSettings = Seq(
     "org.typelevel" %% "cats-laws" % catsVersion % Test,
     "org.typelevel" %% "cats-kernel-laws" % catsVersion % Test
   ) ++ compilerPlugins,
-  mimaPreviousArtifacts := Set(organization.value %% name.value % "0.7.0")
+  mimaPreviousArtifacts := {
+    val lastCompatible = if (Set("sup-kafka", "sup-cassandra").contains(name.value)) "0.8.2" else "0.7.0"
+    Set(organization.value %% name.value % lastCompatible)
+  }
 )
 
 def module(moduleName: String): Project =
@@ -111,8 +114,7 @@ val cassandra = module("cassandra")
       "com.datastax.oss" % "java-driver-core" % cassandraVersion,
       "com.dimafeng" %% "testcontainers-scala-scalatest" % testcontainersScalaVersion % Test,
       "com.dimafeng" %% "testcontainers-scala-cassandra" % testcontainersScalaVersion % Test
-    ),
-    mimaPreviousArtifacts := Set()
+    )
   )
   .dependsOn(core % "compile->compile;test->test")
 
@@ -179,8 +181,7 @@ val kafka = module("fs2-kafka")
       "com.github.fd4s" %% "fs2-kafka" % fs2KafkaVersion,
       "com.dimafeng" %% "testcontainers-scala-scalatest" % testcontainersScalaVersion % Test,
       "com.dimafeng" %% "testcontainers-scala-kafka" % testcontainersScalaVersion % Test
-    ),
-    mimaPreviousArtifacts := Set()
+    )
   )
   .dependsOn(core % "compile->compile;test->test")
 
@@ -253,5 +254,5 @@ val sup =
   project
     .in(file("."))
     .settings(commonSettings)
-    .settings(skip in publish := true, crossScalaVersions := List(), mimaPreviousArtifacts := Set.empty)
+    .settings((publish / skip) := true, crossScalaVersions := List(), mimaPreviousArtifacts := Set.empty)
     .aggregate((allModules).map(x => x: ProjectReference): _*)
