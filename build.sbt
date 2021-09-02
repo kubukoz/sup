@@ -12,7 +12,8 @@ val catsTaglessVersion = "0.14.0"
 val doobieVersion = "1.0.0-M5"
 val catsVersion = "2.6.1"
 val scalacacheVersion = "1.0.0-M2"
-val kindProjectorVersion = "0.13.1"
+val fs2KafkaVersion = "2.2.0"
+val kindProjectorVersion = "0.13.0"
 val redis4catsVersion = "1.0.0"
 val h2Version = "1.4.200"
 val log4CatsVersion = "2.1.1"
@@ -27,6 +28,8 @@ val GraalVM11 = "graalvm-ce-java11@21.0.0"
 
 ThisBuild / scalaVersion := Scala_212
 ThisBuild / crossScalaVersions := Seq(Scala_212, Scala_213, Scala_3)
+// Using sbt-projectmatrix, Scala versions are mapped to different modules, hence we only need to run CI on one
+ThisBuild / githubWorkflowScalaVersions := Seq(Scala_212)
 ThisBuild / githubWorkflowJavaVersions := Seq(GraalVM11)
 ThisBuild / githubWorkflowBuild := Seq(
   WorkflowStep.Sbt(List("test", "mimaReportBinaryIssues"))
@@ -199,8 +202,32 @@ val sttp = module("sttp")
   .jvmPlatform(scala2And3)
   .dependsOn(core)
 
-val allModules =
-  List(core, scalacache, doobie, redis, log4cats, http4s, http4sClient, akkaHttp, circe, sttp, cassandra)
+val kafka = module("fs2-kafka")
+  .settings(
+    libraryDependencies ++= Seq(
+      "com.github.fd4s" %% "fs2-kafka" % fs2KafkaVersion,
+      "com.dimafeng" %% "testcontainers-scala-scalatest" % testcontainersScalaVersion % Test,
+      "com.dimafeng" %% "testcontainers-scala-kafka" % testcontainersScalaVersion % Test
+    ),
+    mimaPreviousArtifacts := Set()
+  )
+  .jvmPlatform(scala2And3)
+  .dependsOn(core % "compile->compile;test->test")
+
+val allModules = List(
+  core,
+  scalacache,
+  doobie,
+  redis,
+  log4cats,
+  http4s,
+  http4sClient,
+  akkaHttp,
+  circe,
+  sttp,
+  cassandra,
+  kafka
+)
 
 val lastStableVersion = settingKey[String]("Last tagged version")
 

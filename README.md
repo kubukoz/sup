@@ -59,3 +59,10 @@ Although some of these can be implemented by users and used with sup, they're no
 
 Another design decision is that health is binary - a service is either healthy or not,
 and there's no "unknown" state.
+
+
+## Code of conduct
+
+This project supports the [Scala code of conduct](https://www.scala-lang.org/conduct/) and wants communication on all its channels (GitHub etc.) to be inclusive environments.
+
+If you have any concerns about someone's behavior on these channels, contact [Jakub Kozłowski](mailto:kubukoz@gmail.com).
