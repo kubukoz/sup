@@ -2,8 +2,7 @@ pull_request_rules:
   - name: automatically merge Scala Steward PRs on CI success
     conditions:
       - author=scala-steward
-      - status-success=Build and Test (ubuntu-latest, 2.12.13, graalvm-ce-java11@21.0.0)
-      - status-success=Build and Test (ubuntu-latest, 2.13.5, graalvm-ce-java11@21.0.0)
+      - status-success=Build and Test (ubuntu-latest, 2.12.14, graalvm-ce-java11@21.0.0)
       - body~=labels:.*semver-patch.*
     actions:
       merge:
