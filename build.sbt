@@ -11,7 +11,7 @@ val catsEffectVersion = "3.1.1"
 val catsTaglessVersion = "0.14.0"
 val doobieVersion = "1.0.0-RC1"
 val catsVersion = "2.6.1"
-val scalacacheVersion = "1.0.0-M3"
+val scalacacheVersion = "1.0.0-M4"
 val fs2KafkaVersion = "2.2.0"
 val kindProjectorVersion = "0.13.2"
 val redis4catsVersion = "1.0.0"
@@ -113,7 +113,7 @@ val scalacache = module("scalacache")
   .settings(
     libraryDependencies ++= Seq("com.github.cb372" %% "scalacache-core" % scalacacheVersion)
   )
-  .jvmPlatform(scala2Only)
+  .jvmPlatform(scala2And3)
   .dependsOn(core)
 
 val doobie = module("doobie")
