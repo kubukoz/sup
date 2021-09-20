@@ -74,7 +74,7 @@ val scala2CompilerPlugins = List(
 )
 
 val compilerPlugins = List(
-  compilerPlugin(("com.kubukoz" % "better-tostring" % "0.3.6").cross(CrossVersion.full))
+  compilerPlugin(("com.kubukoz" % "better-tostring" % "0.3.7").cross(CrossVersion.full))
 )
 
 val commonSettings = Seq(
