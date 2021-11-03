@@ -17,12 +17,12 @@ val kindProjectorVersion = "0.13.2"
 val redis4catsVersion = "1.0.0"
 val h2Version = "1.4.200"
 val log4CatsVersion = "2.1.1"
-val http4sVersion = "0.23.6"
-val akkaHttpVersion = "10.2.6"
+val http4sVersion = "0.23.5"
+val akkaHttpVersion = "10.2.7"
 val circeVersion = "0.14.1"
 val sttpVersion = "3.3.15"
 val cassandraVersion = "4.12.0"
-val testcontainersScalaVersion = "0.39.8"
+val testcontainersScalaVersion = "0.39.9"
 
 val GraalVM11 = "graalvm-ce-java11@21.0.0"
 
@@ -74,7 +74,7 @@ val scala2CompilerPlugins = List(
 )
 
 val compilerPlugins = List(
-  compilerPlugin(("org.polyvariant" % "better-tostring" % "0.3.9").cross(CrossVersion.full))
+  compilerPlugin(("org.polyvariant" % "better-tostring" % "0.3.10").cross(CrossVersion.full))
 )
 
 val commonSettings = Seq(
