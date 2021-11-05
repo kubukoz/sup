@@ -27,7 +27,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        scala: [2.12.14, 2.13.6, 3.0.0]
+        scala: [2.12.14]
         java: [graalvm-ce-java11@21.0.0]
     runs-on: ${{ matrix.os }}
     steps:
@@ -59,7 +59,7 @@ jobs:
       - run: sbt ++${{ matrix.scala }} test mimaReportBinaryIssues
 
       - name: Compress target directories
-        run: tar cf targets.tar modules/sttp/target/jvm-2.13 modules/circe/target/jvm-2.12 modules/http4s/target/jvm-2.13 modules/sttp/target/jvm-3 modules/cassandra/target/jvm-3 modules/scalacache/target/jvm-2.13 modules/doobie/target/jvm-2.13 modules/core/target/jvm-2.12 modules/http4s-client/target/jvm-2.12 modules/core/target/jvm-3 modules/doobie/target/jvm-3 modules/log4cats/target/jvm-2.13 modules/cassandra/target/jvm-2.13 modules/doobie/target/jvm-2.12 modules/http4s/target/jvm-2.12 modules/akka-http/target/jvm-2.13 modules/redis/target/jvm-3 modules/scalacache/target/jvm-2.12 modules/redis/target/jvm-2.12 modules/circe/target/jvm-2.13 modules/http4s/target/jvm-3 modules/log4cats/target/jvm-2.12 modules/sttp/target/jvm-2.12 modules/http4s-client/target/jvm-3 modules/http4s-client/target/jvm-2.13 modules/akka-http/target/jvm-2.12 modules/circe/target/jvm-3 modules/redis/target/jvm-2.13 modules/core/target/jvm-2.13 target modules/log4cats/target/jvm-3 modules/cassandra/target/jvm-2.12 project/target
+        run: tar cf targets.tar modules/sttp/target/jvm-2.13 modules/fs2-kafka/target/jvm-2.13 modules/scalacache/target/jvm-3 modules/circe/target/jvm-2.12 modules/http4s/target/jvm-2.13 modules/sttp/target/jvm-3 modules/cassandra/target/jvm-3 modules/scalacache/target/jvm-2.13 modules/doobie/target/jvm-2.13 modules/core/target/jvm-2.12 modules/http4s-client/target/jvm-2.12 modules/core/target/jvm-3 modules/doobie/target/jvm-3 modules/log4cats/target/jvm-2.13 modules/cassandra/target/jvm-2.13 modules/doobie/target/jvm-2.12 modules/http4s/target/jvm-2.12 modules/akka-http/target/jvm-2.13 modules/fs2-kafka/target/jvm-2.12 modules/redis/target/jvm-3 modules/scalacache/target/jvm-2.12 modules/fs2-kafka/target/jvm-3 modules/redis/target/jvm-2.12 modules/circe/target/jvm-2.13 modules/http4s/target/jvm-3 modules/log4cats/target/jvm-2.12 modules/sttp/target/jvm-2.12 modules/http4s-client/target/jvm-3 modules/http4s-client/target/jvm-2.13 modules/akka-http/target/jvm-2.12 modules/circe/target/jvm-3 modules/redis/target/jvm-2.13 modules/core/target/jvm-2.13 target modules/log4cats/target/jvm-3 modules/cassandra/target/jvm-2.12 project/target
 
       - name: Upload target directories
         uses: actions/upload-artifact@v2
@@ -106,26 +106,6 @@ jobs:
           name: target-${{ matrix.os }}-2.12.14-${{ matrix.java }}
 
       - name: Inflate target directories (2.12.14)
-        run: |
-          tar xf targets.tar
-          rm targets.tar
-
-      - name: Download target directories (2.13.6)
-        uses: actions/download-artifact@v2
-        with:
-          name: target-${{ matrix.os }}-2.13.6-${{ matrix.java }}
-
-      - name: Inflate target directories (2.13.6)
-        run: |
-          tar xf targets.tar
-          rm targets.tar
-
-      - name: Download target directories (3.0.0)
-        uses: actions/download-artifact@v2
-        with:
-          name: target-${{ matrix.os }}-3.0.0-${{ matrix.java }}
-
-      - name: Inflate target directories (3.0.0)
         run: |
           tar xf targets.tar
           rm targets.tar

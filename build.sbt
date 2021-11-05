@@ -7,26 +7,29 @@ val Scala_3 = "3.0.0"
 val scala2Only = Seq(Scala_212, Scala_213)
 val scala2And3 = scala2Only :+ Scala_3
 
-val catsEffectVersion = "3.1.1"
+val catsEffectVersion = "3.2.9"
 val catsTaglessVersion = "0.14.0"
-val doobieVersion = "1.0.0-M5"
+val doobieVersion = "1.0.0-RC1"
 val catsVersion = "2.6.1"
-val scalacacheVersion = "1.0.0-M2"
-val kindProjectorVersion = "0.13.0"
+val scalacacheVersion = "1.0.0-M4"
+val fs2KafkaVersion = "2.2.0"
+val kindProjectorVersion = "0.13.2"
 val redis4catsVersion = "1.0.0"
 val h2Version = "1.4.200"
 val log4CatsVersion = "2.1.1"
-val http4sVersion = "1.0.0-M22"
-val akkaHttpVersion = "10.2.4"
+val http4sVersion = "0.23.6"
+val akkaHttpVersion = "10.2.7"
 val circeVersion = "0.14.1"
-val sttpVersion = "3.3.11"
+val sttpVersion = "3.3.15"
 val cassandraVersion = "4.12.0"
-val testcontainersScalaVersion = "0.39.5"
+val testcontainersScalaVersion = "0.39.9"
 
 val GraalVM11 = "graalvm-ce-java11@21.0.0"
 
 ThisBuild / scalaVersion := Scala_212
 ThisBuild / crossScalaVersions := Seq(Scala_212, Scala_213, Scala_3)
+// Using sbt-projectmatrix, Scala versions are mapped to different modules, hence we only need to run CI on one
+ThisBuild / githubWorkflowScalaVersions := Seq(Scala_212)
 ThisBuild / githubWorkflowJavaVersions := Seq(GraalVM11)
 ThisBuild / githubWorkflowBuild := Seq(
   WorkflowStep.Sbt(List("test", "mimaReportBinaryIssues"))
@@ -71,7 +74,7 @@ val scala2CompilerPlugins = List(
 )
 
 val compilerPlugins = List(
-  compilerPlugin(("com.kubukoz" % "better-tostring" % "0.3.5").cross(CrossVersion.full))
+  compilerPlugin(("org.polyvariant" % "better-tostring" % "0.3.10").cross(CrossVersion.full))
 )
 
 val commonSettings = Seq(
@@ -110,7 +113,7 @@ val scalacache = module("scalacache")
   .settings(
     libraryDependencies ++= Seq("com.github.cb372" %% "scalacache-core" % scalacacheVersion)
   )
-  .jvmPlatform(scala2Only)
+  .jvmPlatform(scala2And3)
   .dependsOn(core)
 
 val doobie = module("doobie")
@@ -199,8 +202,32 @@ val sttp = module("sttp")
   .jvmPlatform(scala2And3)
   .dependsOn(core)
 
-val allModules =
-  List(core, scalacache, doobie, redis, log4cats, http4s, http4sClient, akkaHttp, circe, sttp, cassandra)
+val kafka = module("fs2-kafka")
+  .settings(
+    libraryDependencies ++= Seq(
+      "com.github.fd4s" %% "fs2-kafka" % fs2KafkaVersion,
+      "com.dimafeng" %% "testcontainers-scala-scalatest" % testcontainersScalaVersion % Test,
+      "com.dimafeng" %% "testcontainers-scala-kafka" % testcontainersScalaVersion % Test
+    ),
+    mimaPreviousArtifacts := Set()
+  )
+  .jvmPlatform(scala2And3)
+  .dependsOn(core % "compile->compile;test->test")
+
+val allModules = List(
+  core,
+  scalacache,
+  doobie,
+  redis,
+  log4cats,
+  http4s,
+  http4sClient,
+  akkaHttp,
+  circe,
+  sttp,
+  cassandra,
+  kafka
+)
 
 val lastStableVersion = settingKey[String]("Last tagged version")
 
