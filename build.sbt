@@ -1,20 +1,20 @@
 val Scala_212 = "2.12.13"
 val Scala_213 = "2.13.5"
 
-val catsEffectVersion = "2.4.1"
-val catsTaglessVersion = "0.11"
-val doobieVersion = "0.9.4"
-val catsVersion = "2.6.1"
-val scalacacheVersion = "0.28.0"
-val fs2KafkaVersion = "1.8.0"
-val kindProjectorVersion = "0.11.3"
-val fs2RedisVersion = "0.10.3"
-val h2Version = "1.4.200"
-val log4CatsVersion = "1.1.1"
-val http4sVersion = "0.21.22"
-val circeVersion = "0.13.0"
-val sttpVersion = "1.7.2"
-val cassandraVersion = "4.12.0"
+val catsEffectVersion          = "2.4.1"
+val catsTaglessVersion         = "0.11"
+val doobieVersion              = "0.9.4"
+val catsVersion                = "2.6.1"
+val scalacacheVersion          = "0.28.0"
+val fs2KafkaVersion            = "1.8.0"
+val kindProjectorVersion       = "0.11.3"
+val fs2RedisVersion            = "0.10.3"
+val h2Version                  = "1.4.200"
+val log4CatsVersion            = "1.1.1"
+val http4sVersion              = "0.22.12"
+val circeVersion               = "0.13.0"
+val sttpVersion                = "1.7.2"
+val cassandraVersion           = "4.12.0"
 val testcontainersScalaVersion = "0.39.5"
 
 val GraalVM11 = "graalvm-ce-java11@21.0.0"
@@ -60,8 +60,8 @@ inThisBuild(
 )
 
 val compilerPlugins = List(
-  compilerPlugin(("org.typelevel" % "kind-projector" % kindProjectorVersion).cross(CrossVersion.full)),
-  compilerPlugin(("com.kubukoz" % "better-tostring" % "0.3.2").cross(CrossVersion.full))
+  compilerPlugin(("org.typelevel" % "kind-projector"  % kindProjectorVersion).cross(CrossVersion.full)),
+  compilerPlugin(("com.kubukoz"   % "better-tostring" % "0.3.2").cross(CrossVersion.full))
 )
 
 val commonSettings = Seq(
@@ -69,11 +69,11 @@ val commonSettings = Seq(
   name := "sup",
   updateOptions := updateOptions.value.withGigahorse(false), //may fix publishing bug
   libraryDependencies ++= Seq(
-    "org.typelevel" %% "cats-tagless-laws" % catsTaglessVersion % Test,
-    "org.typelevel" %% "cats-effect-laws" % catsEffectVersion % Test,
-    "org.typelevel" %% "cats-testkit-scalatest" % "2.1.5" % Test,
-    "org.typelevel" %% "cats-laws" % catsVersion % Test,
-    "org.typelevel" %% "cats-kernel-laws" % catsVersion % Test
+    "org.typelevel" %% "cats-tagless-laws"      % catsTaglessVersion % Test,
+    "org.typelevel" %% "cats-effect-laws"       % catsEffectVersion  % Test,
+    "org.typelevel" %% "cats-testkit-scalatest" % "2.1.5"            % Test,
+    "org.typelevel" %% "cats-laws"              % catsVersion        % Test,
+    "org.typelevel" %% "cats-kernel-laws"       % catsVersion        % Test
   ) ++ compilerPlugins,
   mimaPreviousArtifacts := {
     val lastCompatible = if (Set("sup-fs2-kafka", "sup-cassandra").contains(name.value)) "0.8.2" else "0.7.0"
@@ -86,7 +86,7 @@ def module(moduleName: String): Project =
 
 val core = module("core").settings(
   libraryDependencies ++= Seq(
-    "org.typelevel" %% "cats-effect" % catsEffectVersion,
+    "org.typelevel" %% "cats-effect"       % catsEffectVersion,
     "org.typelevel" %% "cats-tagless-core" % catsTaglessVersion
   )
 )
@@ -102,8 +102,8 @@ val scalacache = module("scalacache")
 val doobie = module("doobie")
   .settings(
     libraryDependencies ++= Seq(
-      "org.tpolecat" %% "doobie-core" % doobieVersion,
-      "com.h2database" % "h2" % h2Version % Test
+      "org.tpolecat"  %% "doobie-core" % doobieVersion,
+      "com.h2database" % "h2"          % h2Version % Test
     )
   )
   .dependsOn(core % "compile->compile;test->test")
@@ -111,9 +111,9 @@ val doobie = module("doobie")
 val cassandra = module("cassandra")
   .settings(
     libraryDependencies ++= Seq(
-      "com.datastax.oss" % "java-driver-core" % cassandraVersion,
-      "com.dimafeng" %% "testcontainers-scala-scalatest" % testcontainersScalaVersion % Test,
-      "com.dimafeng" %% "testcontainers-scala-cassandra" % testcontainersScalaVersion % Test
+      "com.datastax.oss" % "java-driver-core"               % cassandraVersion,
+      "com.dimafeng"    %% "testcontainers-scala-scalatest" % testcontainersScalaVersion % Test,
+      "com.dimafeng"    %% "testcontainers-scala-cassandra" % testcontainersScalaVersion % Test
     )
   )
   .dependsOn(core % "compile->compile;test->test")
@@ -138,7 +138,7 @@ val http4s = module("http4s")
   .settings(
     libraryDependencies ++= Seq(
       "org.http4s" %% "http4s-core" % http4sVersion,
-      "org.http4s" %% "http4s-dsl" % http4sVersion
+      "org.http4s" %% "http4s-dsl"  % http4sVersion
     )
   )
   .dependsOn(core)
@@ -178,9 +178,9 @@ val sttp = module("sttp")
 val kafka = module("fs2-kafka")
   .settings(
     libraryDependencies ++= Seq(
-      "com.github.fd4s" %% "fs2-kafka" % fs2KafkaVersion,
-      "com.dimafeng" %% "testcontainers-scala-scalatest" % testcontainersScalaVersion % Test,
-      "com.dimafeng" %% "testcontainers-scala-kafka" % testcontainersScalaVersion % Test
+      "com.github.fd4s" %% "fs2-kafka"                      % fs2KafkaVersion,
+      "com.dimafeng"    %% "testcontainers-scala-scalatest" % testcontainersScalaVersion % Test,
+      "com.dimafeng"    %% "testcontainers-scala-kafka"     % testcontainersScalaVersion % Test
     )
   )
   .dependsOn(core % "compile->compile;test->test")
@@ -255,4 +255,4 @@ val sup =
     .in(file("."))
     .settings(commonSettings)
     .settings((publish / skip) := true, crossScalaVersions := List(), mimaPreviousArtifacts := Set.empty)
-    .aggregate((allModules).map(x => x: ProjectReference): _*)
+    .aggregate(allModules.map(x => x: ProjectReference): _*)
