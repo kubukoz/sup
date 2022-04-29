@@ -3,7 +3,7 @@ package sup.modules
 import cats.Id
 import sup.HealthCheck
 import scala.concurrent.duration._
-import cats.implicits._
+import cats.syntax.all._
 import cats.effect.kernel.MonadCancelThrow
 
 object doobie {

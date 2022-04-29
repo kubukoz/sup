@@ -1,6 +1,6 @@
 package sup.modules
 
-import cats.implicits._
+import cats.syntax.all._
 import cats.{ApplicativeError, Id}
 import cats.catsInstancesForId
 import dev.profunktor.redis4cats.algebra.Ping

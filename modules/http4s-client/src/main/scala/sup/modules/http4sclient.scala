@@ -1,6 +1,6 @@
 package sup.modules
 
-import cats.implicits._
+import cats.syntax.all._
 import cats.{Functor, Id}
 import org.http4s.client.Client
 import org.http4s.{EntityDecoder, Request}

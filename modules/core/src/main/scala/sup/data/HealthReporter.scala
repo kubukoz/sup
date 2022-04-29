@@ -1,7 +1,7 @@
 package sup.data
 
 import cats.data.NonEmptyList
-import cats.implicits._
+import cats.syntax.all._
 import cats.Apply
 import cats.Functor
 import cats.NonEmptyParallel

@@ -1,6 +1,6 @@
 package sup
 
-import cats.implicits._
+import cats.syntax.all._
 import cats.kernel.Monoid
 import cats.~>
 import cats.Applicative

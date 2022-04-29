@@ -1,7 +1,7 @@
 package sup.modules
 
 import cats._
-import cats.implicits._
+import cats.syntax.all._
 import fs2.kafka.KafkaAdminClient
 import org.apache.kafka.common.errors.{TimeoutException, UnknownTopicOrPartitionException}
 import sup.{Health, HealthCheck, HealthResult}

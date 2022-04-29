@@ -5,7 +5,7 @@ import cats.Foldable
 import cats.NonEmptyReducible
 import cats.Reducible
 import cats.Show
-import cats.implicits._
+import cats.syntax.all._
 import cats.kernel.Monoid
 
 /** A more specific version of [[cats.data.OneAnd]] combined with [[cats.data.Nested]].
