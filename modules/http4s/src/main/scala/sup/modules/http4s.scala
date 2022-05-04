@@ -8,7 +8,7 @@ import org.http4s.HttpRoutes
 import org.http4s.Response
 import sup.HealthCheck
 import sup.HealthResult
-import cats.implicits._
+import cats.syntax.all._
 
 object http4s {
 

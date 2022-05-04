@@ -4,7 +4,7 @@ import _root_.sttp.client3.Request
 import _root_.sttp.client3.SttpBackend
 import cats.Functor
 import cats.Id
-import cats.implicits._
+import cats.syntax.all._
 import sup.HealthCheck
 import sup.HealthResult
 
