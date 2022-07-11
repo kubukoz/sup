@@ -1,6 +1,4 @@
 package sup
-
-import cats.implicits._
 import dev.profunktor.redis4cats.algebra.Ping
 import sup.modules.redis
 import org.scalatest.wordspec.AnyWordSpec
