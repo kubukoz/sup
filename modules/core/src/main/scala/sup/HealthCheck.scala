@@ -2,7 +2,7 @@ package sup
 
 import cats.data.{EitherK, Tuple2K}
 import cats.{~>, Applicative, ApplicativeError, Apply, Eq, Functor, Id, Monoid, NonEmptyParallel}
-import cats.implicits._
+import cats.syntax.all._
 import cats.effect.kernel.implicits._
 import cats.effect.kernel.GenConcurrent
 

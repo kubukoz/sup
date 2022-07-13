@@ -2,7 +2,7 @@ package sup.modules
 
 import cats.FlatMap
 import cats.Show
-import cats.implicits._
+import cats.syntax.all._
 import org.typelevel.log4cats.MessageLogger
 import sup.Health
 import sup.HealthCheckEndoMod

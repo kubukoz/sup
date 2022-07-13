@@ -1,6 +1,6 @@
 package sup.data
 
-import cats.implicits._
+import cats.syntax.all._
 import cats.Eq
 import cats.Eval
 import cats.Id

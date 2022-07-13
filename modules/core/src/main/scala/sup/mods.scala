@@ -5,7 +5,7 @@ import cats.{Applicative, ApplicativeError, FlatMap, Functor, Id, Semigroup}
 
 import scala.concurrent.duration.FiniteDuration
 import cats.effect.kernel.implicits._
-import cats.implicits._
+import cats.syntax.all._
 import sup.data.Tagged
 import cats.effect.kernel.GenTemporal
 import cats.effect.kernel.Temporal

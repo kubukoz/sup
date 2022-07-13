@@ -2,7 +2,7 @@ package sup
 
 import cats.kernel.CommutativeMonoid
 import cats.{Eq, Show}
-import cats.implicits._
+import cats.syntax.all._
 
 /**
   * The component's health status. It can only be Healthy or Sick - there's no middle ground (no Unknown state).

@@ -4,7 +4,7 @@ import _root_.doobie.Transactor
 import cats.effect.Async
 import cats.effect.IO
 import scala.concurrent.duration._
-import cats.implicits._
+import cats.syntax.all._
 
 class DoobieCheckSpec extends BaseIOTest {
 
