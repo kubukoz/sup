@@ -15,7 +15,7 @@ object scalacache {
     key: String,
     ttl: Option[Duration]
   )(
-    implicit cache: Cache[F, HealthResult[H]],
+    implicit cache: Cache[F, String, HealthResult[H]],
     flags: Flags
-  ): HealthCheckEndoMod[F, H] = _.transform(cache.cachingForMemoizeF(key)(ttl))
+  ): HealthCheckEndoMod[F, H] = _.transform(cache.cachingF(key)(ttl))
 }
