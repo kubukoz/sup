@@ -1,28 +1,30 @@
 import sbt.internal.ProjectMatrix
 
+Global / onChangedBuildSource := ReloadOnSourceChanges
+
 val Scala_212 = "2.12.14"
-val Scala_213 = "2.13.6"
-val Scala_3 = "3.0.0"
+val Scala_213 = "2.13.8"
+val Scala_3 = "3.1.3"
 
 val scala2Only = Seq(Scala_212, Scala_213)
 val scala2And3 = scala2Only :+ Scala_3
 
-val catsEffectVersion = "3.2.9"
+val catsEffectVersion = "3.3.14"
 val catsTaglessVersion = "0.14.0"
-val doobieVersion = "1.0.0-RC1"
-val catsVersion = "2.6.1"
-val scalacacheVersion = "1.0.0-M4"
-val fs2KafkaVersion = "2.2.0"
+val doobieVersion = "1.0.0-RC2"
+val catsVersion = "2.8.0"
+val scalacacheVersion = "1.0.0-M6"
+val fs2KafkaVersion = "2.5.0"
 val kindProjectorVersion = "0.13.2"
-val redis4catsVersion = "1.0.0"
+val redis4catsVersion = "1.2.0"
 val h2Version = "1.4.200"
-val log4CatsVersion = "2.1.1"
-val http4sVersion = "0.23.6"
+val log4CatsVersion = "2.4.0"
+val http4sVersion = "0.23.15"
 val akkaHttpVersion = "10.2.9"
-val circeVersion = "0.14.1"
-val sttpVersion = "3.3.15"
+val circeVersion = "0.14.2"
+val sttpVersion = "3.7.6"
 val cassandraVersion = "4.12.0"
-val testcontainersScalaVersion = "0.39.9"
+val testcontainersScalaVersion = "0.40.10"
 
 val GraalVM11 = "graalvm-ce-java11@21.0.0"
 
@@ -74,11 +76,12 @@ val scala2CompilerPlugins = List(
 )
 
 val compilerPlugins = List(
-  compilerPlugin(("org.polyvariant" % "better-tostring" % "0.3.10").cross(CrossVersion.full))
+  compilerPlugin(("org.polyvariant" % "better-tostring" % "0.3.16").cross(CrossVersion.full))
 )
 
 val commonSettings = Seq(
   scalacOptions --= Seq("-Xfatal-warnings"),
+  scalacOptions ++= (if(scalaVersion.value.startsWith("3")) Seq("-Yscala-release", "3.1") else Nil),
   name := "sup",
   updateOptions := updateOptions.value.withGigahorse(false), //may fix publishing bug
   libraryDependencies ++= Seq(
