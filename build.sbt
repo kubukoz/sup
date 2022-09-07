@@ -76,7 +76,7 @@ val scala2CompilerPlugins = List(
 )
 
 val compilerPlugins = List(
-  compilerPlugin(("org.polyvariant" % "better-tostring" % "0.3.16").cross(CrossVersion.full))
+  compilerPlugin(("org.polyvariant" % "better-tostring" % "0.3.17").cross(CrossVersion.full))
 )
 
 val commonSettings = Seq(
