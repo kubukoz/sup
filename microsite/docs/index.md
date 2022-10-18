@@ -40,7 +40,7 @@ Check out [the usage guide](guide/).
 
 sup is cross-published for Scala @SCALA_VERSIONS@.
 
-The core module has a dependency on cats-core 2.x and cats-effect 2.x.
+The core module has a dependency on cats-core 2.x and cats-effect 3.x.
 
 ## Why?
 
