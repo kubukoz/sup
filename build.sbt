@@ -4,7 +4,7 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 
 val Scala_212 = "2.12.14"
 val Scala_213 = "2.13.8"
-val Scala_3 = "3.1.3"
+val Scala_3 = "3.2.1"
 
 val scala2Only = Seq(Scala_212, Scala_213)
 val scala2And3 = scala2Only :+ Scala_3
