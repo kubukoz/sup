@@ -22,7 +22,7 @@ val log4CatsVersion = "2.4.0"
 val http4sVersion = "0.23.15"
 val akkaHttpVersion = "10.2.10"
 val circeVersion = "0.14.2"
-val sttpVersion = "3.7.6"
+val sttpVersion = "3.8.5"
 val cassandraVersion = "4.12.0"
 val testcontainersScalaVersion = "0.40.10"
 
