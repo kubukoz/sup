@@ -9,7 +9,7 @@ val Scala_3 = "3.1.3"
 val scala2Only = Seq(Scala_212, Scala_213)
 val scala2And3 = scala2Only :+ Scala_3
 
-val catsEffectVersion = "3.3.14"
+val catsEffectVersion = "3.4.2"
 val catsTaglessVersion = "0.14.0"
 val doobieVersion = "1.0.0-RC2"
 val catsVersion = "2.8.0"
